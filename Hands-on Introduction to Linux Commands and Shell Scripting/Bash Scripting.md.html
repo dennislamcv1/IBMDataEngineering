@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <center>
+      <img src="https://gitlab.com/ibm/skills-network/courses/placeholder101/-/raw/master/labs/module%201/images/IDSNlogo.png" width="300" alt="cognitiveclass.ai logo">
+    </center>
+    <h1>Hands-on Lab: Getting Started with Shell Scripting</h1>
+    <p>Estimated time needed: <strong>30</strong> minutes</p>
+    <h2>Objectives</h2>
+    <p>After completing this lab you will be able to:</p>
+    <ul>
+      <li>Create and execute a simple bash shell script.</li>
+      <li>Implement the 'shabang' directive in a bash shell script.</li>
+    </ul>
+    <h1>About Skills Network Cloud IDE</h1>
+    <p>Skills Network Cloud IDE (based on Theia and Docker) provides an environment for hands on labs for course and project related labs. Theia is an open source IDE (Integrated Development Environment), that can be run on desktop or on the cloud. to complete this lab, we will be using the Cloud IDE based on Theia running in a Docker container.</p>
+    <h2>Important Notice about this lab environment</h2>
+    <p>Please be aware that sessions for this lab environment are not persisted. Every time you connect to this lab, a new environment is created for you. Any data you may have saved in the earlier session would get lost. Plan to complete these labs in a single session, to avoid losing your data.</p>
+    <h1>Exercise 1 - Create and execute a basic Shell Script</h1>
+    <p>In this exercise, we will create a simple script which will do the following.</p>
+    <ul>
+      <li>Accept a user name</li>
+      <li>Print a welcome message to the user</li>
+    </ul>
+    <p>We will also add comments to the script. All the lines starting with <code>#</code> are comments. They are not executed by the shell. Comments make a shell script more readable, and help in debugging the script.</p>
+    <p><strong>1.1 Create a new script file</strong></p>
+    <p>Step 1: On the menu on the lab screen, use <strong>File->New File</strong> to create a new file.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-LX0117EN-SkillsNetwork/labs/Bash%20Scripting/Lab%20-%20Bash%20Scripting/images/file_new.png" alt="">
+    </p>
+    <p>Step 2: Give the name as 'greet.sh' and click 'OK'</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-LX0117EN-SkillsNetwork/labs/Bash%20Scripting/Lab%20-%20Bash%20Scripting/images/file_name.png" alt="">
+    </p>
+    <p>Step 3: Copy and paste the following lines into the newly created file.</p>
+    <pre><code class="hljs language-bash"><span class="hljs-comment"># This script accepts the user's name and prints </span>
+<span class="hljs-comment"># a message greeting the user</span>
+
+<span class="hljs-comment"># Print the prompt message on screen</span>
+<span class="hljs-built_in">echo</span> -n <span class="hljs-string">"Enter your name :"</span>	  	
+
+<span class="hljs-comment"># Wait for user to enter a name, and save the entered name into the variable 'name'</span>
+<span class="hljs-built_in">read</span> name				
+
+<span class="hljs-comment"># Print the welcome message followed by the name	</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"Welcome <span class="hljs-variable">$name</span>"</span>
+
+<span class="hljs-comment"># The following message should print on a single line. Hence the usage of '-n'</span>
+<span class="hljs-built_in">echo</span> -n <span class="hljs-string">"Congratulations! You just created and ran your first shell script "</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"using Bash on IBM Skills Network"</span>
+
+</code></pre>
+    <p></p>
+    <p>Step 4: Save the file using the <strong>File->Save</strong> menu option</p>
+    <p><strong>1.2 Execute the script</strong></p>
+    <p>Open a new terminal, by clicking on the menu bar and selecting <strong>Terminal</strong>-><strong>New Terminal</strong>, as in the image below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-LX0117EN-SkillsNetwork/labs/Bash%20Scripting/Lab%20-%20Bash%20Scripting/images/new-terminal.png" alt="">
+    </p>
+    <p>This will open a new terminal at the bottom of the screen as in the image below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-LX0117EN-SkillsNetwork/labs/Bash%20Scripting/Lab%20-%20Bash%20Scripting/images/terminal_bottom_screen.png" alt="">
+    </p>
+    <p>Run the commands below on the newly opened terminal.</p>
+    <p>Let us check the permissions for this new file:</p>
+    <pre><code class="hljs language-stata"><span class="hljs-keyword">ls</span> -<span class="hljs-keyword">l</span> greet.<span class="hljs-keyword">sh</span>
+</code></pre>
+    <p></p>
+    <p>If the file exists and has read permission, run the following command to execute it.</p>
+    <pre><code class="hljs language-mipsasm"><span class="hljs-keyword">bash </span>greet.<span class="hljs-keyword">sh
+</span></code></pre>
+    <p></p>
+    <p>The message 'Enter your name :' appears on screen.</p>
+    <p>Type your name and press Enter.</p>
+    <p>You should now see the message displayed on screen.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-LX0117EN-SkillsNetwork/labs/Bash%20Scripting/Lab%20-%20Bash%20Scripting/images/greet_output.png" alt="">
+    </p>
+    <p>You have succesfully executed your first bash shell script.</p>
+    <h1>Exercise 2 - Using 'Shabang' line</h1>
+    <p>In this exercise, we will edit the script 'greet.sh' created in the previous exercise and make it an executable file.</p>
+    <p>This is done to ensure that the name of the script can be used like a command.</p>
+    <p>Adding this special line lets us specify the path to the interpreter of the script, which is 'bash' in this case.</p>
+    <p>Let us follow the below steps.</p>
+    <p><strong>2.1 : Find the path to the interpreter.</strong></p>
+    <p>The <strong>which</strong> command helps you find out the path of the command 'bash'.</p>
+    <pre><code class="hljs language-bash"><span class="hljs-built_in">which</span> bash
+</code></pre>
+    <p></p>
+    <p>In this case it returns the path '/bin/bash'.</p>
+    <p><strong>2.2 : Edit the script 'greet.sh' and add the <em>shabang</em> line to the script.</strong></p>
+    <p>Open the file and add the following line at the beginning of the script:</p>
+    <pre><code class="hljs language-bash"><span class="hljs-meta">#! /bin/bash</span>
+</code></pre>
+    <p></p>
+    <p>The script should now look like the following:</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-LX0117EN-SkillsNetwork/labs/Bash%20Scripting/Lab%20-%20Bash%20Scripting/images/code_with_shabang.png" alt="">
+    </p>
+    <p><strong>2.3 Check the permissions of the script.</strong></p>
+    <p>One more step needs to be completed to make 'greet.sh' completely executable by name.<br>Let us add the execute permission for the user on greet.sh.</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">chmod</span> +x greet.sh
+</code></pre>
+    <p></p>
+    <p>Verify if the execute permission is granted.</p>
+    <p>
+      Generally, it is not a good idea to grant permissions to a script for all user, groups and others alike.
+      It is more appropriate to limit the execute permission to only the owner.
+    </p>
+    <p>To change permissions for <code>greet.sh</code>, run the command below:</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">chmod u</span>+x greet.sh
+</code></pre>
+    <p></p>
+    <p>Verify the permissions using the command below.</p>
+    <pre><code class="hljs language-stata"><span class="hljs-keyword">ls</span> -<span class="hljs-keyword">l</span> greet.<span class="hljs-keyword">sh</span>
+</code></pre>
+    <p></p>
+    <p>If you wish to grant execute permission to everyone you need to run the command <code>chmod +x greet.sh</code></p>
+    <p><strong>2.4 Execute the script.</strong></p>
+    <p>Run the command given below to execute the shell script.</p>
+    <pre><code class="hljs language-jboss-cli"><span class="hljs-string">./greet.sh</span>
+</code></pre>
+    <p></p>
+    <p>The '.' here refers to the current directory. We are telling linux to execute the script greet.sh that is in the current directory.</p>
+    <h1>Practice exercises</h1>
+    <ol>
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Create a script named 'greetnew.sh' that reads the firstname and lastname of the user, and prints a welcome message like Hello firstname lastname.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Use the read command and echo commands. Write comments. Make sure to add the shabang line.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <p>Step 1: Create a new file named 'greetnew.sh'.</p>
+      <p>Step 2: Add the following lines to the file:</p>
+      <pre><code class="hljs language-bash"><span class="hljs-meta">#! /bin/bash</span>
+
+<span class="hljs-comment"># This script accepts the user's name and prints </span>
+<span class="hljs-comment"># a message greeting the user</span>
+
+<span class="hljs-comment"># Print the prompt message on screen</span>
+<span class="hljs-built_in">echo</span> -n <span class="hljs-string">"Enter your firstname :"</span>	  	
+
+<span class="hljs-comment"># Wait for user to enter a name, and save the entered name into the variable 'name'</span>
+<span class="hljs-built_in">read</span> firstname				
+
+<span class="hljs-comment"># Print the prompt message on screen</span>
+<span class="hljs-built_in">echo</span> -n <span class="hljs-string">"Enter your lastname :"</span>	  	
+
+<span class="hljs-comment"># Wait for user to enter a name, and save the entered name into the variable 'name'</span>
+<span class="hljs-built_in">read</span> lastname	
+
+<span class="hljs-comment"># Print the welcome message followed by the name	</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"Hello <span class="hljs-variable">$firstname</span> <span class="hljs-variable">$lastname</span>."</span>
+
+</code></pre>
+      <p></p>
+      <p>Step 3: Save the file.</p>
+      <p>Step 4: Add the 'execute' permission to 'greetnew.sh' for the owner.</p>
+      <pre><code class="hljs language-ebnf"><span class="hljs-attribute">chmod u</span>+x greetnew.sh
+</code></pre>
+      <p></p>
+      <p>Step 5: Execute the file from the command prompt using the command below.</p>
+      <pre><code class="hljs language-haxe">./greetnew<span class="hljs-type"></span>.sh
+</code></pre>
+      <p></p>
+    </details>
+    <h2>Authors</h2>
+    <p>Ramesh Sannareddy</p>
+    <h3>Other Contributors</h3>
+    <p>Rav Ahuja</p>
+    <h2>Change Log</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date (YYYY-MM-DD)</th>
+          <th>Version</th>
+          <th>Changed By</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-05-30</td>
+          <td>0.1</td>
+          <td>Ramesh Sannareddy</td>
+          <td>Created initial version of the lab</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Copyright (c) 2021 IBM Corporation. All rights reserved.</p>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

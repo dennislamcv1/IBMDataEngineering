@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <center>
+      <img src="https://gitlab.com/ibm/skills-network/courses/placeholder101/-/raw/master/labs/module%201/images/IDSNlogo.png" width="300" alt="cognitiveclass.ai logo">
+    </center>
+    <h1>Hands-on Lab: Scheduling Jobs using crontab</h1>
+    <p>Estimated time needed: <strong>20</strong> minutes</p>
+    <h2>Objectives</h2>
+    <p>After completing this lab you will be able to:</p>
+    <ul>
+      <li>List existing cron jobs.</li>
+      <li>Add a cron job.</li>
+      <li>Remove cron jobs.</li>
+    </ul>
+    <h1>About Skills Network Cloud IDE</h1>
+    <p>Skills Network Cloud IDE (based on Theia and Docker) provides an environment for hands on labs for course and project related labs. Theia is an open source IDE (Integrated Development Environment), that can be run on desktop or on the cloud. to complete this lab, we will be using the Cloud IDE based on Theia running in a Docker container.</p>
+    <h2>Important Notice about this lab environment</h2>
+    <p>Please be aware that sessions for this lab environment are not persisted. Every time you connect to this lab, a new environment is created for you. Any data you may have saved in the earlier session would get lost. Plan to complete these labs in a single session, to avoid losing your data.</p>
+    <h1>Exercise 1 - Understand crontab file syntax</h1>
+    <p>Cron is a system daemon used to execute desired tasks in the background at designated times.</p>
+    <p>A crontab file is a simple text file containing a list of commands meant to be run at specified times. It is edited using the <strong>crontab</strong> command.</p>
+    <p>Each line in crontab file has five time-and-date fields, followed by a command, followed by a newline character ('\n'). The fields are separated by spaces.</p>
+    <p>
+      The five time-and-date fields cannot contain spaces.
+      The five time-and-date fields and their allowed values are as follows:
+    </p>
+    <table>
+      <tbody>
+        <tr>
+          <td>minute (0-59)</td>
+        </tr>
+        <tr>
+          <td>hour(0-23, 0 = midnight)</td>
+        </tr>
+        <tr>
+          <td>day (1-31)</td>
+        </tr>
+        <tr>
+          <td>month (1-12)</td>
+        </tr>
+        <tr>
+          <td>weekday (0-6, 0 = Sunday)</td>
+        </tr>
+      </tbody>
+    </table>
+    <h1>Exercise 2 - List cron jobs</h1>
+    <p>Open a new terminal, by clicking on the menu bar and selecting <strong>Terminal</strong>-><strong>New Terminal</strong>, as in the image below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-LX0117EN-SkillsNetwork/labs/Bash%20Scripting/Lab%20Scheduling%20Tasks%20Using%20Crontab/images/new-terminal.png" alt="">
+    </p>
+    <p>This will open a new terminal at the bottom of the screen as in the image below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-LX0117EN-SkillsNetwork/labs/Bash%20Scripting/Lab%20Scheduling%20Tasks%20Using%20Crontab/images/terminal_bottom_screen.png" alt="">
+    </p>
+    <p>Run the commands below on the newly opened terminal.</p>
+    <p>The -l option of the crontab command prints the current crontab.</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">crontab -l</span>
+</code></pre>
+    <p></p>
+    <p>You may get a message <code>no crontab for theia</code> if your crontab is empty.</p>
+    <h1>Exercise 3 - Add a job in the crontab file</h1>
+    <p><strong>3.1. Add a job to crontab.</strong></p>
+    <p>To add a cron job, run the command below</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">crontab -e</span>
+</code></pre>
+    <p></p>
+    <p>This will create a new crontab file for you(if you do not have one already) and now you are ready to add a new cron job.</p>
+    <p>Your crontab file will be opened in an editor as shown in the image below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-LX0117EN-SkillsNetwork/labs/Bash%20Scripting/Lab%20Scheduling%20Tasks%20Using%20Crontab/images/crontab1.png" alt="">
+    </p>
+    <p>Scroll down to the end of the file using the arrow keys.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-LX0117EN-SkillsNetwork/labs/Bash%20Scripting/Lab%20Scheduling%20Tasks%20Using%20Crontab/images/crontab2.png" alt="">
+    </p>
+    <p>Add the below line at the end of the crontab file.</p>
+    <pre><code class="hljs language-basic"><span class="hljs-symbol">0 </span><span class="hljs-number">21</span> * * * echo <span class="hljs-string">"Welcome to cron"</span> >> /tmp/echo.txt
+</code></pre>
+    <p></p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-LX0117EN-SkillsNetwork/labs/Bash%20Scripting/Lab%20Scheduling%20Tasks%20Using%20Crontab/images/crontab3.png" alt="">
+    </p>
+    <p>The above job specifies that the echo command should run when the minute is 0 and the hours is 21. It effectively means the job runs at 9.00 p.m every day.</p>
+    <p>The output of the command should be sent to a file /tmp/echo.txt.</p>
+    <p>Press Control + X to save the changes.</p>
+    <p>Press 'Y' to confirm.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-LX0117EN-SkillsNetwork/labs/Bash%20Scripting/Lab%20Scheduling%20Tasks%20Using%20Crontab/images/crontab4.png" alt="">
+    </p>
+    <p>Press Enter to come out of the editor.</p>
+    <p>Check if the job is added to the crontab by running the following command.</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">crontab -l</span>
+</code></pre>
+    <p></p>
+    <p>You should see the newly added job in the output.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-LX0117EN-SkillsNetwork/labs/Bash%20Scripting/Lab%20Scheduling%20Tasks%20Using%20Crontab/images/crontab5.png" alt="">
+    </p>
+    <p><strong>3.2. Schedule a shell script</strong>.</p>
+    <p>Let us create a simple shell script that prints the current time and the current disk usage statistics.</p>
+    <p>Step 1: On the menu on the lab screen, use <strong>File->New File</strong> to create a new file:</p>
+    <p>Step 2: Give the file name as 'diskusage.sh' and click 'OK'</p>
+    <p>Step 3: Save the following commands into the shell script.</p>
+    <pre><code class="hljs language-bash"><span class="hljs-meta">#! /bin/bash</span>
+<span class="hljs-comment"># print the current date time</span>
+date
+<span class="hljs-comment"># print the disk free statistics</span>
+df -h
+</code></pre>
+    <p></p>
+    <p>Step 4: Save the file using the <strong>File->Save</strong> menu option.</p>
+    <p>Step 5: Verify that the script is working:</p>
+    <pre><code class="hljs language-mipsasm">chmod u+x <span class="hljs-keyword">diskusage.sh
+</span>./<span class="hljs-keyword">diskusage.sh
+</span></code></pre>
+    <p></p>
+    <p>The script should print the current timestamp and the disk usage stats.</p>
+    <p>
+      Let us schedule this script to be run everyday at midnight 12:00 (when the hour is 0 on the 24 hour clock).
+      We want the output of this script to be appended to <code>/home/project/diskusage.log</code>.
+    </p>
+    <p>Edit the crontab.</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">crontab -e</span>
+</code></pre>
+    <p></p>
+    <p>Add the following line to the end of the file:</p>
+    <pre><code class="hljs language-basic"><span class="hljs-symbol">0 </span><span class="hljs-number">0</span> * * * /home/project/disksusage.sh >>/home/project/diskusage.<span class="hljs-keyword">log</span>
+</code></pre>
+    <p></p>
+    <p>Press Control + X to save the changes.</p>
+    <p>Press 'Y' to confirm.</p>
+    <p>Press Enter to come out of the editor.</p>
+    <p>Check if the job is added to the crontab by running the following command.</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">crontab -l</span>
+</code></pre>
+    <p></p>
+    <p>You should see the newly added job in the output.</p>
+    <h1>Exercise 4 - Remove the current crontab</h1>
+    <p>The -r option causes the current crontab to be removed.</p>
+    <p>Caution: This removes all your cron jobs. Be extra cautious when you use this command on a production server.</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">crontab -r</span>
+</code></pre>
+    <p></p>
+    <p>Verify if your crontab is removed.</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">crontab -l</span>
+</code></pre>
+    <p></p>
+    <h1>Practice exercises</h1>
+    <ol>
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Create a cron job that runs the task <code>date >> /tmp/everymin.txt</code> every minute.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Refer to the crontab syntax description.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <p>Edit the crontab file</p>
+      <pre><code class="hljs language-ebnf"><span class="hljs-attribute">crontab -e</span>
+</code></pre>
+      <p></p>
+      <p>Add the following line at the end of the file</p>
+      <pre><code class="hljs language-markdown"><span class="hljs-bullet">*</span> <span class="hljs-emphasis">* *</span> <span class="hljs-emphasis">* *</span> date >> /tmp/everymin.txt
+</code></pre>
+      <p></p>
+      <p>Save the file and quit the editor.</p>
+    </details>
+    <h2>Authors</h2>
+    <p>Ramesh Sannareddy</p>
+    <h3>Other Contributors</h3>
+    <p>Rav Ahuja</p>
+    <h2>Change Log</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date (YYYY-MM-DD)</th>
+          <th>Version</th>
+          <th>Changed By</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-05-30</td>
+          <td>0.1</td>
+          <td>Ramesh Sannareddy</td>
+          <td>Created initial version of the lab</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Copyright (c) 2021 IBM Corporation. All rights reserved.</p>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <center>
+      <img src="https://gitlab.com/ibm/skills-network/courses/placeholder101/-/raw/master/labs/module%201/images/IDSNlogo.png" width="300" alt="cognitiveclass.ai logo">
+    </center>
+    <h1>Hands-on Lab: Bash Scripting Advanced</h1>
+    <p>Estimated time needed: <strong>30</strong> minutes</p>
+    <h2>Objectives</h2>
+    <p>After completing this lab you will be able to make use of the following features of the bash shell</p>
+    <ul>
+      <li>Metacharacters</li>
+      <li>Quoting</li>
+      <li>Variables</li>
+      <li>Command substitution</li>
+      <li>I/O Redirection</li>
+      <li>Pipes and Filters</li>
+      <li>Command line arguments</li>
+    </ul>
+    <h1>About Skills Network Cloud IDE</h1>
+    <p>Skills Network Cloud IDE (based on Theia and Docker) provides an environment for hands on labs for course and project related labs. Theia is an open source IDE (Integrated Development Environment), that can be run on desktop or on the cloud. to complete this lab, we will be using the Cloud IDE based on Theia running in a Docker container.</p>
+    <h2>Important Notice about this lab environment</h2>
+    <p>Please be aware that sessions for this lab environment are not persisted. Every time you connect to this lab, a new environment is created for you. Any data you may have saved in the earlier session would get lost. Plan to complete these labs in a single session, to avoid losing your data.</p>
+    <h1>Exercise 1 - Metacharacters</h1>
+    <p>Run the commands given below on a newly opened terminal.</p>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Open a new terminal, by clicking on the menu bar and selecting <strong>Terminal</strong>-><strong>New Terminal</strong>, as in the image below.</p>
+      </blockquote>
+      <blockquote>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-LX0117EN-SkillsNetwork/labs/Bash%20Scripting/Bash%20Scripting%20Advanced/images/new-terminal.png" alt="">
+        </p>
+      </blockquote>
+      <blockquote>
+        <p>This will open a new terminal at the bottom of the screen as in the image below.</p>
+      </blockquote>
+      <blockquote>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-LX0117EN-SkillsNetwork/labs/Bash%20Scripting/Bash%20Scripting%20Advanced/images/terminal_bottom_screen.png" alt="">
+        </p>
+      </blockquote>
+    </details>
+    <p>There are several characters which have special meanings to the shell.</p>
+    <p>Following are some of the special characters and their usage.</p>
+    <p><strong>1.1 '#' - For adding comments</strong></p>
+    <p>Lines beginning with a # (with the exception of #!) are comments and will not be executed.</p>
+    <pre><code class="hljs language-pgsql"># This <span class="hljs-keyword">is</span> a <span class="hljs-keyword">comment</span> <span class="hljs-type">line</span>
+</code></pre>
+    <p><strong>1.2 ';' - Command seperator</strong></p>
+    <p>Multiple commands can be seperated from each other using a ; when used in a single command line.</p>
+    <pre><code class="hljs language-mel"><span class="hljs-keyword">pwd</span>;<span class="hljs-keyword">date</span>
+</code></pre>
+    <p></p>
+    <p><strong>1.3 * - wildcard used in filename expansion</strong></p>
+    <p>The '*' character matches any number of any character in filename patterns. By itself, it matches every filename in a given directory.</p>
+    <p>The following example lists all files whose name ends with a '.conf' in the /etc directory.</p>
+    <pre><code class="hljs language-jboss-cli"><span class="hljs-keyword">ls</span> <span class="hljs-string">/etc/</span>*<span class="hljs-string">.conf</span>
+</code></pre>
+    <p></p>
+    <p><strong>1.4 '?' - wildcard used in filename expansion</strong></p>
+    <p>The '?' character represents a single character in a filename pattern.</p>
+    <p>The following command lists all files whose name starts with any single character followed by 'grep'.</p>
+    <pre><code class="hljs language-gradle">ls <span class="hljs-regexp">/bin/</span>?<span class="hljs-keyword">grep</span>
+</code></pre>
+    <p></p>
+    <h1>Exercise 2 - Quoting</h1>
+    <p>If any special character has to be treated without their special meaning, we need to quote them.</p>
+    <p>The following examples show how quoting is done in shell.</p>
+    <p><strong>2.1 Quoting using backslash (\)</strong></p>
+    <p>Backslash removes the meaning of the special character that follows it.</p>
+    <pre><code class="hljs language-livescript">echo The symbol <span class="hljs-keyword">for</span> multiplicaton <span class="hljs-keyword">is</span> <span class="hljs-string">\*</span>
+</code></pre>
+    <p></p>
+    <p><strong>2.2 Quoting using single quote (')</strong></p>
+    <p>A pair of single quotes removes special meanings of all special characters within them (except another single quote).</p>
+    <pre><code class="hljs language-ada">echo <span class="hljs-symbol">'Following</span> are <span class="hljs-keyword">some</span> special characters <span class="hljs-keyword">in</span> shell - &#x3C; > ; <span class="hljs-string">" ( ) \ [ ]  '
+</span></code></pre>
+    <p></p>
+    <p><strong>2.3 Quoting using double quote (")</strong></p>
+    <p>A pair of double quotes removes special meanings of all special characters within them <em>except another double quote, variable substitution and command substitution.</em>.</p>
+    <p>Try out the examples below with double quotes as well as single quotes to see the difference between their usage.</p>
+    <pre><code class="hljs language-bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">"Current user name: <span class="hljs-variable">$USERNAME</span>"</span>
+</code></pre>
+    <p></p>
+    <pre><code class="hljs language-crmsh">echo 'Current <span class="hljs-keyword">user</span> <span class="hljs-title">name</span>: $USERNAME'
+</code></pre>
+    <p></p>
+    <h1>Exercise 3 - Working with variables</h1>
+    <p><strong>About Variables</strong></p>
+    <p>Variables help store data for the script. The data may be in the form of a number or a character string.</p>
+    <p>You may create, remove or display the variables.</p>
+    <p>Let us now see how they are used in the shell.</p>
+    <p><strong>3.1 List the variables already defined in the shell.</strong></p>
+    <pre><code class="hljs language-routeros"><span class="hljs-builtin-name">set</span>
+</code></pre>
+    <p></p>
+    <p>You should see a lot of variables in the output.</p>
+    <p><strong>3.2 Create new variables</strong></p>
+    <p>Use the syntax <strong>variable_name=value</strong>.</p>
+    <p>Create a new variable called 'balance' with a value of 10000. List all the variables again.</p>
+    <pre><code class="hljs language-ini"><span class="hljs-attr">balance</span>=<span class="hljs-number">10000</span>
+</code></pre>
+    <p></p>
+    <p>Run the set command to check if the variable <code>balance</code> has been created.</p>
+    <pre><code class="hljs language-routeros"><span class="hljs-builtin-name">set</span>
+</code></pre>
+    <p></p>
+    <p><strong>3.3 Create an environment variable</strong></p>
+    <p>Environment variables are just like any other variable. They differ in the fact that they are copied to any child process created from the shell.</p>
+    <p><strong>export</strong> command can be used to convert a regular variable to environment variable.</p>
+    <p>Make the variable ' balance' an environment variable.</p>
+    <pre><code class="hljs language-routeros"><span class="hljs-builtin-name">export</span> balance
+</code></pre>
+    <p></p>
+    <p><strong>3.4 List environment variables</strong></p>
+    <p>Use the following command to list all the environment variables.</p>
+    <pre><code class="hljs language-dockerfile"><span class="hljs-keyword">env</span>
+</code></pre>
+    <p></p>
+    <p>You should see a lot of variables in the output.</p>
+    <p><strong>3.5 Display the value of a variable</strong></p>
+    <p>To display or interpolate the value of a variable in a command, we use the feature of shell called <strong>variable substitution</strong>.</p>
+    <p>It is done by preceding the name of the variable with a <strong>$</strong> (dollar) symbol.<br></p>
+    <p>The command below prints the value of the variable $balance.</p>
+    <pre><code class="hljs language-bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">"Current account balance is <span class="hljs-variable">$balance</span>"</span>
+</code></pre>
+    <p></p>
+    <p><strong>3.6 Remove a variable</strong></p>
+    <p>To remove variables, use <strong>unset</strong> command.</p>
+    <p>Remove variable 'balance'.</p>
+    <pre><code class="hljs language-bash"><span class="hljs-built_in">unset</span> balance
+</code></pre>
+    <p></p>
+    <p>Run the set command to check if the variable <code>balance</code> has been removed.</p>
+    <pre><code class="hljs language-routeros"><span class="hljs-builtin-name">set</span>
+</code></pre>
+    <p></p>
+    <h1>Exercise 4 - Command substitution</h1>
+    <p>Command substitution is a feature of the shell, which helps save the output generated by a command in a variable.</p>
+    <p>It can also be used to nest multiple commands , so that the innermost command's output can be used by outer commands.<br>The inner command is enclosed in <strong>$()</strong> and will execute first.
+      <r></r>
+    </p>
+    <p>Let us try the following examples.</p>
+    <p>**4.1 Store the output of the command <code>hostname -i </code>in a variable named $myip</p>
+    <pre><code class="hljs language-reasonml">myip=<span class="hljs-constructor">$(<span class="hljs-params">hostname</span> -<span class="hljs-params">i</span>)</span>
+echo $myip
+</code></pre>
+    <p></p>
+    <p><strong>4.2 Print the following message on screen:</strong></p>
+    <p>"Running on host : <em>host_name</em>" ,</p>
+    <p>Where 'host_name' should be your current hostname.</p>
+    <pre><code class="hljs language-bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">"Running on host: <span class="hljs-subst">$(hostname)</span>"</span>
+</code></pre>
+    <p></p>
+    <p>Command substitution can be done using the backquote syntax also.</p>
+    <pre><code class="hljs language-stata"><span class="hljs-keyword">ls</span> -<span class="hljs-keyword">l</span> `<span class="hljs-keyword">which</span> <span class="hljs-keyword">cat</span>`
+</code></pre>
+    <p></p>
+    <p>
+      The output of command <code>which cat</code> is the path to the command <code>cat</code>. This path is sent to ls -l as an input.
+      You should see the permissions for the file <code>cat</code> in the output.
+    </p>
+    <h1>Exercise 5 - I/O Redirection</h1>
+    <p>Linux sends the output of a command to <strong>standard output (display)</strong> and any error generated is sent to <strong>standard error (display)</strong>.</p>
+    <p>Similarly, the input required by a command is received from <strong>standard input (keyboard)</strong>.</p>
+    <p>If we need to change these defaults, shell provides a feature called <strong>I/O Redirection</strong>.</p>
+    <p>This is achieved using the following special characters.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Symbol</th>
+          <th>Meaning</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>&#x3C;</td>
+          <td>Input Redirection</td>
+        </tr>
+        <tr>
+          <td>></td>
+          <td>Output Redirecton</td>
+        </tr>
+        <tr>
+          <td>>></td>
+          <td>Append Output</td>
+        </tr>
+        <tr>
+          <td>2></td>
+          <td>Error Redirection</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Let us try a few examples.</p>
+    <p><strong>5.1 Save the network configuration details into a file called <code>output.txt</code></strong></p>
+    <p>In this example, we will send the output of <code>ifconfig</code> command to the file instead of standard output(display).</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">ifconfig</span> > output.txt
+</code></pre>
+    <p></p>
+    <p>Check out the contents of output.txt</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">cat output</span>.txt
+</code></pre>
+    <p></p>
+    <p><strong>5.2 Save the output of <code>date</code> command into the file 'output.txt'</strong>.</p>
+    <pre><code class="hljs language-lua"><span class="hljs-built_in">date</span> > <span class="hljs-built_in">output</span>.txt
+</code></pre>
+    <p></p>
+    <p>Check out the contents of output.txt</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">cat output</span>.txt
+</code></pre>
+    <p></p>
+    <p>Did you notice, that previous contents of output.txt were overwritten?</p>
+    <p>When you redirect using <code>></code> the contents of the target file are overwritten.</p>
+    <p><strong>5.3 Append output to a file</strong></p>
+    <p>Now, we will try the following sequence, where we use '>>' instead of '>'.</p>
+    <p>Run the commands below.</p>
+    <pre><code class="hljs language-haxe">uname -a >> <span class="hljs-keyword">new</span><span class="hljs-type">output</span>.txt
+date >> <span class="hljs-keyword">new</span><span class="hljs-type">output</span>.txt
+</code></pre>
+    <p></p>
+    <p>Check out the contents of newoutput.txt</p>
+    <pre><code class="hljs language-haxe">cat <span class="hljs-keyword">new</span><span class="hljs-type">output</span>.txt
+</code></pre>
+    <p></p>
+    <p>You should see the output of <code>uname</code> and <code>date</code> commands appended to the file newoutput.txt</p>
+    <p><strong>5.4 Dipslay the contents of file 'newoutput.txt' in all uppercase.</strong></p>
+    <p>You can use the command <strong>tr</strong> for this translation.</p>
+    <p><strong>tr</strong> command does not accept file names as arguments. But it accepts standard input.</p>
+    <p>So, we will redirect the content of file 'newoutput.txt' to the input of tr command.</p>
+    <pre><code class="hljs language-haxe">tr <span class="hljs-string">"[a-z]"</span> <span class="hljs-string">"[A-Z]"</span> &#x3C; <span class="hljs-keyword">new</span><span class="hljs-type">output</span>.txt
+</code></pre>
+    <p></p>
+    <p>You should see all capital letters in the output.</p>
+    <h1>Exercise 6 - Pipes and Filters</h1>
+    <p><strong>Command pipeline</strong> is a feature of the shell, that helps us to combine different unrelated commands in such a way that one command's output is sent directly as input to the next command. This way, what is not possible with a single command can be made possible by connecting multiple commands.</p>
+    <p><strong>Only filter commands can be used in this manner</strong>.</p>
+    <p>A <strong>filter command</strong> is a command which can accept input from standard input and send output to standard output.</p>
+    <p>Let us see some examples using few filter commands which we have already discussed.</p>
+    <p><strong>6.1 Count the total number of files in your current directory.</strong></p>
+    <p>Since the <strong>ls</strong> command doesn't provide an option to get a count, let us get help from <strong>wc</strong> command.</p>
+    <p>By combining them using command pipeline syntax, we get the following command.</p>
+    <pre><code class="hljs language-1c">ls <span class="hljs-string">| wc -l </span>
+</code></pre>
+    <p></p>
+    <p><strong>6.2 Find the total disk space usage.</strong></p>
+    <p><strong>df -h</strong> command gives disk usage for all individual filesystems including the total usage across the server under the head <code>overlay</code>.</p>
+    <p>You can get the overall disk usage if you <code>grep</code> for overlay from the output of <code>df -h</code></p>
+    <pre><code class="hljs language-1c">df -h<span class="hljs-string">|grep overlay</span>
+</code></pre>
+    <p></p>
+    <p><strong>6.3 List five largest files.</strong></p>
+    <p>The -S option of <strong>ls</strong> command sorts the files from largest to smallest.</p>
+    <p>We will send this sorted list through a pipe to the <strong>head</strong> command.</p>
+    <pre><code class="hljs language-jboss-cli"><span class="hljs-keyword">ls</span> -lS <span class="hljs-string">/bin</span> | head -6
+</code></pre>
+    <p></p>
+    <p>You should see the list of five largest files from the /bin directory.</p>
+    <h1>Exercise 7 - Command line arguments</h1>
+    <p>Command line arguments are a very convenient way to pass inputs to a script.</p>
+    <p>Command line arguments can be accessed inside the script as $1, $2 and so on. $1 is the first arugment, $2 is the second argument.</p>
+    <p><strong>7.1 Create a simple bash script that handles two arguments.</strong></p>
+    <p>Save the below code as wish.sh</p>
+    <pre><code class="hljs language-bash"><span class="hljs-meta">#! /bin/bash</span>
+
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"Hi <span class="hljs-variable">$1</span> <span class="hljs-variable">$2</span>"</span>
+
+<span class="hljs-comment">#$1 is the first argument passed to the script</span>
+
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"<span class="hljs-variable">$1</span> is your firstname"</span>
+
+<span class="hljs-comment">#$2 is the second argument passed to the script</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"<span class="hljs-variable">$2</span> is your lastname"</span>
+</code></pre>
+    <p></p>
+    <p>Make the script executable to everyone.</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">chmod</span> +x wish.sh
+</code></pre>
+    <p></p>
+    <p>Run the script with the two arguments as shown below.</p>
+    <pre><code class="hljs language-jboss-cli"><span class="hljs-string">./wish.sh</span> Ramesh Sannareddy
+</code></pre>
+    <p></p>
+    <p>You should see the below output.</p>
+    <p>Hi Ramesh Sannareddy</p>
+    <p>Ramesh is your firstname</p>
+    <p>Sannareddy is your lastname</p>
+    <p><strong>7.2 Find the total disk space usage.</strong></p>
+    <p>Let us create a bash script named <code>dirinfo.sh</code> that takes the directory name as an argument and prints the total number of the the directories and the number of files in it.</p>
+    <p>We will make use of the find command with -type option which will list only files or directories depending upon the usage of <code>d</code> switch or <code>f</code> switch respectively.</p>
+    <p>The command <code>wc -l</code> will count the lines.</p>
+    <p>Save the below code as dirinfo.sh</p>
+    <pre><code class="hljs language-bash"><span class="hljs-meta">#! /bin/bash</span>
+
+dircount=$(find <span class="hljs-variable">$1</span> -<span class="hljs-built_in">type</span> d|wc -l)
+
+filecount=$(find <span class="hljs-variable">$1</span> -<span class="hljs-built_in">type</span> f|wc -l)
+
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"There are <span class="hljs-variable">$dircount</span> directories in the directory <span class="hljs-variable">$1</span>"</span>
+
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"There are <span class="hljs-variable">$filecount</span> files in the directory <span class="hljs-variable">$1</span>"</span>
+
+</code></pre>
+    <p></p>
+    <p>Make the script executable to everyone.</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">chmod</span> +x dirinfo.sh
+</code></pre>
+    <p></p>
+    <p>Run the script with the one argument as shown below.</p>
+    <pre><code class="hljs language-awk">.<span class="hljs-regexp">/dirinfo.sh /</span>tmp
+</code></pre>
+    <p></p>
+    <p>In the output you should see number of files and directories in the directory /tmp.</p>
+    <h1>Practice exercises</h1>
+    <ol>
+      <li>Problem.</li>
+    </ol>
+    <blockquote>
+      <p><em>Create a variable called 'color' and store the string 'light green' in it.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Use <em>variablename=value</em> syntax.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-ini"><span class="hljs-attr">color</span>=<span class="hljs-string">'light green'</span>
+</code></pre>
+      <p></p>
+      <p>The value should be in quotes since it has a space character in it.</p>
+    </details>
+    <ol start="2">
+      <li>Problem.</li>
+    </ol>
+    <blockquote>
+      <p><em>Display the list of all the files whose name starts with 'b' and ends with '.log' in the directory /var/log.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Use the wildcard character '*' to create the file name pattern.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-stata"><span class="hljs-keyword">ls</span> /<span class="hljs-keyword">var</span>/<span class="hljs-keyword">log</span>/b*.<span class="hljs-keyword">log</span>
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="3">
+      <li>Problem.</li>
+    </ol>
+    <blockquote>
+      <p><em>Display the count of all files whose name starts with 'c' in the /bin directory.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Use the ls and wc commands in a command pipeline.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-awk">ls <span class="hljs-regexp">/bin/</span>c* | wc -l
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="4">
+      <li>Problem.</li>
+    </ol>
+    <blockquote>
+      <p><em>Display the value of variable 'color'.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Use echo command and variable substitution.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-bash"><span class="hljs-built_in">echo</span> <span class="hljs-variable">$color</span>
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="5">
+      <li>Problem.</li>
+    </ol>
+    <blockquote>
+      <p><em>Store the value of the variable 'color' in a file 'color.txt'</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Use the echo command and output redirection syntax.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-dos"><span class="hljs-built_in">echo</span> $<span class="hljs-built_in">color</span> > <span class="hljs-built_in">color</span>.txt
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="6">
+      <li>Problem.</li>
+    </ol>
+    <blockquote>
+      <p><em>Write a shell script named <code>latest_warnings.sh</code> that prints the latest 5 warnings from the /var/log/bootstrap.log file.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Use the grep command to search for the pattern <code>warning</code> in the file /var/log/bootstrap.log.</p>
+      </blockquote>
+      <p>Use the tail command and print the last 5 warnings only.</p>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-bash"><span class="hljs-meta">#! /bin/bash</span>
+grep warning /var/<span class="hljs-built_in">log</span>/bootstrap.log|tail -5
+</code></pre>
+      <p></p>
+    </details>
+    <h2>Authors</h2>
+    <p>Ramesh Sannareddy</p>
+    <h3>Other Contributors</h3>
+    <p>Rav Ahuja</p>
+    <h2>Change Log</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date (YYYY-MM-DD)</th>
+          <th>Version</th>
+          <th>Changed By</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-05-30</td>
+          <td>0.1</td>
+          <td>Ramesh Sannareddy</td>
+          <td>Created initial version of the lab</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Copyright (c) 2021 IBM Corporation. All rights reserved.</p>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>
