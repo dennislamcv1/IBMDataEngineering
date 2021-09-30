@@ -1,0 +1,40 @@
+
+sudo sed -i 's/\"6\"/\"7\"/' /usr/local/bin/start_airflow
+
+start_airflow
+
+airflow password: MjYzNTctdTdteGhp
+
+cp my_first_dag.py $AIRFLOW_HOME/dags
+
+airflow dags list
+
+airflow tasks list my-first-dag
+
+
+
+
+
+
+
+
+
+https://mirrors.estointernet.in/apache/kafka/2.8.1/kafka_2.12-2.8.1.tgz
+
+wget https://mirrors.estointernet.in/apache/kafka/2.8.1/kafka_2.12-2.8.1.tgz
+
+tar -xzf kafka_2.12-2.8.1.tgz
+
+cd kafka_2.12-2.8.1
+
+bin/zookeeper-server-start.sh config/zookeeper.properties
+
+bin/kafka-server-start.sh config/server.properties
+
+bin/kafka-topics.sh --create --topic toll --bootstrap-server localhost:9092
+
+wget https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0250EN-SkillsNetwork/labs/Final%20Assignment/toll_traffic_generator.py
+
+rm kafka_2.12-2.8.1.tgz
+
+mysql --host=127.0.0.1 --port=3306 --user=root --password=Mzk4NS1nd3Z2dXpt

@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <h1>Hands-on Lab: Working with streaming data using Kafka</h1>
+    <center>
+      <img src="https://gitlab.com/ibm/skills-network/courses/placeholder101/-/raw/master/labs/module%201/images/IDSNlogo.png" width="300" alt="cognitiveclass.ai logo">
+    </center>
+    <h1>Hands-on Lab: Kafka</h1>
+    <p>Estimated time needed: <strong>20</strong> minutes</p>
+    <h2>Objectives</h2>
+    <p>After completing this lab you will be able to:</p>
+    <ul>
+      <li>Download and install Kafka.</li>
+      <li>Start zookeeper.</li>
+      <li>Start the Kafka message broker service.</li>
+      <li>Create a topic.</li>
+      <li>Start a producer.</li>
+      <li>Start a consumer.</li>
+    </ul>
+    <h1>About Skills Network Cloud IDE</h1>
+    <p>Skills Network Cloud IDE (based on Theia and Docker) provides an environment for hands on labs for course and project related labs. Theia is an open source IDE (Integrated Development Environment), that can be run on desktop or on the cloud. to complete this lab, we will be using the Cloud IDE based on Theia running in a Docker container.</p>
+    <h2>Important Notice about this lab environment</h2>
+    <p>Please be aware that sessions for this lab environment are not persistent. A new environment is created for you every time you connect to this lab. Any data you may have saved in an earlier session will get lost. To avoid losing your data, please plan to complete these labs in a single session.</p>
+    <h1>Exercise 1 - Download and extract Kafka</h1>
+    <p>Open a new terminal, by clicking on the menu bar and selecting <strong>Terminal</strong>-><strong>New Terminal</strong>, as shown in the image below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0250EN-SkillsNetwork/labs/Streaming/images/new-terminal.png" alt="Screenshot highlighting New Terminal in menu">
+    </p>
+    <p>This will open a new terminal at the bottom of the screen.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0250EN-SkillsNetwork/labs/Streaming/images/terminal_bottom_screen.png" alt="Screenshot highlighting new terminal at bottom of screen">
+    </p>
+    <p>Run the commands below on the newly opened terminal. (You can copy the code by clicking on the little copy button on the bottom right of the codeblock below and then paste it, wherever you wish.)</p>
+    <p>Download Kafka, by running the command below:</p>
+    <pre><code class="hljs language-apache"><span class="hljs-attribute">wget</span> https://mirrors.estointernet.in/apache/kafka/<span class="hljs-number">2</span>.<span class="hljs-number">8</span>.<span class="hljs-number">0</span>/kafka_<span class="hljs-number">2</span>.<span class="hljs-number">12</span>-<span class="hljs-number">2</span>.<span class="hljs-number">8</span>.<span class="hljs-number">0</span>.tgz
+</code></pre>
+    <p>Extract kafka from the zip file by running the command below.</p>
+    <pre><code class="hljs language-apache"><span class="hljs-attribute">tar</span> -xzf kafka_<span class="hljs-number">2</span>.<span class="hljs-number">12</span>-<span class="hljs-number">2</span>.<span class="hljs-number">8</span>.<span class="hljs-number">0</span>.tgz
+</code></pre>
+    <p>This creates a new directory 'kafka_2.12-2.8.0' in the current directory.</p>
+    <h1>Exercise 2 - start ZooKeeper</h1>
+    <p>ZooKeeper is required for Kafka to work. Start the ZooKeeper server.</p>
+    <pre><code class="hljs language-apache"><span class="hljs-attribute">cd</span> kafka_<span class="hljs-number">2</span>.<span class="hljs-number">12</span>-<span class="hljs-number">2</span>.<span class="hljs-number">8</span>.<span class="hljs-number">0</span>
+<span class="hljs-attribute">bin</span>/zookeeper-server-start.sh config/zookeeper.properties
+</code></pre>
+    <p>When ZooKeeper starts you should see an output like this:</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0250EN-SkillsNetwork/labs/Streaming/images/zookeeper1.png" alt="Screenshot of output">
+    </p>
+    <p>You can sure it has started when you see an output like this:</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0250EN-SkillsNetwork/labs/Streaming/images/zookeeper2.png" alt="Screenshot of output">
+    </p>
+    <p>ZooKeeper, as of this version, is required for Kafka to work. ZooKeeper is responsibile for the overall management of Kafka cluster. It monitors the Kafka brokers and notifies Kafka if any broker or partition goes down, or if a new broker or partition goes up.</p>
+    <h1>Exercise 3 - Start the Kafka broker service</h1>
+    <p>Start a new terminal.<br>Run the commands below. This will start the Kafka message broker service.</p>
+    <pre><code class="hljs language-apache"><span class="hljs-attribute">cd</span> kafka_<span class="hljs-number">2</span>.<span class="hljs-number">12</span>-<span class="hljs-number">2</span>.<span class="hljs-number">8</span>.<span class="hljs-number">0</span>
+<span class="hljs-attribute">bin</span>/kafka-server-start.sh config/server.properties
+</code></pre>
+    <p>When Kafka starts, you should see an output like this:</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0250EN-SkillsNetwork/labs/Streaming/images/kafka1.png" alt="">
+    </p>
+    <p>You can be sure it has started when you see an output like this:</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0250EN-SkillsNetwork/labs/Streaming/images/kafka2.png" alt="">
+    </p>
+    <h1>Exercise 4 - Create a topic</h1>
+    <p>You need to create a topic before you can start to post messages.</p>
+    <p>To create a topic named <code>news</code>, start a new terminal and run the command below.</p>
+    <pre><code class="hljs language-apache"><span class="hljs-attribute">cd</span> kafka_<span class="hljs-number">2</span>.<span class="hljs-number">12</span>-<span class="hljs-number">2</span>.<span class="hljs-number">8</span>.<span class="hljs-number">0</span>
+<span class="hljs-attribute">bin</span>/kafka-topics.sh --create --topic news --bootstrap-server localhost:<span class="hljs-number">9092</span>
+</code></pre>
+    <p>You will see the message: 'Created topic news.'</p>
+    <h1>Exercise 5 - Start Producer</h1>
+    <p>You need a producer to send messages to Kafka. Run the command below to start a producer.</p>
+    <pre><code class="hljs language-stata">bin/kafka-console-producer.<span class="hljs-keyword">sh</span> --topic <span class="hljs-keyword">news</span> --<span class="hljs-keyword">bootstrap</span>-server localhost:9092
+</code></pre>
+    <p>Once the producer starts, and you get the '>' prompt, type any text message and press enter. Or you can copy the text below and paste. The below text sends three messages to kafka.</p>
+    <pre><code class="hljs language-applescript">Good morning
+Good <span class="hljs-built_in">day</span>
+Enjoy <span class="hljs-keyword">the</span> Kafka lab
+</code></pre>
+    <h1>Exercise 6 - Start Consumer</h1>
+    <p>You need a consumer to read messages from kafka.</p>
+    <p>Open a new terminal.</p>
+    <p>Run the command below to listen to the messages in the topic <code>news</code>.</p>
+    <pre><code class="hljs language-apache"><span class="hljs-attribute">cd</span> kafka_<span class="hljs-number">2</span>.<span class="hljs-number">12</span>-<span class="hljs-number">2</span>.<span class="hljs-number">8</span>.<span class="hljs-number">0</span>
+<span class="hljs-attribute">bin</span>/kafka-console-consumer.sh --topic news --from-beginning --bootstrap-server localhost:<span class="hljs-number">9092</span>
+</code></pre>
+    <p>You should see all the messages you sent from the producer appear here.</p>
+    <p>You can go back to the producer terminal and type some more messages, one message per line, and you will see them appear here.</p>
+    <h1>Exercise 7 - Explore Kafka directories.</h1>
+    <p>Kafka uses the directory /tmp/kakfa-logs to store the messages.</p>
+    <p>Explore the folder news-0 inside /tmp/kakfa-logs.</p>
+    <p>This is where all the messages are stored.</p>
+    <p>Explore the folder /home/project/kafka_2.12-2.8.0</p>
+    <p>This folder has the below 3 sub directories.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Directory</th>
+          <th>Contents</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>bin</td>
+          <td>shell scripts to control kafka and zookeeper</td>
+        </tr>
+        <tr>
+          <td>config</td>
+          <td>configuration files</td>
+        </tr>
+        <tr>
+          <td>logs</td>
+          <td>log files forkafka and zookeeper</td>
+        </tr>
+      </tbody>
+    </table>
+    <h1>Exercise 8 - Clean up</h1>
+    <p>Delete the kafka installation file.</p>
+    <pre><code class="hljs language-apache"><span class="hljs-attribute">rm</span> kafka_<span class="hljs-number">2</span>.<span class="hljs-number">12</span>-<span class="hljs-number">2</span>.<span class="hljs-number">8</span>.<span class="hljs-number">0</span>.tgz
+</code></pre>
+    <h1>Practice exercises</h1>
+    <ol>
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Create a new topic named <code>weather</code>.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Use <code>kafka-topics.sh</code> command with the <code>create</code> option.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <p>Make sure that you are in the 'kafka_2.12-2.8.0' directory. Run the following command:</p>
+      <pre><code class="hljs language-brainfuck"><span class="hljs-comment">bin/kafka</span><span class="hljs-literal">-</span><span class="hljs-comment">topics</span><span class="hljs-string">.</span><span class="hljs-comment">sh</span> --<span class="hljs-comment">create</span> --<span class="hljs-comment">topic</span> <span class="hljs-comment">weather</span> --<span class="hljs-comment">bootstrap</span><span class="hljs-literal">-</span><span class="hljs-comment">server</span> <span class="hljs-comment">localhost:9092</span>
+</code></pre>
+    </details>
+    <ol start="2">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Post messages to the topic <code>weather</code>.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Use <code>kafka-console-producer.sh</code> and point to topic <code>weather</code>.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <p>Make sure that you are in the 'kafka_2.12-2.8.0' directory. Run the following command:</p>
+      <pre><code class="hljs language-brainfuck"><span class="hljs-comment">bin/kafka</span><span class="hljs-literal">-</span><span class="hljs-comment">console</span><span class="hljs-literal">-</span><span class="hljs-comment">producer</span><span class="hljs-string">.</span><span class="hljs-comment">sh</span> --<span class="hljs-comment">topic</span> <span class="hljs-comment">weather</span> --<span class="hljs-comment">bootstrap</span><span class="hljs-literal">-</span><span class="hljs-comment">server</span> <span class="hljs-comment">localhost:9092</span>
+
+</code></pre>
+      <p>Post some test messages.</p>
+    </details>
+    <ol start="3">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Read the messages from the topic <code>weather</code>.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Use <code>kafka-console-consumer.sh</code> and read from the topic 'weather'</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-brainfuck"><span class="hljs-comment">bin/kafka</span><span class="hljs-literal">-</span><span class="hljs-comment">console</span><span class="hljs-literal">-</span><span class="hljs-comment">consumer</span><span class="hljs-string">.</span><span class="hljs-comment">sh</span> --<span class="hljs-comment">topic</span> <span class="hljs-comment">weather</span> --<span class="hljs-comment">from</span><span class="hljs-literal">-</span><span class="hljs-comment">beginning</span> --<span class="hljs-comment">bootstrap</span><span class="hljs-literal">-</span><span class="hljs-comment">server</span> <span class="hljs-comment">localhost:9092</span>
+</code></pre>
+      <p>Make sure that the messages you sent from the producer appear here.</p>
+    </details>
+    <h2>Authors</h2>
+    <p>Ramesh Sannareddy</p>
+    <h3>Other Contributors</h3>
+    <p>Rav Ahuja</p>
+    <h2>Change Log</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date (YYYY-MM-DD)</th>
+          <th>Version</th>
+          <th>Changed By</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-08-24</td>
+          <td>0.2</td>
+          <td>Ramesh Sannareddy</td>
+          <td>Incorporated feedback from Yan</td>
+        </tr>
+        <tr>
+          <td>2021-06-22</td>
+          <td>0.1</td>
+          <td>Ramesh Sannareddy</td>
+          <td>Created initial version of the lab</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Copyright (c) 2021 IBM Corporation. All rights reserved.</p>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

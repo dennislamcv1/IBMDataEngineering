@@ -1,0 +1,180 @@
+
+<!doctype html>
+<html>
+<head>
+<style>
+.abc {float:left;
+  background-color:yellow;
+  border-radius:5px;
+  margin:5px;
+  padding:5px;
+}
+.xyz {
+  width:200px;
+  height:200px;
+  border-radius:25px;
+  padding: 50px;
+  margin: 0 auto;
+}
+
+.main{
+  border-radius:20px;
+  border:2px solid black;
+  font-family: 'Helvetica Neue', Helvetica, Arial;
+  margin: 0 auto;
+  width:90%;
+}
+
+
+  
+table tr td {text-align: center;padding:0;}
+</style>
+</head>
+<body onload="populate()">
+  <div class="main">
+    <center>
+    <img src="https://gitlab.com/ibm/skills-network/courses/placeholder101/-/raw/master/labs/module%201/images/IDSNlogo.png" width="300" alt="cognitiveclass.ai logo"  />
+</center>
+
+  <h1 style="color:grey;text-align:center">Can you differentiate between ETL and ELT?</h1>
+<table border=0 align=center width=100%>
+  <tr>
+      <td colspan="2">Drag and drop the below terms into the correct bins</td>
+  </tr>
+  <tr>
+      <td colspan="2" align=center"><span id="options" align="center"></span></td>
+  </tr>
+
+  <tr>
+    <table border=0 align=center>
+      <tr>
+      <td>
+        <div id="category1"></div>
+        <div id="category1values" ondrop="drop(event)" ondragover="allowDrop(event)"
+  style="background-color:tan" class="xyz"></div>
+    <td align=center>
+      <button onclick="getscore()"><h3>Check your score</h3></button>
+      <h3>Score <output id="score">0</output></h3>
+      <button onclick="location.reload()"><h3>Start Over</h3></button>
+      
+      
+    </td>
+    <td>
+      <div id="category2"></div>
+      <div id="category2values" ondrop="drop(event)" ondragover="allowDrop(event)"
+  style="background-color:grey"  class="xyz"></div>
+  </td> 
+  <tr>
+    <tr>
+      <td colspan=3 align=center>Copyright (c) 2021 IBM Corporation. All rights reserved.
+</td>
+  </tr>
+  </table>
+  </tr>
+  
+</table>
+</div>
+
+
+<script>
+//---------------------------------------------------------------------------
+input={category1:"ETL",category2:"ELT",
+category1values:["Source and destination databases are different",
+"Data size is small",
+"Complex data transformations",
+"Structured Data"],
+category2values:["Source and destination databases are same",
+"Data size is huge",
+"Simple data transformations",
+"Unstructured Data"]
+}
+//---------------------------------------------------------------------------
+result={category1values:[],category2values:[]}
+
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
+
+
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+
+function drag(ev) {
+  ev.dataTransfer.setData("text", ev.target.id);
+  //console.log(ev.target.id);
+}
+
+function drop(ev) {
+  ev.preventDefault();
+  var data = ev.dataTransfer.getData("text");
+  ev.target.appendChild(document.getElementById(data));
+  //var score =parseInt(document.getElementById("score").value);
+  //console.log(data);
+  console.log(ev.target.id);
+  result[ev.target.id].push(data);
+}
+function populate(){
+  document.getElementById("category1").innerHTML="<strong>" + input.category1 + "</strong>";
+  document.getElementById("category2").innerHTML="<strong>" + input.category2 + "</strong>";
+  var j = document.getElementById("options");
+  var x = input.category1values;
+  var y = input.category2values;
+  var bin = shuffle(x.concat(y));
+  for(var i=0;i<bin.length;i++){
+    var ele= '<button draggable="true" ondragstart="drag(event)" class="abc"';
+    ele+=' id="';
+    ele+=bin[i];
+    ele+='">';
+    ele+=bin[i] + '</button>';
+    j.innerHTML+=ele;
+  }
+
+}
+function contains(myarray,ele){
+  if (myarray.indexOf(ele) > -1){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
+function getscore(){
+  var score=0;
+  var y = input.category1values;
+  var x = result.category1values;
+  for(var i=0;i<y.length;i++){
+    if (contains(x,y[i])){
+      score+=1;
+    }
+  }
+  y = input.category2values;
+  x = result.category2values;
+  for(var i=0;i<y.length;i++){
+    if (contains(x,y[i])){
+      score+=1;
+    }
+  }
+  score = (score /8) * 100;
+  document.getElementById("score").value=score + " %";
+}
+
+</script>
+</body>
+
+</html>

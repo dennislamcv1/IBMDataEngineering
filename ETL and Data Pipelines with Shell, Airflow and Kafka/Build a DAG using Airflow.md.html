@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <center>
+      <img src="https://gitlab.com/ibm/skills-network/courses/placeholder101/-/raw/master/labs/module%201/images/IDSNlogo.png" width="300" alt="cognitiveclass.ai logo">
+    </center>
+    <h1>Hands-on Lab: Create a DAG for Apache Airflow</h1>
+    <p>Estimated time needed: <strong>40</strong> minutes</p>
+    <h2>Objectives</h2>
+    <p>After completing this lab you will be able to:</p>
+    <ul>
+      <li>Explore the anatomy of a DAG.</li>
+      <li>Create a DAG.</li>
+      <li>Submit a DAG.</li>
+    </ul>
+    <h1>About Skills Network Cloud IDE</h1>
+    <p>Skills Network Cloud IDE (based on Theia and Docker) provides an environment for hands on labs for course and project related labs. Theia is an open source IDE (Integrated Development Environment), that can be run on desktop or on the cloud. to complete this lab, we will be using the Cloud IDE based on Theia running in a Docker container.</p>
+    <h2>Important Notice about this lab environment</h2>
+    <p>Please be aware that sessions for this lab environment are not persistent. A new environment is created for you every time you connect to this lab. Any data you may have saved in an earlier session will get lost. To avoid losing your data, please plan to complete these labs in a single session.</p>
+    <h1>Exercise 1 - Start Apache Airflow</h1>
+    <p>Open a new terminal by clicking on the menu bar and selecting <strong>Terminal</strong>-><strong>New Terminal</strong>, as shown in the image below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0250EN-SkillsNetwork/labs/Apache%20Airflow/Build%20a%20DAG%20using%20Airflow/images/new-terminal.png" alt="Screenshot highlighting New Terminal in dropdown menu">
+    </p>
+    <p>This will open a new terminal at the bottom of the screen as in the image below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0250EN-SkillsNetwork/labs/Apache%20Airflow/Build%20a%20DAG%20using%20Airflow/images/terminal_bottom_screen.png" alt="Screenshot highlighting the new terminal at the bottom of the screen">
+    </p>
+    <p>Run the commands below on the newly opened terminal. (You can copy the code by clicking on the little copy button on the bottom right of the codeblock and then paste it wherever you wish.)</p>
+    <p>Start Apache Airflow in the lab environment.</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">start_airflow</span>
+</code></pre>
+    <p></p>
+    <p>Please be patient, it will take a few minutes for airflow to get started.</p>
+    <p>When airflow starts successfully, you should see an output similar to the one below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0250EN-SkillsNetwork/labs/Apache%20Airflow/Build%20a%20DAG%20using%20Airflow/images/start_airflow.png" alt="Screenshot highlighting UI URL, Username, and Password">
+    </p>
+    <h1>Exercise 2 - Open the Airflow Web UI</h1>
+    <p>Copy the Web-UI URL and paste it on a new browser tab. Or your can click on the URL by holding the control key (Command key in case of a Mac).</p>
+    <p>You should land at a page that looks like this.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0250EN-SkillsNetwork/labs/Apache%20Airflow/Build%20a%20DAG%20using%20Airflow/images/airflow_webui.png" alt="Screenshot of Skills Network Airflow">
+    </p>
+    <h1>Exercise 3 - Explore the anatomy of a DAG</h1>
+    <p>An Apache Airflow DAG is a python program. It consists of these logical blocks.</p>
+    <ul>
+      <li>Imports</li>
+      <li>DAG Arguments</li>
+      <li>DAG Definition</li>
+      <li>Task Definitions</li>
+      <li>Task Pipeline</li>
+    </ul>
+    <p>A typical <code>imports</code> block looks like this.</p>
+    <pre><code class="hljs language-capnproto"><span class="hljs-comment"># import the libraries</span>
+
+<span class="hljs-keyword">from</span> datetime <span class="hljs-keyword">import</span> timedelta
+<span class="hljs-comment"># The DAG object; we'll need this to instantiate a DAG</span>
+<span class="hljs-keyword">from</span> airflow <span class="hljs-keyword">import</span> DAG
+<span class="hljs-comment"># Operators; we need this to write tasks!</span>
+<span class="hljs-keyword">from</span> airflow.operators.bash_operator <span class="hljs-keyword">import</span> BashOperator
+<span class="hljs-comment"># This makes scheduling easy</span>
+<span class="hljs-keyword">from</span> airflow.utils.dates <span class="hljs-keyword">import</span> days_ago
+</code></pre>
+    <p></p>
+    <p>A typical <code>DAG Arguments</code> block looks like this.</p>
+    <pre><code class="hljs language-scheme">#defining DAG arguments
+
+# You can override them on a per-task basis during operator initialization
+default_args = {
+    <span class="hljs-symbol">'owner</span><span class="hljs-symbol">':</span> <span class="hljs-symbol">'Ramesh</span> Sannareddy',
+    <span class="hljs-symbol">'start_date</span><span class="hljs-symbol">':</span> days_ago(<span class="hljs-name">0</span>),
+    <span class="hljs-symbol">'email</span><span class="hljs-symbol">':</span> [<span class="hljs-symbol">'ramesh@somemail.com</span>'],
+    <span class="hljs-symbol">'email_on_failure</span><span class="hljs-symbol">':</span> True,
+    <span class="hljs-symbol">'email_on_retry</span><span class="hljs-symbol">':</span> True,
+    <span class="hljs-symbol">'retries</span><span class="hljs-symbol">':</span> <span class="hljs-number">1</span>,
+    <span class="hljs-symbol">'retry_delay</span><span class="hljs-symbol">':</span> timedelta(<span class="hljs-name">minutes=5</span>),
+}
+</code></pre>
+    <p></p>
+    <p>DAG arguments are like settings for the DAG.</p>
+    <p>The above settings mention</p>
+    <ul>
+      <li>the owner name,</li>
+      <li>when this DAG should run from: days_age(0) means today,</li>
+      <li>the email address where the alerts are sent to,</li>
+      <li>whether alert must be sent on failure,</li>
+      <li>whether alert must be sent on retry,</li>
+      <li>the number of retries in case of failure, and</li>
+      <li>the time delay between retries.</li>
+    </ul>
+    <p>A typical <code>DAG definition</code> block looks like this.</p>
+    <pre><code class="hljs language-ini"><span class="hljs-comment"># define the DAG</span>
+<span class="hljs-attr">dag</span> = DAG(
+    <span class="hljs-attr">dag_id</span>=<span class="hljs-string">'sample-etl-dag'</span>,
+    <span class="hljs-attr">default_args</span>=default_args,
+    <span class="hljs-attr">description</span>=<span class="hljs-string">'Sample ETL DAG using Bash'</span>,
+    <span class="hljs-attr">schedule_interval</span>=timedelta(days=<span class="hljs-number">1</span>),
+)
+</code></pre>
+    <p></p>
+    <p>Here we are creating a variable named dag by instantiating the DAG class with the following parameters.</p>
+    <p><code>sample-etl-dag</code> is the ID of the DAG. This is what you see on the web console.</p>
+    <p>We are passing the dictionary <code>default_args</code>, in which all the defaults are defined.</p>
+    <p><code>description</code> helps us in understanding what this DAG does.</p>
+    <p><code>schedule_interval</code> tells us how frequently this DAG runs. In this case every day. (<code>days=1</code>).</p>
+    <p>A typical <code>task definitions</code> block looks like this:</p>
+    <pre><code class="hljs language-ini"><span class="hljs-comment"># define the tasks</span>
+
+<span class="hljs-comment"># define the first task named extract</span>
+<span class="hljs-attr">extract</span> = BashOperator(
+    <span class="hljs-attr">task_id</span>=<span class="hljs-string">'extract'</span>,
+    <span class="hljs-attr">bash_command</span>=<span class="hljs-string">'echo "extract"'</span>,
+    <span class="hljs-attr">dag</span>=dag,
+)
+
+
+<span class="hljs-comment"># define the second task named transform</span>
+<span class="hljs-attr">transform</span> = BashOperator(
+    <span class="hljs-attr">task_id</span>=<span class="hljs-string">'transform'</span>,
+    <span class="hljs-attr">bash_command</span>=<span class="hljs-string">'echo "transform"'</span>,
+    <span class="hljs-attr">dag</span>=dag,
+)
+
+<span class="hljs-comment"># define the third task named load</span>
+
+<span class="hljs-attr">load</span> = BashOperator(
+    <span class="hljs-attr">task_id</span>=<span class="hljs-string">'load'</span>,
+    <span class="hljs-attr">bash_command</span>=<span class="hljs-string">'echo "load"'</span>,
+    <span class="hljs-attr">dag</span>=dag,
+)
+</code></pre>
+    <p></p>
+    <p>A task is defined using:</p>
+    <ul>
+      <li>A task_id which is a string and helps in identifying the task.</li>
+      <li>What bash command it represents.</li>
+      <li>Which dag this task belongs to.</li>
+    </ul>
+    <p>A typical <code>task pipeline</code> block looks like this:</p>
+    <pre><code class="hljs language-gauss"><span class="hljs-meta"># task pipeline</span>
+extract >> transform >> <span class="hljs-keyword">load</span>
+</code></pre>
+    <p></p>
+    <p>Task pipeline helps us to organize the order of tasks.</p>
+    <p>Here the task <code>extract</code> must run first, followed by <code>transform</code>, followed by the task <code>load</code>.</p>
+    <h1>Exercise 4 - Create a DAG</h1>
+    <p>Let us create a DAG that runs daily, and extracts user information from <em>/etc/passwd</em> file, transforms it, and loads it into a file.</p>
+    <p>This DAG has two tasks <code>extract</code> that extracts fields from <em>/etc/passwd</em> file and <code>transform_and_load</code> that transforms and loads data into a file.</p>
+    <pre><code class="hljs language-routeros"><span class="hljs-comment"># import the libraries</span>
+
+<span class="hljs-keyword">from</span> datetime import timedelta
+<span class="hljs-comment"># The DAG object; we'll need this to instantiate a DAG</span>
+<span class="hljs-keyword">from</span> airflow import DAG
+<span class="hljs-comment"># Operators; we need this to write tasks!</span>
+<span class="hljs-keyword">from</span> airflow.operators.bash_operator import BashOperator
+<span class="hljs-comment"># This makes scheduling easy</span>
+<span class="hljs-keyword">from</span> airflow.utils.dates import days_ago
+
+<span class="hljs-comment">#defining DAG arguments</span>
+
+<span class="hljs-comment"># You can override them on a per-task basis during operator initialization</span>
+default_args = {
+    <span class="hljs-string">'owner'</span>: <span class="hljs-string">'Ramesh Sannareddy'</span>,
+    <span class="hljs-string">'start_date'</span>: days_ago(0),
+    <span class="hljs-string">'email'</span>: [<span class="hljs-string">'ramesh@somemail.com'</span>],
+    <span class="hljs-string">'email_on_failure'</span>: <span class="hljs-literal">False</span>,
+    <span class="hljs-string">'email_on_retry'</span>: <span class="hljs-literal">False</span>,
+    <span class="hljs-string">'retries'</span>: 1,
+    <span class="hljs-string">'retry_delay'</span>: timedelta(<span class="hljs-attribute">minutes</span>=5),
+}
+
+<span class="hljs-comment"># defining the DAG</span>
+
+<span class="hljs-comment"># define the DAG</span>
+dag = DAG(
+    <span class="hljs-string">'my-first-dag'</span>,
+    <span class="hljs-attribute">default_args</span>=default_args,
+    <span class="hljs-attribute">description</span>=<span class="hljs-string">'My first DAG'</span>,
+    <span class="hljs-attribute">schedule_interval</span>=timedelta(days=1),
+)
+
+<span class="hljs-comment"># define the tasks</span>
+
+<span class="hljs-comment"># define the first task</span>
+
+extract = BashOperator(
+    <span class="hljs-attribute">task_id</span>=<span class="hljs-string">'extract'</span>,
+    <span class="hljs-attribute">bash_command</span>=<span class="hljs-string">'cut -d":" -f1,3,6 /etc/passwd > extracted-data.txt'</span>,
+    <span class="hljs-attribute">dag</span>=dag,
+)
+
+
+<span class="hljs-comment"># define the second task</span>
+transform_and_load = BashOperator(
+    <span class="hljs-attribute">task_id</span>=<span class="hljs-string">'transform'</span>,
+    <span class="hljs-attribute">bash_command</span>=<span class="hljs-string">'tr ":" "," &#x3C; extracted-data.txt > transformed-data.csv'</span>,
+    <span class="hljs-attribute">dag</span>=dag,
+)
+
+
+<span class="hljs-comment"># task pipeline</span>
+extract >> transform_and_load
+</code></pre>
+    <p></p>
+    <p>Copy the code above and save it into a file named <code>my_first_dag.py</code></p>
+    <h1>Exercise 5 - Submit a DAG</h1>
+    <p>Submitting a DAG is as simple as copying the DAG python file into <code>dags</code> folder in the <code>AIRFLOW_HOME</code> directory.</p>
+    <p>Open a terminal and run the command below to submit the DAG that was created in the previous exercise.</p>
+    <pre><code class="hljs language-powershell"><span class="hljs-built_in">cp</span> my_first_dag.py <span class="hljs-variable">$AIRFLOW_HOME</span>/dags
+</code></pre>
+    <p></p>
+    <p>Verify that our DAG actually got submitted.</p>
+    <p>Run the command below to list out all the existing DAGs.</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">airflow dags list</span>
+</code></pre>
+    <p></p>
+    <p>Verify that <code>my-first-dag</code> is a part of the output.</p>
+    <pre><code class="hljs language-1c">airflow dags list<span class="hljs-string">|grep "</span>my-first-dag<span class="hljs-string">"</span>
+</code></pre>
+    <p></p>
+    <p>You should see your DAG name in the output.</p>
+    <p>Run the command below to list out all the tasks in <code>my-first-dag</code>.</p>
+    <pre><code class="hljs language-applescript">airflow tasks <span class="hljs-built_in">list</span> <span class="hljs-keyword">my</span>-<span class="hljs-keyword">first</span>-dag
+</code></pre>
+    <p></p>
+    <p>You should see 2 tasks in the output.</p>
+    <h1>Practice exercises</h1>
+    <ol>
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Write a DAG named <code>ETL_Server_Access_Log_Processing</code>.</em></p>
+    </blockquote>
+    <p><em><strong>Task 1</strong>: Create the imports block.</em><br><em><strong>Task 2</strong>: Create the DAG Arguments block. You can use the default settings</em><br><em><strong>Task 3</strong>: Create the DAG definition block. The DAG should run daily.</em><br><em><strong>Task 4</strong>: Create the download task.</em><br>download task must download the server access log file which is available at the URL: <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0250EN-SkillsNetwork/labs/Apache%20Airflow/Build%20a%20DAG%20using%20Airflow/web-server-access-log.txt" target="_blank" rel="external">https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0250EN-SkillsNetwork/labs/Apache%20Airflow/Build%20a%20DAG%20using%20Airflow/web-server-access-log.txt</a></p>
+    <p><em><strong>Task 5</strong>: Create the extract task.</em><br>The server access log file contains these fields.</p>
+    <p>a. <code>timestamp</code> - TIMESTAMP<br>b. <code>latitude</code> - float<br>c. <code>longitude</code> - float<br>d. <code>visitorid</code> - char(37)<br>e. <code>accessed_from_mobile</code> - boolean<br>f. <code>browser_code</code> - int<br></p>
+    <p>The <code>extract</code> task must extract the fields <code>timestamp</code> and <code>visitorid</code>.</p>
+    <p><em><strong>Task 6</strong>: Create the transform task.</em><br>The <code>transform</code> task must capitalize the <code>visitorid</code>.</p>
+    <p><em><strong>Task 7</strong>: Create the load task.</em><br>The <code>load</code> task must compress the extracted and transformed data.</p>
+    <p><em><strong>Task 8</strong>: Create the task pipeline block.</em><br>The pipeline block should schedule the task in the order listed below:</p>
+    <ol>
+      <li>download</li>
+      <li>extract</li>
+      <li>transform</li>
+      <li>load</li>
+    </ol>
+    <p><em><strong>Task 10</strong>: Submit the DAG.</em><br><em><strong>Task 11</strong>. Verify if the DAG is submitted</em><br></p>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Follow the example Python code given in the lab and make necessary changes to create the new DAG.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <p>Select File -> New File from the menu and name it as <code>ETL_Server_Access_Log_Processing.py</code>.<br></p>
+      <p>Add to the file the following parts of code to complete the tasks given in the problem.</p>
+      <p><em><strong>Task 1: Create the imports block.</strong></em><br></p>
+      <pre><code class="hljs language-capnproto"><span class="hljs-comment"># import the libraries</span>
+
+<span class="hljs-keyword">from</span> datetime <span class="hljs-keyword">import</span> timedelta
+<span class="hljs-comment"># The DAG object; we'll need this to instantiate a DAG</span>
+<span class="hljs-keyword">from</span> airflow <span class="hljs-keyword">import</span> DAG
+<span class="hljs-comment"># Operators; we need this to write tasks!</span>
+<span class="hljs-keyword">from</span> airflow.operators.bash_operator <span class="hljs-keyword">import</span> BashOperator
+<span class="hljs-comment"># This makes scheduling easy</span>
+<span class="hljs-keyword">from</span> airflow.utils.dates <span class="hljs-keyword">import</span> days_ago
+</code></pre>
+      <p></p>
+      <p><em><strong>Task 2: Create the DAG Arguments block. You can use the default settings.</strong></em><br></p>
+      <pre><code class="hljs language-scheme">#defining DAG arguments
+
+# You can override them on a per-task basis during operator initialization
+default_args = {
+    <span class="hljs-symbol">'owner</span><span class="hljs-symbol">':</span> <span class="hljs-symbol">'Ramesh</span> Sannareddy',
+    <span class="hljs-symbol">'start_date</span><span class="hljs-symbol">':</span> days_ago(<span class="hljs-name">0</span>),
+    <span class="hljs-symbol">'email</span><span class="hljs-symbol">':</span> [<span class="hljs-symbol">'ramesh@somemail.com</span>'],
+    <span class="hljs-symbol">'email_on_failure</span><span class="hljs-symbol">':</span> False,
+    <span class="hljs-symbol">'email_on_retry</span><span class="hljs-symbol">':</span> False,
+    <span class="hljs-symbol">'retries</span><span class="hljs-symbol">':</span> <span class="hljs-number">1</span>,
+    <span class="hljs-symbol">'retry_delay</span><span class="hljs-symbol">':</span> timedelta(<span class="hljs-name">minutes=5</span>),
+}
+</code></pre>
+      <p></p>
+      <p><em><strong>Task 3: Create the DAG definition block. The DAG should run daily.</strong></em><br></p>
+      <pre><code class="hljs language-ini"><span class="hljs-comment"># defining the DAG</span>
+
+<span class="hljs-comment"># define the DAG</span>
+<span class="hljs-attr">dag</span> = DAG(
+    'etl-log-processsing-dag',
+    <span class="hljs-attr">default_args</span>=default_args,
+    <span class="hljs-attr">description</span>=<span class="hljs-string">'My first DAG'</span>,
+    <span class="hljs-attr">schedule_interval</span>=timedelta(days=<span class="hljs-number">1</span>),
+)
+</code></pre>
+      <p></p>
+      <p><em><strong>Task 4: Create the download task.</strong></em><br></p>
+      <pre><code class="hljs language-ini"><span class="hljs-comment"># define the tasks</span>
+
+<span class="hljs-comment"># define the task 'download'</span>
+
+<span class="hljs-attr">download</span> = BashOperator(
+    <span class="hljs-attr">task_id</span>=<span class="hljs-string">'download'</span>,
+    <span class="hljs-attr">bash_command</span>=<span class="hljs-string">'wget "https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0250EN-SkillsNetwork/labs/Apache%20Airflow/Build%20a%20DAG%20using%20Airflow/web-server-access-log.txt"'</span>,
+    <span class="hljs-attr">dag</span>=dag,
+)
+</code></pre>
+      <p></p>
+      <p><em><strong>Task 5: Create the extract task.</strong></em><br></p>
+      <p>The extract task must extract the fields <code>timestamp</code> and <code>visitorid</code>.</p>
+      <pre><code class="hljs language-reasonml"># define the task 'extract'
+
+extract = <span class="hljs-constructor">BashOperator(
+    <span class="hljs-params">task_id</span>='<span class="hljs-params">extract</span>',
+    <span class="hljs-params">bash_command</span>='<span class="hljs-params">cut</span> -<span class="hljs-params">f1</span>,4 -<span class="hljs-params">d</span><span class="hljs-string">"#"</span> <span class="hljs-params">web</span>-<span class="hljs-params">server</span>-<span class="hljs-params">access</span>-<span class="hljs-params">log</span>.<span class="hljs-params">txt</span> > <span class="hljs-params">extracted</span>.<span class="hljs-params">txt</span>',
+    <span class="hljs-params">dag</span>=<span class="hljs-params">dag</span>,
+)</span>
+
+</code></pre>
+      <p></p>
+      <p><em><strong>Task 6: Create the transform task.</strong></em><br>The transform task must capitalize the <code>visitorid</code>.</p>
+      <pre><code class="hljs language-reasonml"># define the task 'transform'
+
+transform = <span class="hljs-constructor">BashOperator(
+    <span class="hljs-params">task_id</span>='<span class="hljs-params">transform</span>',
+    <span class="hljs-params">bash_command</span>='<span class="hljs-params">tr</span> <span class="hljs-string">"[a-z]"</span> <span class="hljs-string">"[A-Z]"</span> &#x3C; <span class="hljs-params">extracted</span>.<span class="hljs-params">txt</span> > <span class="hljs-params">capitalized</span>.<span class="hljs-params">txt</span>',
+    <span class="hljs-params">dag</span>=<span class="hljs-params">dag</span>,
+)</span>
+
+</code></pre>
+      <p></p>
+      <p><em><strong>Task 7: Create the load task.</strong></em><br>The <code>load</code> task must compress the extracted and transformed data.</p>
+      <pre><code class="hljs language-ini"><span class="hljs-comment"># define the task 'load'</span>
+
+<span class="hljs-attr">load</span> = BashOperator(
+    <span class="hljs-attr">task_id</span>=<span class="hljs-string">'load'</span>,
+    <span class="hljs-attr">bash_command</span>=<span class="hljs-string">'zip log.zip capitalized.txt'</span> ,
+    <span class="hljs-attr">dag</span>=dag,
+)
+
+</code></pre>
+      <p></p>
+      <p><em><strong>Task 8: Create the task pipeline block.</strong></em><br></p>
+      <pre><code class="hljs language-gauss"><span class="hljs-meta"># task pipeline</span>
+
+download >> extract >> transform >> <span class="hljs-keyword">load</span>
+</code></pre>
+      <p></p>
+      <p><em><strong>Task 9: Submit the DAG.</strong></em><br></p>
+      <pre><code class="hljs language-powershell"><span class="hljs-built_in">cp</span>  ETL_Server_Access_Log_Processing.py <span class="hljs-variable">$AIRFLOW_HOME</span>/dags
+</code></pre>
+      <p></p>
+      <p><em><strong>Task 10: Verify if the DAG is submitted.</strong></em><br></p>
+      <pre><code class="hljs language-ebnf"><span class="hljs-attribute">airflow dags list</span>
+</code></pre>
+      <p></p>
+      <p>Verify that the DAG <code>etl-log-processsing-dag</code> is listed.</p>
+    </details>
+    <h2>Authors</h2>
+    <p>Ramesh Sannareddy</p>
+    <h3>Other Contributors</h3>
+    <p>Rav Ahuja</p>
+    <h2>Change Log</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date (YYYY-MM-DD)</th>
+          <th>Version</th>
+          <th>Changed By</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-07-05</td>
+          <td>0.1</td>
+          <td>Ramesh Sannareddy</td>
+          <td>Created initial version of the lab</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Copyright (c) 2021 IBM Corporation. All rights reserved.</p>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>
