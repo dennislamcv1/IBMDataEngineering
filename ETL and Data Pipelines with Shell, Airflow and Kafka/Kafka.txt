@@ -35,6 +35,12 @@ bin/kafka-topics.sh --create --topic toll --bootstrap-server localhost:9092
 
 wget https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0250EN-SkillsNetwork/labs/Final%20Assignment/toll_traffic_generator.py
 
+python3 toll_traffic_generator.py
+
+wget https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0250EN-SkillsNetwork/labs/Final%20Assignment/streaming_data_reader.py
+
+python3 streaming_data_reader.py
+
 rm kafka_2.12-2.8.1.tgz
 
 mysql --host=127.0.0.1 --port=3306 --user=root --password=Mzk4NS1nd3Z2dXpt
