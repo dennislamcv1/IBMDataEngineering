@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <h1>Hands-on Lab: Working with Facts and Dimension Tables</h1>
+    <center>
+      <img src="https://gitlab.com/ibm/skills-network/courses/placeholder101/-/raw/master/labs/module%201/images/IDSNlogo.png" width="300" alt="cognitiveclass.ai logo">
+    </center>
+    <h1>Hands-on Lab: Working with Facts and Dimension Tables</h1>
+    <p>Estimated time needed: <strong>30</strong> minutes</p>
+    <h2>Objectives</h2>
+    <p>In this lab you will:</p>
+    <ul>
+      <li>Study the schema of the given csv file</li>
+      <li>Design the fact tables</li>
+      <li>Design the dimension tables</li>
+      <li>Create a star schema using the fact and dimension tables</li>
+    </ul>
+    <h1>About Skills Network Cloud IDE</h1>
+    <p>Skills Network Cloud IDE (based on Theia and Docker) provides an environment for hands on labs for course and project related labs. Theia is an open source IDE (Integrated Development Environment), that can be run on desktop or on the cloud. To complete this lab, we will be using the Cloud IDE based on Theia running in a Docker container.</p>
+    <h2>Important Notice about this lab environment</h2>
+    <p>Please be aware that sessions for this lab environment are not persistent. A new environment is created for you every time you connect to this lab. Any data you may have saved in an earlier session will get lost. To avoid losing your data, please plan to complete these labs in a single session.</p>
+    <h1>Exercise 1 - Study the schema of the given csv file</h1>
+    <p>In this lab, we will design a data warehouse for a cloud service provider.</p>
+    <p>The cloud service provider has given us their billing data in the csv file <code>cloud-billing-dataset.csv</code>. This file contains the billing data for the past decade.</p>
+    <p>Here are the field wise details of the billing data.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Field Name</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>customerid</td>
+          <td>Id of the customer</td>
+        </tr>
+        <tr>
+          <td>category</td>
+          <td>Category of the customer. Example: Individual or Company</td>
+        </tr>
+        <tr>
+          <td>country</td>
+          <td>Country of the customer</td>
+        </tr>
+        <tr>
+          <td>industry</td>
+          <td>Which domain/industry the customer belongs to. Example: Legal, Engineering</td>
+        </tr>
+        <tr>
+          <td>month</td>
+          <td>The billed month, stored as YYYY-MM. Example: 2009-01 refers to the month January in the year 2009</td>
+        </tr>
+        <tr>
+          <td>billedamount</td>
+          <td>Amount charged by the cloud services provided for that month in USD</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>We need to design a data warehouse that can support the queries listed below:</p>
+    <ul>
+      <li>average billing per customer</li>
+      <li>billing by country</li>
+      <li>top 10 customers</li>
+      <li>top 10 countries</li>
+      <li>billing by industry</li>
+      <li>billing by category</li>
+      <li>billing by year</li>
+      <li>billing by month</li>
+      <li>billing by quarter</li>
+      <li>average billing per industry per month</li>
+      <li>average billing per industry per quarter</li>
+      <li>average billing per country per quarter</li>
+      <li>average billing per country per industry per quarter</li>
+    </ul>
+    <p>Here are five rows picked at random from the csv file.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Working%20with%20Facts%20and%20Dimension%20Tables/images/csv-rows.png" alt="Five rows from csv file">
+    </p>
+    <h1>Exercise 2 - Design the fact tables</h1>
+    <p>The fact in this data is the bill which is generated monthly.</p>
+    <p>The fields <code>customerid</code> and <code>billedamount</code> are the important fields in the fact table.</p>
+    <p>We also need a way to identify the additional customer information, other than the id, and date information. So we need fields that refer to the customer and date information in other tables.</p>
+    <p>The final fact table for the bill would look like this:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Field Name</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>billid</td>
+          <td>Primary key - Unique identifier for every bill</td>
+        </tr>
+        <tr>
+          <td>customerid</td>
+          <td>Foreign Key - Id of the customer</td>
+        </tr>
+        <tr>
+          <td>monthid</td>
+          <td>Foreign Key - Id of the month. We can resolve the billed month info using this</td>
+        </tr>
+        <tr>
+          <td>billedamount</td>
+          <td>Amount charged by the cloud services provided for that month in USD</td>
+        </tr>
+      </tbody>
+    </table>
+    <h1>Exercise 3 - Design the dimension tables</h1>
+    <p>There are two dimensions to our fact(monthly bill).</p>
+    <ol>
+      <li>Customer information</li>
+      <li>Date information</li>
+    </ol>
+    <p>Let us organize all the fields that give information about the customer into a dimension table.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Field Name</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>customerid</td>
+          <td>Primary Key - Id of the customer</td>
+        </tr>
+        <tr>
+          <td>category</td>
+          <td>Category of the customer. Example: Individual or Company</td>
+        </tr>
+        <tr>
+          <td>country</td>
+          <td>Country of the customer</td>
+        </tr>
+        <tr>
+          <td>industry</td>
+          <td>Which domain/industry the customer belongs to. Example: Legal, Engineering</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Let us organize or derive all the fields that give information about the date of the bill.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Field Name</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>monthid</td>
+          <td>Primary Key - Id of the month</td>
+        </tr>
+        <tr>
+          <td>year</td>
+          <td>Year derived from the month field of the original data. Example: 2010</td>
+        </tr>
+        <tr>
+          <td>month</td>
+          <td>Month number derived from the month field of the original data. Example: 1, 2, 3</td>
+        </tr>
+        <tr>
+          <td>monthname</td>
+          <td>Month name derived from the month field of the original data. Example: March</td>
+        </tr>
+        <tr>
+          <td>quarter</td>
+          <td>Quarter number derived from the month field of the original data. Example: 1, 2, 3, 4</td>
+        </tr>
+        <tr>
+          <td>quartername</td>
+          <td>Quarter name derived from the month field of the original data. Example: Q1, Q2, Q3, Q4</td>
+        </tr>
+      </tbody>
+    </table>
+    <h1>Exercise 4 - Create a star schema using the fact and dimension tables</h1>
+    <p>Based on the previous two exercises, we have now arrived at 3 tables, we can name them as in the table below.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Table Name</th>
+          <th>Type</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>FactBilling</td>
+          <td>Fact</td>
+          <td>This table contains the billing amount, and the foreign keys to customer and month data</td>
+        </tr>
+        <tr>
+          <td>DimCustomer</td>
+          <td>Dimension</td>
+          <td>This table contains all the information related the customer</td>
+        </tr>
+        <tr>
+          <td>DimMonth</td>
+          <td>Dimension</td>
+          <td>This table contains all the information related the month of billing</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>When we arrange the above tables in Star Schema style, we get a table strucutre that looks likes the one in the image below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Working%20with%20Facts%20and%20Dimension%20Tables/images/erd-diagram.png" alt="erd-diagram">
+    </p>
+    <p>The image shows the fact and dimension tables along with the relaionships between them.</p>
+    <h1>Exercise 5 - Create the schema on the data warehouse</h1>
+    <p>Step 1: Start the postgresql server.</p>
+    <p>Open a new terminal, by clicking on the menu bar and selecting <strong>Terminal</strong>-><strong>New Terminal</strong>, as shown in the image below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Working%20with%20Facts%20and%20Dimension%20Tables/images/new-terminal.png" alt="Screenshot highlighting New Terminal in menu">
+    </p>
+    <p>This will open a new terminal at the bottom of the screen.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Working%20with%20Facts%20and%20Dimension%20Tables/images/terminal_bottom_screen.png" alt="Screenshot highlighting new terminal at bottom of screen">
+    </p>
+    <p>Run the commands below on the newly opened terminal. (You can copy the code by clicking on the little copy button on the bottom right of the codeblock below and then paste it, wherever you wish.)</p>
+    <p>Start the PostgreSQL server, by running the command below:</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">start_postgres</span>
+</code></pre>
+    <p>You should see an output similar to the one below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Working%20with%20Facts%20and%20Dimension%20Tables/images/start-postgres.png" alt="Screenshot of output">
+    </p>
+    <p>Step 2: Create the database on the data warehouse.</p>
+    <p>Using the createdb command of the PostgreSQL server, we can directly create the database from the terminal.</p>
+    <p>Run the command below to create a database named billingDW.</p>
+    <pre><code class="hljs language-apache"><span class="hljs-attribute">createdb</span> -h localhost -U postgres -p <span class="hljs-number">5432</span> billingDW
+</code></pre>
+    <p>In the above command</p>
+    <ul>
+      <li>-h mentions that the database server is running on the localhost</li>
+      <li>-U mentions that we are using the user name postgres to log into the database</li>
+      <li>-p mentions that the database server is running on port number 5432</li>
+    </ul>
+    <p>You should see an output like this.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Working%20with%20Facts%20and%20Dimension%20Tables/images/postgres-createdb.png" alt="Screenshot of output showing h, U, p">
+    </p>
+    <p>Step 3: Download the schema .sql file.</p>
+    <p>The commands to create the schema are available in the file below.</p>
+    <p><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Working%20with%20Facts%20and%20Dimension%20Tables/star-schema.sql" target="_blank" rel="external">https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Working%20with%20Facts%20and%20Dimension%20Tables/star-schema.sql</a></p>
+    <p>Download the file by running the command below.</p>
+    <pre><code class="hljs language-apache"><span class="hljs-attribute">wget</span> https://cf-courses-data.s<span class="hljs-number">3</span>.us.cloud-object-storage.appdomain.cloud/IBM-DB<span class="hljs-number">0260</span>EN-SkillsNetwork/labs/Working%<span class="hljs-number">20</span>with%<span class="hljs-number">20</span>Facts%<span class="hljs-number">20</span>and%<span class="hljs-number">20</span>Dimension%<span class="hljs-number">20</span>Tables/star-schema.sql
+</code></pre>
+    <p>Step 4: Create the schema</p>
+    <p>Run the command below to create the schema in the under <code>billingDW</code> database.</p>
+    <pre><code class="hljs language-mipsasm">psql  -h localhost -U postgres -p <span class="hljs-number">5432</span> <span class="hljs-keyword">billingDW </span>&#x3C; star-<span class="hljs-keyword">schema.sql
+</span></code></pre>
+    <p>You should see an ouput similar to the one below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Working%20with%20Facts%20and%20Dimension%20Tables/images/postgres-createschema.png" alt="Screenshot of output">
+    </p>
+    <h1>Practice exercises</h1>
+    <p>In this practice exercise, you will analyze the below csv file, which contains data about the daily sales at different stores of an international fashion retailer.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Working%20with%20Facts%20and%20Dimension%20Tables/images/sales-csv.png" alt="">
+    </p>
+    <ol>
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Design the schema for the dimension table DimStore.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Make sure that this table contains the country and city of the store.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <table>
+        <thead>
+          <tr>
+            <th>Field Name</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>storeid</td>
+            <td>Primary key - Unique identifier for every store</td>
+          </tr>
+          <tr>
+            <td>city</td>
+            <td>City where the store is located.</td>
+          </tr>
+          <tr>
+            <td>country</td>
+            <td>Country where the store is located.</td>
+          </tr>
+        </tbody>
+      </table>
+    </details>
+    <ol start="2">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Design the schema for the dimension table DimDate.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Here the customer needs reports to the granularity of a day. Make sure that you include the day, weekday and weekdayname also in this table.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <table>
+        <thead>
+          <tr>
+            <th>Field Name</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>dateid</td>
+            <td>Primary Key - Id of the date</td>
+          </tr>
+          <tr>
+            <td>day</td>
+            <td>Day derived from the date field of the original data. Example: 13, 19</td>
+          </tr>
+          <tr>
+            <td>weekday</td>
+            <td>Weekday derived from the date field of the original data. Example: 1, 2, 3, 4, 5, 6, 7. 1 for sunday, 7 for saturday</td>
+          </tr>
+          <tr>
+            <td>weekdayname</td>
+            <td>Weekday name derived from the date field of the original data. Example: Sunday, Monday</td>
+          </tr>
+          <tr>
+            <td>year</td>
+            <td>Year derived from the date field of the original data. Example: 2010</td>
+          </tr>
+          <tr>
+            <td>month</td>
+            <td>Month number derived from the date field of the original data. Example: 1, 2, 3</td>
+          </tr>
+          <tr>
+            <td>monthname</td>
+            <td>Month name derived from the date field of the original data. Example: March</td>
+          </tr>
+          <tr>
+            <td>quarter</td>
+            <td>Quarter number derived from the date field of the original data. Example: 1, 2, 3, 4</td>
+          </tr>
+          <tr>
+            <td>quartername</td>
+            <td>Quarter name derived from the date field of the original data. Example: Q1, Q2, Q3, Q4</td>
+          </tr>
+        </tbody>
+      </table>
+    </details>
+    <ol start="3">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Design the schema for the fact table FactSales.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Make sure that the totalsales field is captured and there is a way to refer to the store and the date. Also add a rowid to uniquely identify every row.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <table>
+        <thead>
+          <tr>
+            <th>Field Name</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>rowid</td>
+            <td>Primary key - Unique identifier for every row</td>
+          </tr>
+          <tr>
+            <td>storeid</td>
+            <td>Foreign Key - Id of the store</td>
+          </tr>
+          <tr>
+            <td>dateid</td>
+            <td>Foreign Key - Id of the date</td>
+          </tr>
+          <tr>
+            <td>totalsales</td>
+            <td>Total sales</td>
+          </tr>
+        </tbody>
+      </table>
+    </details>
+    <p>Congratulations! You have successfully finished this lab.</p>
+    <h2>Authors</h2>
+    <p>Ramesh Sannareddy</p>
+    <h3>Other Contributors</h3>
+    <p>Rav Ahuja</p>
+    <h2>Change Log</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date (YYYY-MM-DD)</th>
+          <th>Version</th>
+          <th>Changed By</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-09-22</td>
+          <td>0.1</td>
+          <td>Ramesh Sannareddy</td>
+          <td>Created initial version of the lab</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Copyright (c) 2021 IBM Corporation. All rights reserved.</p>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

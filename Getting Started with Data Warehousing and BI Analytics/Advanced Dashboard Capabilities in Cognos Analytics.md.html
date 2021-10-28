@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%206%20-%20%20Advanced%20Dashboard%20Capabilities%20in%20Cognos%20Analytics/images/IDSNlogo.png" width="200" height="200">
+    <h1>Hands-on Lab 6: Advanced Dashboard Capabilities in Cognos Analytics</h1>
+    <p><strong>Estimated time needed:</strong> 30 minutes</p>
+    <p>In this lab, you will learn and leverage some advanced Cognos Analytics dashboard capabilities. You will learn how to create calculations, how to keep/exclude data points from a visualization, how to set top/bottom on a visualization, how to create and leverage navigation paths and lastly, how to filter data in a dashboard.</p>
+    <h1>Software Used in this Lab</h1>
+    <p>Like the videos in the course, for the hands-on labs we will be using IBM Cognos Analytics trial version (currently limited to 30 days) as this is available at no charge.</p>
+    <h1>Dataset Used in this Lab</h1>
+    <p>The dataset used in this lab comes from the VM designed to showcase IBM Cognos Analytics. Source: <a href="https://www.ibm.com/cloud/garage/dte/tutorial/ibm-cognos-analytics-1113-getting-started-exploration-0?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDeveloperSkillsNetworkDV0130ENSkillsNetwork20531073-2021-01-01" target="_blank" rel="external">https://www.ibm.com/cloud/garage/dte/tutorial/ibm-cognos-analytics-1113-getting-started-exploration-0</a>. This dataset is published by IBM. You can download the dataset file directly from here: <a href="CustomerLoyaltyProgram.csv">CustomerLoyaltyProgram.csv</a></p>
+    <h1>Objectives</h1>
+    <p>After completing this lab, you will be able to:</p>
+    <ul>
+      <li>Start a new dashboard.</li>
+      <li>Create calculations.</li>
+      <li>Keep/exclude data points from a visualization.</li>
+      <li>Set top/bottom on a visualization.</li>
+      <li>Create and leverage navigation paths.</li>
+      <li>Filter data in a dashboard.</li>
+    </ul>
+    <h1>Exercise 1 : Start a New Dashboard</h1>
+    <p>In this exercise, you will start a new dashboard for working with advanced Cognos Analytics dashboard capabilities.</p>
+    <ol>
+      <li>
+        <p>To sign in to the Cognos Analytics platform with your IBMid, go to <a href="https://myibm.ibm.com/dashboard/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDeveloperSkillsNetworkDV0130ENSkillsNetwork20531073-2021-01-01" target="_blank" rel="external">myibm.ibm.com/dashboard/</a>.</p>
+      </li>
+      <li>
+        <p>Enter your IBMid and password.</p>
+      </li>
+      <li>
+        <p>Scroll down and click <strong>Launch</strong>.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%206%20-%20%20Advanced%20Dashboard%20Capabilities%20in%20Cognos%20Analytics/images/1.3.png" width="400" height="553">
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>From the <strong>Recent</strong> section, click on the uploaded data file <strong>CustomerLoyaltyProgram.csv</strong>.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%206%20-%20%20Advanced%20Dashboard%20Capabilities%20in%20Cognos%20Analytics/images/1.4.png" width="787">
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        <p>The Template window will be displayed, allowing you to select the type of dashboard and the template style. Select the <strong>tabbed dashboard style</strong>. This will allow you to have multiple pages for your dashboards. Select the <strong>five-panel template</strong>, then click <strong>Create</strong>.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%206%20-%20%20Advanced%20Dashboard%20Capabilities%20in%20Cognos%20Analytics/images/1.5.png" width="916">
+      </li>
+    </ol><br>
+    <ol start="6">
+      <li>
+        <p>To save the newly created dashboard, press <strong>CTRL+S</strong>. Select 'My content' as the Destination. On the <strong>Save as:</strong> text field, type "Advanced dashboard", and click <strong>Save</strong>.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%206%20-%20%20Advanced%20Dashboard%20Capabilities%20in%20Cognos%20Analytics/images/1.6.png" width="585">
+      </li>
+    </ol><br>
+    <ol start="7">
+      <li>
+        <p>As you build the dashboard, the location placement for Widgets in the dashboard template will be referenced using the following Panel numbers.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%206%20-%20%20Advanced%20Dashboard%20Capabilities%20in%20Cognos%20Analytics/images/1.7.png" width="533" height="300">
+      </li>
+    </ol><br>
+    <ol start="8">
+      <li>
+        <p>From the <strong>Data Source panel</strong>, select <strong>Revenue</strong> and drag it to the center of <strong>Panel 1</strong>, releasing it once you see the <strong>drop zone turn blue</strong>.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%206%20-%20%20Advanced%20Dashboard%20Capabilities%20in%20Cognos%20Analytics/images/1.8.png" width="538" height="500">
+      </li>
+    </ol><br>
+    <ol start="9">
+      <li>
+        <p>Click on the <strong>Summary chart in Panel 1</strong> to bring it into focus. From the on-demand toolbar, click <strong>Summarize</strong>. Then select <strong>Average</strong>.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%206%20-%20%20Advanced%20Dashboard%20Capabilities%20in%20Cognos%20Analytics/images/1.9.1.png" width="645" height="250"><br>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%206%20-%20%20Advanced%20Dashboard%20Capabilities%20in%20Cognos%20Analytics/images/1.9.2.png" width="250" height="445">
+      </li>
+    </ol><br>
+    <ol start="10">
+      <li>
+        <p>Click on the <strong>Summary chart in Panel 1</strong> if needed to bring it into focus. From the on-demand toolbar, click <strong>Edit the title</strong>. Enter the title <strong>"Average Revenue"</strong> to the visualization.</p>
+      </li>
+      <li>
+        <p>From the <strong>Navigation</strong> panel, select <strong>Widgets</strong> to open the widgets panel. Drag and drop <strong>Money coin</strong> from <strong>Shapes</strong> to the center of <strong>Panel 1</strong>.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%206%20-%20%20Advanced%20Dashboard%20Capabilities%20in%20Cognos%20Analytics/images/1.11.png" width="670" height="450">
+      </li>
+    </ol><br>
+    <ol start="12">
+      <li>
+        <p>To save the current work in the dashboard, press <strong>CTRL+S</strong>.</p>
+      </li>
+      <li>
+        <p>Your <strong>Panel 1 widget</strong> should look like the one below:</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%206%20-%20%20Advanced%20Dashboard%20Capabilities%20in%20Cognos%20Analytics/images/1.13.png" width="902" height="250">
+      </li>
+    </ol><br>
+    <h1>Exercise 2 : Working with Advanced Cognos Analytics Dashboard Capabilities</h1>
+    <p>In this exercise, you will practice some advanced Cognos Analytics dashboard capabilities.</p>
+    <ul>
+      <li>Task A : Create Calculations</li>
+      <li>Task B : Keep/Exclude Data Points from a visualization</li>
+      <li>Task C : Set Top/Bottom on a visualization</li>
+      <li>Task D : Create and Leverage Navigation Paths</li>
+      <li>Task E : Filter Data in Current tab</li>
+    </ul>
+    <h2>Task A : Create Calculations</h2>
+    <ol>
+      <li>
+        <p>From the <strong>Navigation</strong> panel, select <strong>Sources</strong> to open the data source panel, if it is not already open. The <strong>Data Source</strong> panel displays the uploaded file <strong>“CustomerLoyaltyProgram.csv”</strong> as the Selected Source.</p>
+      </li>
+      <li>
+        <p>Right-click on the <strong>CustomerLoyaltyProgram.csv</strong> of data source panel and select <strong>Calculation</strong>.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%206%20-%20%20Advanced%20Dashboard%20Capabilities%20in%20Cognos%20Analytics/images/2.A.2.png" width="582" height="350">
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Name the calculation as <strong>"Margin"</strong>. From panel <strong>Components</strong> to the field <strong>Expression</strong>, drag and drop <strong>Unit_Sale_Price</strong>, type minus <strong>-</strong> and then drag and drop <strong>Unit_Cost</strong>. Click <strong>OK</strong>.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%206%20-%20%20Advanced%20Dashboard%20Capabilities%20in%20Cognos%20Analytics/images/2.A.3.png" width="450" height="625">
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>On the Data Source panel, expand CustomerLoyaltyProgram.csv, if needed. From the <strong>Data Source</strong> panel, select <strong>Margin</strong> and drag it to the center of <strong>Panel 2</strong>, releasing it once you see the <strong>drop zone turn blue</strong>.</p>
+      </li>
+      <li>
+        <p>Click on the <strong>Summary chart in Panel 2</strong> to bring it into focus. Right-click on the <strong>Summary chart in Panel 2</strong> and select <strong>Summarize</strong>. Then select <strong>Average</strong>.</p>
+      </li>
+      <li>
+        <p>Right-click on the <strong>Summary chart in Panel 2</strong> and select <strong>Format</strong>. Then select <strong>Currency</strong>. Finally select <strong>$(USD)</strong> as the currency.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%206%20-%20%20Advanced%20Dashboard%20Capabilities%20in%20Cognos%20Analytics/images/2.A.6.png" width="450" height="465">
+      </li>
+    </ol><br>
+    <ol start="7">
+      <li>
+        <p>Click on the <strong>Summary chart in Panel 2</strong> if needed to bring it into focus. From the on-demand toolbar, click <strong>Edit the title</strong>. Enter the title <strong>"Average Margin"</strong> to the visualization.</p>
+      </li>
+      <li>
+        <p>To save the current work in the dashboard, press <strong>CTRL+S</strong>.</p>
+      </li>
+      <li>
+        <p>Your <strong>Panel 2 widget</strong> should look like the one below:</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%206%20-%20%20Advanced%20Dashboard%20Capabilities%20in%20Cognos%20Analytics/images/2.A.9.png" width="902" height="250">
+      </li>
+    </ol><br>
+    <h2>Task B : Keep/Exclude Data Points from a Visualization</h2>
+    <ol>
+      <li>
+        <p>On the Data Source panel, expand CustomerLoyaltyProgram.csv, if needed. From the <strong>Data Source</strong> panel, press <strong>CTRL</strong> and select <strong>Revenue, Product Line</strong> and drag it to the center of <strong>Panel 3</strong>, releasing it once you see the <strong>drop zone turn blue</strong>.</p>
+      </li>
+      <li>
+        <p>From the <strong>Data Source</strong> panel, press select <strong>Location Code</strong> and drag it to the <strong>drop zone of Color</strong> of <strong>Panel 3</strong>.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%206%20-%20%20Advanced%20Dashboard%20Capabilities%20in%20Cognos%20Analytics/images/2.B.2.png" width="890" height="300">
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Right-click on the <strong>Suburban</strong> data point of the panel 3 visualization. Select <strong>Exclude</strong>.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%206%20-%20%20Advanced%20Dashboard%20Capabilities%20in%20Cognos%20Analytics/images/2.B.3.png" width="826" height="300">
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>To save the current work in the dashboard, press <strong>CTRL+S</strong>.</p>
+      </li>
+      <li>
+        <p>Your <strong>Panel 3 widget</strong> should look like the one below:</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%206%20-%20%20Advanced%20Dashboard%20Capabilities%20in%20Cognos%20Analytics/images/2.B.5.png" width="832" height="350">
+      </li>
+    </ol><br>
+    <h2>Task C : Set Top/Bottom on a Visualization</h2>
+    <ol>
+      <li>
+        <p>From the <strong>Data Source</strong> panel, press <strong>CTRL</strong> and select <strong>Quantity Sold, City</strong> and drag it to the center of <strong>Panel 4</strong>, releasing it once you see the <strong>drop zone turn blue</strong>.</p>
+      </li>
+      <li>
+        <p>Click on the <strong>chart in panel 4</strong> to bring it into focus and render the <strong>on-demand toolbar</strong>.</p>
+      </li>
+      <li>
+        <p>Click the <strong>Change Visualization</strong> button in the on-demand toolbar. Use the <strong>arrow “>”</strong> to expand <strong>All Visualizations</strong>. Find and select <strong>Column</strong>.</p>
+      </li>
+      <li>
+        <p>Click on the <strong>Column chart in panel 4</strong> to bring it into focus. Right-click on the axis label <strong>Quantity Sold (Sum)</strong> and select <strong>Top or bottom</strong>.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%206%20-%20%20Advanced%20Dashboard%20Capabilities%20in%20Cognos%20Analytics/images/2.C.4.png" width="544" height="400">
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        <p>Set the <strong>value of Number of results</strong> as <strong>10</strong>. Select <strong>Top count</strong>.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%206%20-%20%20Advanced%20Dashboard%20Capabilities%20in%20Cognos%20Analytics/images/2.C.5.png" width="416" height="400">
+      </li>
+    </ol><br>
+    <ol start="6">
+      <li>
+        <p>From the on-demand toolbar, click <strong>Edit the title</strong>. Enter the title <strong>"Top 10 Quantity Sold by City"</strong> to the visualization.</p>
+      </li>
+      <li>
+        <p>To save the current work in the dashboard, press <strong>CTRL+S</strong>.</p>
+      </li>
+      <li>
+        <p>Your <strong>Panel 4 widget</strong> should look like the one below:</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%206%20-%20%20Advanced%20Dashboard%20Capabilities%20in%20Cognos%20Analytics/images/2.C.8.png" width="832" height="350">
+      </li>
+    </ol><br>
+    <h2>Task D : Create and Leverage Navigation Paths</h2>
+    <ol>
+      <li>
+        <p>Click on the <strong>Create navigation path</strong> of <strong>Navigation paths</strong> of the data source panel.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%206%20-%20%20Advanced%20Dashboard%20Capabilities%20in%20Cognos%20Analytics/images/2.D.1.png" width="540" height="350">
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>In the <strong>Create navigation path</strong> dialog box, expand CustomerLoyaltyProgram.csv, if needed. Select, drag and release <strong>Order Year, Quarter, Country, City</strong> sequentially, maintaining the order(shown on the image below) on the right panel. Once done, click <strong>OK</strong>.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%206%20-%20%20Advanced%20Dashboard%20Capabilities%20in%20Cognos%20Analytics/images/2.D.2.png" width="585" height="450">
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>From the <strong>Data Source</strong> panel, press <strong>CTRL</strong> and select <strong>Margin, Product Line, Order Year</strong> and drag it to the center of <strong>Panel 5</strong>, releasing it once you see the <strong>drop zone turn blue</strong>.</p>
+      </li>
+      <li>
+        <p>Click on the <strong>chart in panel 5</strong> to bring it into focus and render the <strong>on-demand toolbar</strong>.</p>
+      </li>
+      <li>
+        <p>Click the <strong>Change Visualization</strong> button in the on-demand toolbar. Use the <strong>arrow “>”</strong> to expand <strong>Recommended visualizations</strong>. Find and Select <strong>Bar</strong>.</p>
+      </li>
+      <li>
+        <p>Right-click on the axis label <strong>Order Year</strong>. Select <strong>Navigate</strong>.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%206%20-%20%20Advanced%20Dashboard%20Capabilities%20in%20Cognos%20Analytics/images/2.D.6.png" width="613" height="100">
+      </li>
+    </ol><br>
+    <ol start="7">
+      <li>
+        <p>One by one select <strong>Order Year, Quarter, Country, City</strong> to navigate among the columns of the navigation paths and observe the resulting panel 5 visualization. Lastly, keep the <strong>Order Year</strong> selected.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%206%20-%20%20Advanced%20Dashboard%20Capabilities%20in%20Cognos%20Analytics/images/2.D.7.png" width="475" height="350">
+      </li>
+    </ol><br>
+    <ol start="8">
+      <li><ins>Alternative interactive way with Drill down/back:</ins>
+        <ul>
+          <li>
+            <p>Click on the <strong>chart in panel 5</strong> to bring it into focus if needed.</p>
+          </li>
+          <li>
+            <p>Right-click on <strong>2016 Smart Electronics bar</strong> of the bar chart.</p>
+          </li>
+          <li>
+            <p>Select <strong>Drill down</strong>.</p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%206%20-%20%20Advanced%20Dashboard%20Capabilities%20in%20Cognos%20Analytics/images/2.D.8.1.png" width="808" height="250"><br>
+          </li>
+          <li>
+            <p>Now right-click on <strong>Q1 Smart Electronics bar</strong> of the bar chart.</p>
+          </li>
+          <li>
+            <p>Select <strong>Drill back</strong>.</p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%206%20-%20%20Advanced%20Dashboard%20Capabilities%20in%20Cognos%20Analytics/images/2.D.8.2.png" width="1120" height="250">
+          </li>
+        </ul>
+      </li>
+    </ol><br>
+    <ol start="9">
+      <li>
+        <p>To save the current work in the dashboard, press <strong>CTRL+S</strong>.</p>
+      </li>
+      <li>
+        <p>Your <strong>Panel 5 widget</strong> should look like the one below:</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%206%20-%20%20Advanced%20Dashboard%20Capabilities%20in%20Cognos%20Analytics/images/2.D.10.png" width="582" height="500">
+      </li>
+    </ol><br>
+    <h2>Task E : Filter Data in the Current Tab</h2>
+    <ol>
+      <li>
+        <p>If required, click <strong>Filters</strong> in the <strong>Dashboard Toolbar</strong> to display the filters pane.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%206%20-%20%20Advanced%20Dashboard%20Capabilities%20in%20Cognos%20Analytics/images/2.E.1.png" width="1340" height="100">
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>From the <strong>Data Source</strong> panel, select <strong>Product Line</strong> and drag and release it on the <strong>This tab</strong> filter panel on the right-hand side.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%206%20-%20%20Advanced%20Dashboard%20Capabilities%20in%20Cognos%20Analytics/images/2.E.2.png" width="728" height="100">
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Click on the <strong>Product Line</strong> filter tab of <strong>This tab</strong> filter panel. Select <strong>Computers and Home Office, Photography, TV and Video Gaming</strong>. Click <strong>OK</strong>.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%206%20-%20%20Advanced%20Dashboard%20Capabilities%20in%20Cognos%20Analytics/images/2.E.3.png" width="598" height="400">
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>To save the current work in the dashboard, press <strong>CTRL+S</strong>.</li>
+    </ol>
+    <h3>Finally, your dashboard should look like below:</h3>
+    <h3>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%206%20-%20%20Advanced%20Dashboard%20Capabilities%20in%20Cognos%20Analytics/images/2.png" width="1085" height="600">
+    </h3><br>
+    <h3>Congratulations! You have completed Lab 6, and you are ready for the next topic.</h3>
+    <h3></h3>
+    <h1>Author(s)</h1>
+    <ul>
+      <li><a href="https://www.linkedin.com/in/sandipsahajoy/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDeveloperSkillsNetworkDV0130ENSkillsNetwork20531073-2021-01-01" target="_blank" rel="external">Sandip Saha Joy</a></li>
+    </ul>
+    <h2>Other Contributor(s)</h2>
+    <ul>
+      <li><a href="https://www.linkedin.com/in/stevelryan?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDeveloperSkillsNetworkDV0130ENSkillsNetwork20531073-2021-01-01" target="_blank" rel="external">Steve Ryan</a></li>
+    </ul>
+    <h1>Changelog</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-06-18</td>
+          <td>1.2</td>
+          <td>Malika Singla</td>
+          <td>Updated Screenshots</td>
+        </tr>
+        <tr>
+          <td>2020-10-02</td>
+          <td>1.1</td>
+          <td>Steve Ryan</td>
+          <td>ID review</td>
+        </tr>
+        <tr>
+          <td>2020-09-24</td>
+          <td>1.0</td>
+          <td>Sandip Saha Joy</td>
+          <td>Initial version created</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2020. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

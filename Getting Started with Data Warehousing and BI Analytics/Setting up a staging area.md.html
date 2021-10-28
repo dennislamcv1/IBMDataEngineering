@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <h1>Hands-on Lab: Setting up a staging area</h1>
+    <center>
+      <img src="https://gitlab.com/ibm/skills-network/courses/placeholder101/-/raw/master/labs/module%201/images/IDSNlogo.png" width="300" alt="cognitiveclass.ai logo">
+    </center>
+    <h1>Hands-on Lab: Setting up a staging area</h1>
+    <p>Estimated time needed: <strong>30</strong> minutes</p>
+    <h2>Objectives</h2>
+    <p>In this lab you will:</p>
+    <ul>
+      <li>Setup a staging server for a data warehouse</li>
+      <li>Create the schema to store the data</li>
+      <li>Load the data into the tables</li>
+      <li>Run a sample query</li>
+    </ul>
+    <h1>About Skills Network Cloud IDE</h1>
+    <p>Skills Network Cloud IDE (based on Theia and Docker) provides an environment for hands on labs for course and project related labs. Theia is an open source IDE (Integrated Development Environment), that can be run on desktop or on the cloud. To complete this lab, we will be using the Cloud IDE based on Theia running in a Docker container.</p>
+    <h2>Important Notice about this lab environment</h2>
+    <p>Please be aware that sessions for this lab environment are not persistent. A new environment is created for you every time you connect to this lab. Any data you may have saved in an earlier session will get lost. To avoid losing your data, please plan to complete these labs in a single session.</p>
+    <h1>Exercise 1 - Start the PostgreSQL server</h1>
+    <p>We will be using the PostgreSQL server as our staging server.</p>
+    <p>Start the PostgreSQL server.</p>
+    <p>Open a new terminal, by clicking on the menu bar and selecting <strong>Terminal</strong>-><strong>New Terminal</strong>, as shown in the image below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Setting%20up%20a%20staging%20area/images/new-terminal.png" alt="Screenshot highlighting New Terminal in menu">
+    </p>
+    <p>This will open a new terminal at the bottom of the screen.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Setting%20up%20a%20staging%20area/images/terminal_bottom_screen.png" alt="Screenshot highlighting new terminal at bottom of screen">
+    </p>
+    <p>Run the commands below on the newly opened terminal. (You can copy the code by clicking on the little copy button on the bottom right of the codeblock below and then paste it, wherever you wish.)</p>
+    <p>Start the PostgreSQL server, by running the command below:</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">start_postgres</span>
+</code></pre>
+    <p>You should see an output similar to the one below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Setting%20up%20a%20staging%20area/images/start-postgres.png" alt="">
+    </p>
+    <h1>Exercise 2 - Create Database</h1>
+    <p>Create the database on the data warehouse.</p>
+    <p>Using the createdb command of the PostgreSQL server, we can directly create the database from the terminal.</p>
+    <p>Run the command below to create a database named billingDW.</p>
+    <pre><code class="hljs language-apache"><span class="hljs-attribute">createdb</span> -h localhost -U postgres -p <span class="hljs-number">5432</span> billingDW
+</code></pre>
+    <p>In the above command</p>
+    <ul>
+      <li>-h mentions that the database server is running on the localhost</li>
+      <li>-U mentions that we are using the user name postgres to log into the database</li>
+      <li>-p mentions that the database server is running on port number 5432</li>
+    </ul>
+    <p>You should see an output like this.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Setting%20up%20a%20staging%20area/images/postgres-createdb.png" alt="">
+    </p>
+    <h1>Exercise 3 - Create data warehouse schema</h1>
+    <p>
+      Step 1:
+      Download the schema files.
+    </p>
+    <p>The commands to create the schema are available in the file below.</p>
+    <p>
+      <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Setting%20up%20a%20staging%20area/billing-datawarehouse.tgz" target="_blank" rel="external">https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Setting%20up%20a%20staging%20area/billing-datawarehouse.tgz</a>
+      Run the commands below to download and extract the schema files.
+    </p>
+    <pre><code class="hljs language-apache"><span class="hljs-attribute">wget</span> https://cf-courses-data.s<span class="hljs-number">3</span>.us.cloud-object-storage.appdomain.cloud/IBM-DB<span class="hljs-number">0260</span>EN-SkillsNetwork/labs/Setting%<span class="hljs-number">20</span>up%<span class="hljs-number">20</span>a%<span class="hljs-number">20</span>staging%<span class="hljs-number">20</span>area/billing-datawarehouse.tgz
+
+<span class="hljs-attribute">tar</span> -xvzf billing-datawarehouse.tgz
+<span class="hljs-attribute">ls</span> *.sql
+</code></pre>
+    <p>You should see 4 .sql files listed in the output</p>
+    <p>Step 2: Create the schema</p>
+    <p>Run the command below to create the schema in the <code>billingDW</code> database.</p>
+    <pre><code class="hljs language-mipsasm">psql  -h localhost -U postgres -p <span class="hljs-number">5432</span> <span class="hljs-keyword">billingDW </span>&#x3C; star-<span class="hljs-keyword">schema.sql
+</span></code></pre>
+    <p>You should see an output similar to the one below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Setting%20up%20a%20staging%20area/images/postgres-createschema.png" alt="">
+    </p>
+    <h1>Exercise 4 - Load data into Dimension tables</h1>
+    <p>When we load data into the tables, it is a good practice to load the data into dimension tables first.</p>
+    <p>Step 1: Load data into DimCustomer table</p>
+    <p>Run the command below to load the data into DimCustomer table in <code>billingDW</code> database.</p>
+    <pre><code class="hljs language-mipsasm">psql  -h localhost -U postgres -p <span class="hljs-number">5432</span> <span class="hljs-keyword">billingDW </span>&#x3C; <span class="hljs-keyword">DimCustomer.sql
+</span></code></pre>
+    <p>Step 2: Load data into DimMonth table</p>
+    <p>Run the command below to load the data into DimMonth table in <code>billingDW</code> database.</p>
+    <pre><code class="hljs language-mipsasm">psql  -h localhost -U postgres -p <span class="hljs-number">5432</span> <span class="hljs-keyword">billingDW </span>&#x3C; <span class="hljs-keyword">DimMonth.sql
+</span></code></pre>
+    <h1>Exercise 5 - Load data into Fact table</h1>
+    <p>Load data into FactBilling table</p>
+    <p>Run the command below to load the data into FactBilling table in <code>billingDW</code> database.</p>
+    <pre><code class="hljs language-reasonml">psql  -h localhost -U postgres -p <span class="hljs-number">5432</span> billingDW &#x3C; <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">FactBilling</span>.</span></span>sql
+</code></pre>
+    <h1>Exercise 6 - Run a sample query</h1>
+    <p>Run the command below to check the number of rows in all the tables in the <code>billingDW</code> database.</p>
+    <pre><code class="hljs language-stylus">psql  -h localhost -U postgres -<span class="hljs-selector-tag">p</span> <span class="hljs-number">5432</span> billingDW &#x3C; verify<span class="hljs-selector-class">.sql</span>
+</code></pre>
+    <p>You should see an output similar to the one below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Setting%20up%20a%20staging%20area/images/verify.png" alt="Screenshot of output">
+    </p>
+    <p>Your data warehouse staging area is now ready.</p>
+    <h1>Practice exercises</h1>
+    <p>In this practice session, you will create a database named <code>practice</code> and load the data into it.</p>
+    <ol>
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Create a database named <code>practice</code>.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>_use the createdb command _</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-apache"><span class="hljs-attribute">createdb</span> -h localhost -U postgres -p <span class="hljs-number">5432</span> practice
+</code></pre>
+    </details>
+    <ol start="2">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>In the <code>practice</code> database, create a schema using <code>star-schema.sql</code>.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Use the psql command, make sure you are setting the database to <code>practice</code>.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-pgsql">psql  -h localhost -U postgres -p <span class="hljs-number">5432</span> practice &#x3C; star-<span class="hljs-keyword">schema</span>.<span class="hljs-keyword">sql</span>
+</code></pre>
+    </details>
+    <ol start="3">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>In the <code>practice</code> database, load the data into all tables using the DimMonth.sql, DimCustomer.sql and FactBilling.sql.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Use the psql command, make sure you are setting the database to <code>practice</code>.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-reasonml">psql  -h localhost -U postgres -p <span class="hljs-number">5432</span> practice &#x3C; <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DimMonth</span>.</span></span>sql
+psql  -h localhost -U postgres -p <span class="hljs-number">5432</span> practice &#x3C; <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DimCustomer</span>.</span></span>sql
+psql  -h localhost -U postgres -p <span class="hljs-number">5432</span> practice &#x3C; <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">FactBilling</span>.</span></span>sql
+
+</code></pre>
+    </details>
+    <ol start="4">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p>_Verify that you have correctly loaded the data into the <code>practice</code> database.</p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Use the verify.sql and run it on the <code>practice</code> database.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-stylus">psql  -h localhost -U postgres -<span class="hljs-selector-tag">p</span> <span class="hljs-number">5432</span> practice &#x3C; verify<span class="hljs-selector-class">.sql</span>
+
+</code></pre>
+    </details>
+    <p>Congratulations!! You have successfully finished the Setting up a staging server lab.</p>
+    <h2>Authors</h2>
+    <p>Ramesh Sannareddy</p>
+    <h3>Other Contributors</h3>
+    <p>Rav Ahuja</p>
+    <h2>Change Log</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date (YYYY-MM-DD)</th>
+          <th>Version</th>
+          <th>Changed By</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-09-4</td>
+          <td>0.1</td>
+          <td>Ramesh Sannareddy</td>
+          <td>Created initial version of the lab</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Copyright (c) 2021 IBM Corporation. All rights reserved.</p>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

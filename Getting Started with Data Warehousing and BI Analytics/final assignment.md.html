@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <h1>Final Assignment - Introduction to Data Warehousing</h1>
+    <center>
+      <img src="https://gitlab.com/ibm/skills-network/courses/placeholder101/-/raw/master/labs/module%201/images/IDSNlogo.png" width="300" alt="cognitiveclass.ai logo">
+    </center>
+    <p>Estimated time needed: <strong>90</strong> minutes.</p>
+    <h1>About This SN Labs Cloud IDE</h1>
+    <p>This Skills Network Labs Cloud IDE provides a hands-on environment for course and project related labs. It utilizes Theia, an open-source IDE (Integrated Development Environment) platform, that can be run on desktop or on the cloud. To complete this lab, we will be using the Cloud IDE based on Theia and PostgreSQL and MySQL database running in a Docker container. You will also need an instance of DB2 running in IBM Cloud.</p>
+    <h2>Important Notice about this lab environment</h2>
+    <p>Please be aware that sessions for this lab environment are not persistent. A new environment is created for you every time you connect to this lab. Any data you may have saved in an earlier session will get lost. To avoid losing your data, please plan to complete these labs in a single session.</p>
+    <h1>Scenario</h1>
+    <p>You are a data engineer hired by a solid waste management company. The company collects and recycles solid waste across major cities in the country of Brazil. The company operates hundreds of trucks of different types to collect and transport solid waste. The company would like to create a data warehouse so that it can create reports like</p>
+    <ul>
+      <li>total waste collected per year per city</li>
+      <li>total waste collected per month per city</li>
+      <li>total waste collected per quarter per city</li>
+      <li>total waste collected per year per trucktype</li>
+      <li>total waste collected per trucktype per city</li>
+      <li>total waste collected per trucktype per station per city</li>
+    </ul>
+    <p>You will use your data warehousing skills to design and implement a data warehouse for the company.</p>
+    <h2>Objectives</h2>
+    <p>In this assignment you will:</p>
+    <ul>
+      <li>Design a Data Warehouse</li>
+      <li>Load data into Data Warehouse</li>
+      <li>Write aggregation queries</li>
+      <li>Create MQTs</li>
+      <li>Create a Dashboard</li>
+    </ul>
+    <h1>Note - Screenshots</h1>
+    <p>Throughout this lab you will be prompted to take screenshots and save them on your own device. These screenshots will need to be uploaded for peer review in the next section of the course. You can use various free screengrabbing tools or your operating system's shortcut keys (Alt + PrintScreen in Windows, Commannd + Shift + 5 on Mac, Shift + Ctrl + Show windows on Chromebook) to capture the required screenshots. The screenshots can be either jpg or png.</p>
+    <h1>About the dataset</h1>
+    <p>The dataset you would be using in this assignment is not a real life dataset. It was programmatically created for this assignment purpose.</p>
+    <h1>Prerequisites</h1>
+    <p>You need access to a cloud instance of IBM DB2 to proceed with this assignment.</p>
+    <p>If you do not have an instance of IBM DB2 on cloud, follow the instructions in this <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Sign%20up%20for%20IBM%20Cloud%20-%20Create%20Db2%20service%20instance%20-%20Get%20started%20with%20the%20Db2%20console/instructional-labs.md.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0260ENSkillsNetwork27338483-2021-01-01" target="_new">lab</a> to create one.</p>
+    <p>You need access to Cognos Analytics.</p>
+    <p>This <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/AnalyzingDataWithCognos/HandsOn_DB2CognosAnalytics.md.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0260ENSkillsNetwork27338483-2021-01-01">lab</a> will guide to get your access to Cognos Analytics, and also get you started with how to use it to analyze the data.</p>
+    <h1>Exercise 1 - Design a Data Warehouse</h1>
+    <p>The solid waste management company has provied you the sample data they wish to collect.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Final%20Assignment/images/solid-waste-trips-new.png" alt="">
+    </p>
+    <p>You will start your project by designing a Star Schema warehouse by identifying the columns for the various dimension and fact tables in the schema.</p>
+    <h3>Task 1 - Design the dimension table MyDimDate</h3>
+    <p>Write down the fields in the MyDimDate table in any text editor one field per line. The company is looking at a granularity of day. Which means they would like to have the ability to generate the report on yearly, monthly, daily, and weekday basis.</p>
+    <p>Here is a partial list of fields to serve as an example:</p>
+    <p>dateid<br>month<br>monthname<br>...<br>...<br></p>
+    <p>Take a screenshot of the fieldnames for the table MyDimDate.</p>
+    <p>Name the screenshot <code>1-MyDimDate.jpg</code>. (Images can be saved with either the .jpg or .png extension.)</p>
+    <h3>Task 2 - Design the dimension table MyDimWaste</h3>
+    <p>Write down the fields in the MyDimWaste table in any text editor one field per line.</p>
+    <p>Take a screenshot of the fieldnames for the table MyDimWaste.</p>
+    <p>Name the screenshot <code>2-MyDimWaste.jpg</code>. (Images can be saved with either the .jpg or .png extension.)</p>
+    <h3>Task 3 - Design the dimension table MyDimZone</h3>
+    <p>Write down the fields in the MyDimZone table in any text editor one field per line.</p>
+    <p>Take a screenshot of the fieldnames for the table MyDimZone.</p>
+    <p>Name the screenshot <code>3-MyDimZone.jpg</code>. (Images can be saved with either the .jpg or .png extension.)</p>
+    <h3>Task 4 - Design the fact table MyFactTrips</h3>
+    <p>Write down the fields in the MyFactTrips table in any text editor one field per line.</p>
+    <p>Take a screenshot of the fieldnames for the table MyFactTrips.</p>
+    <p>Name the screenshot <code>4-MyFactTrips.jpg</code>. (Images can be saved with either the .jpg or .png extension.)</p>
+    <h1>Exercise 2 - Create schema for Data Warehouse on DB2</h1>
+    <p>In this exercise you will create the tables, you have designed in the previous exercise.</p>
+    <h3>Task 5 - Create the dimension table MyDimDate</h3>
+    <p>Create the MyDimDate table.</p>
+    <p>Take a screenshot of the sql statement you used to create the table MyDimDate.</p>
+    <p>Name the screenshot <code>5-MyDimDate.jpg</code>. (Images can be saved with either the .jpg or .png extension.)</p>
+    <h3>Task 6 - Create the dimension table MyDimWaste</h3>
+    <p>Create the MyDimWaste table.</p>
+    <p>Take a screenshot of the sql statement you used to create the table MyDimWaste.</p>
+    <p>Name the screenshot <code>6-MyDimWaste.jpg</code>. (Images can be saved with either the .jpg or .png extension.)</p>
+    <h3>Task 7 - Create the dimension table MyDimZone</h3>
+    <p>Create the MyDimZone table.</p>
+    <p>Take a screenshot of the sql statement you used to create the table MyDimZone.</p>
+    <p>Name the screenshot <code>7-MyDimZone.jpg</code>. (Images can be saved with either the .jpg or .png extension.)</p>
+    <h3>Task 8 - Create the fact table MyFactTrips</h3>
+    <p>Create the MyFactTrips table.</p>
+    <p>Take a screenshot of the sql statement you used to create the table MyFactTrips.</p>
+    <p>Name the screenshot <code>8-MyFactTrips.jpg</code>. (Images can be saved with either the .jpg or .png extension.)</p>
+    <h1>Exercise 3 - Load data into the Data Warehouse</h1>
+    <p>In this exercise you will load the data into the tables.</p>
+    <p>After the initial schema design, you were told that due to opertional issues, data could not be collected in the format initially planned.</p>
+    <p>You will load the data provided by the company in csv format.</p>
+    <h3>Task 9 - Load data into the dimension table DimDate</h3>
+    <p>Download the data from <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Final%20Assignment/DimDate.csv" target="_blank" rel="external">https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Final%20Assignment/DimDate.csv</a></p>
+    <p>Load this data into DimDate table.</p>
+    <p>Take a screenshot of the first 5 rows in the table DimDate.</p>
+    <p>Name the screenshot <code>9-DimDate.jpg</code>. (Images can be saved with either the .jpg or .png extension.)</p>
+    <h3>Task 10 - Load data into the dimension table DimTruck</h3>
+    <p>Download the data from <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Final%20Assignment/DimTruck.csv" target="_blank" rel="external">https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Final%20Assignment/DimTruck.csv</a></p>
+    <p>Load this data into DimTruck table.</p>
+    <p>Take a screenshot of the first 5 rows in the table DimTruck.</p>
+    <p>Name the screenshot <code>10-DimTruck.jpg</code>. (Images can be saved with either the .jpg or .png extension.)</p>
+    <h3>Task 11 - Load data into the dimension table DimStation</h3>
+    <p>Download the data from <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Final%20Assignment/DimStation.csv" target="_blank" rel="external">https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Final%20Assignment/DimStation.csv</a></p>
+    <p>Load this data into DimStation table.</p>
+    <p>Take a screenshot of the first 5 rows in the table DimStation.</p>
+    <p>Name the screenshot <code>11-DimStation.jpg</code>. (Images can be saved with either the .jpg or .png extension.)</p>
+    <h3>Task 12 - Load data into the fact table FactTrips</h3>
+    <p>Download the data from <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Final%20Assignment/FactTrips.csv" target="_blank" rel="external">https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Final%20Assignment/FactTrips.csv</a></p>
+    <p>Load this data into FactTrips table.</p>
+    <p>Take a screenshot of the first 5 rows in the table FactTrips.</p>
+    <p>Name the screenshot <code>12-FactTrips.jpg</code>. (Images can be saved with either the .jpg or .png extension.)</p>
+    <h1>Exercise 4 - Write aggregation queries and create MQTs</h1>
+    <p>In this exercise you will query the data you have loaded in the previous exercise.</p>
+    <h3>Task 13 - Create a grouping sets query</h3>
+    <p>Create a grouping sets query using the columns stationid, trucktype, total waste collected.</p>
+    <p>Take a screenshot of the sql and the output rows.</p>
+    <p>Name the screenshot <code>13-groupingsets.jpg</code>. (Images can be saved with either the .jpg or .png extension.)</p>
+    <h3>Task 14 - Create a rollup query</h3>
+    <p>Create a rollup query using the columns year, city, stationid, and total waste collected.</p>
+    <p>Take a screenshot of the sql and the output rows.</p>
+    <p>Name the screenshot <code>14-rollup.jpg</code>. (Images can be saved with either the .jpg or .png extension.)</p>
+    <h3>Task 15 - Create a cube query</h3>
+    <p>Create a cube query using the columns year, city, stationid, and average waste collected.</p>
+    <p>Take a screenshot of the sql and the output rows.</p>
+    <p>Name the screenshot <code>15-cube.jpg</code>. (Images can be saved with either the .jpg or .png extension.)</p>
+    <h3>Task 16 - Create an MQT</h3>
+    <p>Create an MQT named max_waste_stats using the columns city, stationid, trucktype, and max waste collected.</p>
+    <p>Take a screenshot of the sql.</p>
+    <p>Name the screenshot <code>16-mqt.jpg</code>. (Images can be saved with either the .jpg or .png extension.)</p>
+    <h1>Exercise 5 - Create a dashboard using Cognos Analytics</h1>
+    <p>Download the data from <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Final%20Assignment/DataForCognos.csv" target="_blank" rel="external">https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Final%20Assignment/DataForCognos.csv</a></p>
+    <p>Use the DataForCognos.csv file to generate the following charts.</p>
+    <h3>Task 17 - Create a pie chart in the dashboard</h3>
+    <p>Create a pie chart that shows the waste collected by truck type.</p>
+    <p>Take a screenshot of the pie chart.</p>
+    <p>Name the screenshot <code>17-pie.jpg</code>. (Images can be saved with either the .jpg or .png extension.)</p>
+    <h3>Task 18 - Create a bar chart in the dashboard</h3>
+    <p>Create a bar chart that shows the waste collected station wise.</p>
+    <p>Take a screenshot of the bar chart.</p>
+    <p>Name the screenshot <code>18-bar.jpg</code>. (Images can be saved with either the .jpg or .png extension.)</p>
+    <h3>Task 19 - Create a line chart in the dashboard</h3>
+    <p>Create a line chart that shows the waste collected by month wise.</p>
+    <p>Take a screenshot of the line chart.</p>
+    <p>Name the screenshot <code>19-line.jpg</code>. (Images can be saved with either the .jpg or .png extension.)</p>
+    <h3>Task 20 - Create a pie chart in the dashboard</h3>
+    <p>Create a pie chart that shows the waste collected by city.</p>
+    <p>Take a screenshot of the pie chart.</p>
+    <p>Name the screenshot <code>20-pie.jpg</code>. (Images can be saved with either the .jpg or .png extension.)</p>
+    <p>End of the assignment.</p>
+    <h2>Authors</h2>
+    <p>Ramesh Sannareddy</p>
+    <h3>Other Contributors</h3>
+    <p>Rav Ahuja</p>
+    <h2>Change Log</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date (YYYY-MM-DD)</th>
+          <th>Version</th>
+          <th>Changed By</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-09-29</td>
+          <td>0.1</td>
+          <td>Ramesh Sannareddy</td>
+          <td>Created initial version</td>
+        </tr>
+        <tr>
+          <td>2021-10-6</td>
+          <td>0.2</td>
+          <td>Steve Hord</td>
+          <td>Copy edits</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Copyright (c) 2021 IBM Corporation. All rights reserved.</p>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

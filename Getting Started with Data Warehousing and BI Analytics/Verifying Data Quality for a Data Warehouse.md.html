@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <h1>Hands-on Lab: Verifying Data Quality for a Data Warehouse</h1>
+    <center>
+      <img src="https://gitlab.com/ibm/skills-network/courses/placeholder101/-/raw/master/labs/module%201/images/IDSNlogo.png" width="300" alt="cognitiveclass.ai logo">
+    </center>
+    <h1>Hands-on Lab: Verifying Data Quality for a Data Warehouse</h1>
+    <p>Estimated time needed: <strong>30</strong> minutes</p>
+    <h2>Objectives</h2>
+    <p>In this lab, you will:</p>
+    <ul>
+      <li>Check Null values</li>
+      <li>Check Duplicate values</li>
+      <li>Check Min Max</li>
+      <li>Check Invalid values</li>
+      <li>Generate a report on data quality</li>
+    </ul>
+    <h1>About Skills Network Cloud IDE</h1>
+    <p>Skills Network Cloud IDE (based on Theia and Docker) provides an environment for hands on labs for course and project related labs. Theia is an open source IDE (Integrated Development Environment), that can be run on desktop or on the cloud. To complete this lab, we will be using the Cloud IDE based on Theia running in a Docker container.</p>
+    <h2>Important Notice about this lab environment</h2>
+    <p>Please be aware that sessions for this lab environment are not persistent. A new environment is created for you every time you connect to this lab. Any data you may have saved in an earlier session will get lost. To avoid losing your data, please plan to complete these labs in a single session.</p>
+    <h1>Exercise 1 - Getting the environment ready</h1>
+    <p>In this exercise, you will get the environment ready so that we can perform the data quality checks.</p>
+    <p>Step 1: Start the postgresql server.</p>
+    <p>Open a new terminal, by clicking on the menu bar and selecting <strong>Terminal</strong>-><strong>New Terminal</strong>, as shown in the image below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Verifying%20Data%20Quality%20for%20a%20Data%20Warehouse/images/new-terminal.png" alt="Screenshot highlighting New Terminal in menu">
+    </p>
+    <p>This will open a new terminal at the bottom of the screen.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Verifying%20Data%20Quality%20for%20a%20Data%20Warehouse/images/terminal_bottom_screen.png" alt="Screenshot highlighting new terminal at bottom of screen">
+    </p>
+    <p>Run the commands below on the newly opened terminal. (You can copy the code by clicking on the little copy button on the bottom right of the codeblock below and then paste it wherever you wish.)</p>
+    <p>Start the PostgreSQL server, by running the command below.</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">start_postgres</span>
+</code></pre>
+    <p>You should see an output similar to the one below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Verifying%20Data%20Quality%20for%20a%20Data%20Warehouse/images/start-postgres.png" alt="Screenshot highlighting new terminal at bottom of screen">
+    </p>
+    <p>Step 2: Download the staging area setup script.</p>
+    <p>Run the command below to download the staging area setup script.</p>
+    <pre><code class="hljs language-apache"><span class="hljs-attribute">wget</span> https://cf-courses-data.s<span class="hljs-number">3</span>.us.cloud-object-storage.appdomain.cloud/IBM-DB<span class="hljs-number">0260</span>EN-SkillsNetwork/labs/Verifying%<span class="hljs-number">20</span>Data%<span class="hljs-number">20</span>Quality%<span class="hljs-number">20</span>for%<span class="hljs-number">20</span>a%<span class="hljs-number">20</span>Data%<span class="hljs-number">20</span>Warehouse/setup_staging_area.sh
+
+</code></pre>
+    <p>Step 3: Run the setup script.</p>
+    <p>Run the command below to execute the staging area setup script.</p>
+    <pre><code class="hljs language-mipsasm"><span class="hljs-keyword">bash </span>setup_staging_area.<span class="hljs-keyword">sh
+</span></code></pre>
+    <p>When you see a message <code>Successfully setup the staging area</code> you are ready to perform data quality checks.</p>
+    <h1>Exercise 2 - Getting the testing framework ready</h1>
+    <p>You can perform most of the data quality checks by manually running sql queries on the data warehouse.</p>
+    <p>It is a good idea to automate these checks using custom programs or tools. Automation helps you to easily</p>
+    <ul>
+      <li>create new tests,</li>
+      <li>run tests,</li>
+      <li>and schedule tests.</li>
+    </ul>
+    <p>We will be using a python based framework to run the data quality tests.</p>
+    <p>Step 1: Download the framework.</p>
+    <p>Run the commands below to download the framework</p>
+    <pre><code class="hljs language-apache"><span class="hljs-attribute">wget</span> https://cf-courses-data.s<span class="hljs-number">3</span>.us.cloud-object-storage.appdomain.cloud/IBM-DB<span class="hljs-number">0260</span>EN-SkillsNetwork/labs/Verifying%<span class="hljs-number">20</span>Data%<span class="hljs-number">20</span>Quality%<span class="hljs-number">20</span>for%<span class="hljs-number">20</span>a%<span class="hljs-number">20</span>Data%<span class="hljs-number">20</span>Warehouse/dataqualitychecks.py
+
+<span class="hljs-attribute">wget</span> https://cf-courses-data.s<span class="hljs-number">3</span>.us.cloud-object-storage.appdomain.cloud/IBM-DB<span class="hljs-number">0260</span>EN-SkillsNetwork/labs/Verifying%<span class="hljs-number">20</span>Data%<span class="hljs-number">20</span>Quality%<span class="hljs-number">20</span>for%<span class="hljs-number">20</span>a%<span class="hljs-number">20</span>Data%<span class="hljs-number">20</span>Warehouse/dbconnect.py
+
+<span class="hljs-attribute">wget</span> https://cf-courses-data.s<span class="hljs-number">3</span>.us.cloud-object-storage.appdomain.cloud/IBM-DB<span class="hljs-number">0260</span>EN-SkillsNetwork/labs/Verifying%<span class="hljs-number">20</span>Data%<span class="hljs-number">20</span>Quality%<span class="hljs-number">20</span>for%<span class="hljs-number">20</span>a%<span class="hljs-number">20</span>Data%<span class="hljs-number">20</span>Warehouse/mytests.py
+
+<span class="hljs-attribute">wget</span> https://cf-courses-data.s<span class="hljs-number">3</span>.us.cloud-object-storage.appdomain.cloud/IBM-DB<span class="hljs-number">0260</span>EN-SkillsNetwork/labs/Verifying%<span class="hljs-number">20</span>Data%<span class="hljs-number">20</span>Quality%<span class="hljs-number">20</span>for%<span class="hljs-number">20</span>a%<span class="hljs-number">20</span>Data%<span class="hljs-number">20</span>Warehouse/generate-data-quality-report.py
+
+
+<span class="hljs-attribute">ls</span>
+
+</code></pre>
+    <p>Step 2: Install the python driver for Postgresql.</p>
+    <p>Run the command below to install the python driver for Postgresql database</p>
+    <pre><code class="hljs language-apache"><span class="hljs-attribute">pip</span> install psycopg<span class="hljs-number">2</span>
+</code></pre>
+    <p>Step 3: Test database connectivity.</p>
+    <p>Now we need to check</p>
+    <ul>
+      <li>if the Postgresql python driver is installed properly.</li>
+      <li>if Postgresql server is up and running.</li>
+      <li>if our micro framework can connect to the database.</li>
+    </ul>
+    <p>The command below to check all the above cases.</p>
+    <pre><code class="hljs language-vim"><span class="hljs-keyword">python3</span> dbconnect.<span class="hljs-keyword">py</span>
+</code></pre>
+    <p>If all goes well, you should a message <code>Successfully connected to database</code>.</p>
+    <p>The command also disconnects from the server with a message <code>Connection closed</code>.</p>
+    <h1>Exercise 3 - Create a sample data quality report</h1>
+    <p>Run the command below to generate a sample data quality report.</p>
+    <pre><code class="hljs language-verilog">python3 <span class="hljs-keyword">generate</span>-data-quality-report<span class="hljs-variable">.py</span>
+</code></pre>
+    <p>You should see a list of tests that were run and their status.</p>
+    <h1>Exercise 4 - Explore the data quality tests</h1>
+    <p>Open the file <code>mytests.py</code> in the editor by using the steps below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Verifying%20Data%20Quality%20for%20a%20Data%20Warehouse/images/file-open.png" alt="Screenshot highlighting Open">
+    </p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Verifying%20Data%20Quality%20for%20a%20Data%20Warehouse/images/select-mytests.py.png" alt="Screenshot highlighting mytests.py">
+    </p>
+    <p>You should now see the file opened in the editor.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0260EN-SkillsNetwork/labs/Verifying%20Data%20Quality%20for%20a%20Data%20Warehouse/images/mytests.py.png" alt="Screenshot showing file open in editor">
+    </p>
+    <p>The file <code>mytests.py</code> contains all the data quality tests.</p>
+    <p>It provides a quick and easy way to author and run new data quality tests.</p>
+    <p>The testing framework provides the following tests:</p>
+    <ul>
+      <li>check_for_nulls - this test will check for nulls in a column</li>
+      <li>check_for_min_max - this test will check if the values in a column are with a range of min and max values</li>
+      <li>check_for_valid_values - this test will check for any invalid values in a column</li>
+      <li>check_for_duplicates - this test will check for duplicates in a column</li>
+    </ul>
+    <p>Each test can be authored by mentioning a minimum of 4 parameters.</p>
+    <ul>
+      <li>testname - The human readable name of the test for reporting purposes</li>
+      <li>test - The actual test name that the testing micro framework provides</li>
+      <li>table - The table name on which the test is to be performed</li>
+      <li>column - The table name on which the test is to be performed</li>
+    </ul>
+    <h1>Exercise 5 - Check for nulls</h1>
+    <p>Let us now see what a <code>check_for_nulls</code> test looks like.</p>
+    <p>Here is a sample <code>check_for_nulls</code> test:</p>
+    <pre><code class="hljs language-json">test1={
+	<span class="hljs-attr">"testname"</span>:<span class="hljs-string">"Check for nulls"</span>,
+	<span class="hljs-attr">"test"</span>:check_for_nulls,
+	<span class="hljs-attr">"column"</span>: <span class="hljs-string">"monthid"</span>,
+	<span class="hljs-attr">"table"</span>: <span class="hljs-string">"DimMonth"</span>
+}
+</code></pre>
+    <p>All tests must be named as <code>test</code> following by a unique number to identify the test.</p>
+    <ul>
+      <li>Give an easy to understand description for <code>testname</code></li>
+      <li>mention <code>check_for_nulls</code> for <code>test</code></li>
+      <li>mention the column name on which you wish to check for nulls</li>
+      <li>mention the table name where this column exists</li>
+    </ul>
+    <p>Let us now create a new <code>check_for_nulls</code> test and run it.</p>
+    <p>The test below checks if there are any null values in the column <code>year</code> in the table <code>DimMonth</code>.</p>
+    <p>The test fails if nulls exist.</p>
+    <p>Copy and paste the code below at the end of mytests.py file.</p>
+    <pre><code class="hljs language-json">test5={
+	<span class="hljs-attr">"testname"</span>:<span class="hljs-string">"Check for nulls"</span>,
+	<span class="hljs-attr">"test"</span>:check_for_nulls,
+	<span class="hljs-attr">"column"</span>: <span class="hljs-string">"year"</span>,
+	<span class="hljs-attr">"table"</span>: <span class="hljs-string">"DimMonth"</span>
+}
+</code></pre>
+    <p>Save the file using Menu -> File -> Save</p>
+    <p>Run the command below to generate the new data quality report.</p>
+    <pre><code class="hljs language-verilog">python3 <span class="hljs-keyword">generate</span>-data-quality-report<span class="hljs-variable">.py</span>
+</code></pre>
+    <h1>Exercise 6 - Check for min max range</h1>
+    <p>Let us now see what a <code>check_for_min_max</code> test looks like.</p>
+    <p>Here is a sample <code>check_for_min_max</code> test</p>
+    <pre><code class="hljs language-json">test2={
+	<span class="hljs-attr">"testname"</span>:<span class="hljs-string">"Check for min and max"</span>,
+	<span class="hljs-attr">"test"</span>:check_for_min_max,
+	<span class="hljs-attr">"column"</span>: <span class="hljs-string">"monthid"</span>,
+	<span class="hljs-attr">"table"</span>: <span class="hljs-string">"DimMonth"</span>,
+	<span class="hljs-attr">"minimum"</span>:<span class="hljs-number">1</span>,
+	<span class="hljs-attr">"maximum"</span>:<span class="hljs-number">12</span>
+}
+</code></pre>
+    <p>In addition to the usual fields, you have two more fields here.</p>
+    <ul>
+      <li>minimum is the lowest valid value for this column. (Example 1 in case of month number)</li>
+      <li>maximum is the highest valid value for this column. (Example 12 in case of month number)</li>
+    </ul>
+    <p>Let us now create a new <code>check_for_min_max</code> test and run it.</p>
+    <p>The test below checks for minimum of 1 and maximum of 4 in the column <code>quarter</code> in the table <code>DimMonth</code>.</p>
+    <p>The test fails if there any values less than minimum or more than maximum.</p>
+    <p>Copy and paste the code below at the end of mytests.py file.</p>
+    <pre><code class="hljs language-json">test6={
+	<span class="hljs-attr">"testname"</span>:<span class="hljs-string">"Check for min and max"</span>,
+	<span class="hljs-attr">"test"</span>:check_for_min_max,
+	<span class="hljs-attr">"column"</span>: <span class="hljs-string">"quarter"</span>,
+	<span class="hljs-attr">"table"</span>: <span class="hljs-string">"DimMonth"</span>,
+	<span class="hljs-attr">"minimum"</span>:<span class="hljs-number">1</span>,
+	<span class="hljs-attr">"maximum"</span>:<span class="hljs-number">4</span>
+}
+</code></pre>
+    <p>Save the file using Menu -> File -> Save</p>
+    <p>Run the command below to generate the new data quality report.</p>
+    <pre><code class="hljs language-verilog">python3 <span class="hljs-keyword">generate</span>-data-quality-report<span class="hljs-variable">.py</span>
+</code></pre>
+    <h1>Exercise 7 - Check for any invalid entries</h1>
+    <p>Let us now see what a <code>check_for_valid_values</code> test looks like.</p>
+    <p>Here is a sample <code>check_for_valid_values</code> test:</p>
+    <pre><code class="hljs language-json">test3={
+	<span class="hljs-attr">"testname"</span>:<span class="hljs-string">"Check for valid values"</span>,
+	<span class="hljs-attr">"test"</span>:check_for_valid_values,
+	<span class="hljs-attr">"column"</span>: <span class="hljs-string">"category"</span>,
+	<span class="hljs-attr">"table"</span>: <span class="hljs-string">"DimCustomer"</span>,
+	<span class="hljs-attr">"valid_values"</span>:{'Individual','Company'}
+}
+</code></pre>
+    <p>In addition to the usual fields, you have an additional field here.</p>
+    <ul>
+      <li>use the field <code>valid_values</code> to mention what are the valid values for this column.</li>
+    </ul>
+    <p>Let us now create a new <code>check_for_valid_values</code> test and run it.</p>
+    <p>The test below checks for valid values in the column <code>quartername</code> in the table <code>DimMonth</code>.</p>
+    <p>The valid values are Q1,Q2,Q3,Q4</p>
+    <p>The test fails if there any values less than minimum or more than maximum.</p>
+    <p>Copy and paste the code below at the end of mytests.py file.</p>
+    <pre><code class="hljs language-scheme">test<span class="hljs-number">7</span>={
+	<span class="hljs-string">"testname"</span>:<span class="hljs-string">"Check for valid values"</span>,
+	<span class="hljs-string">"test"</span>:check_for_valid_values,
+	<span class="hljs-string">"column"</span>: <span class="hljs-string">"quartername"</span>,
+	<span class="hljs-string">"table"</span>: <span class="hljs-string">"DimMonth"</span>,
+	<span class="hljs-string">"valid_values"</span>:{<span class="hljs-symbol">'Q1</span>',<span class="hljs-symbol">'Q2</span>',<span class="hljs-symbol">'Q3</span>',<span class="hljs-symbol">'Q4</span>'}
+}
+</code></pre>
+    <p>Save the file using Menu -> File -> Save</p>
+    <p>Run the command below to generate the new data quality report.</p>
+    <pre><code class="hljs language-verilog">python3 <span class="hljs-keyword">generate</span>-data-quality-report<span class="hljs-variable">.py</span>
+</code></pre>
+    <h1>Exercise 8 - Check for duplicate entries</h1>
+    <p>Let us now see what a <code>check_for_duplicates</code> test looks like.</p>
+    <p>Here is a sample <code>check_for_duplicates</code> test</p>
+    <pre><code class="hljs language-json">test4={
+	<span class="hljs-attr">"testname"</span>:<span class="hljs-string">"Check for duplicates"</span>,
+	<span class="hljs-attr">"test"</span>:check_for_duplicates,
+	<span class="hljs-attr">"column"</span>: <span class="hljs-string">"monthid"</span>,
+	<span class="hljs-attr">"table"</span>: <span class="hljs-string">"DimMonth"</span>
+}
+</code></pre>
+    <p>Let us now create a new <code>check_for_duplicates</code> test and run it.</p>
+    <p>The test below checks for any duplicate values in the column <code>customerid</code> in the table <code>DimCustomer</code>.</p>
+    <p>The test fails if duplicates exist.</p>
+    <p>Copy and paste the code below at the end of mytests.py file.</p>
+    <pre><code class="hljs language-json">test8={
+	<span class="hljs-attr">"testname"</span>:<span class="hljs-string">"Check for duplicates"</span>,
+	<span class="hljs-attr">"test"</span>:check_for_duplicates,
+	<span class="hljs-attr">"column"</span>: <span class="hljs-string">"customerid"</span>,
+	<span class="hljs-attr">"table"</span>: <span class="hljs-string">"DimCustomer"</span>
+}
+</code></pre>
+    <p>Save the file using Menu -> File -> Save</p>
+    <p>Run the command below to generate the new data quality report.</p>
+    <pre><code class="hljs language-verilog">python3 <span class="hljs-keyword">generate</span>-data-quality-report<span class="hljs-variable">.py</span>
+</code></pre>
+    <h1>Practice exercises</h1>
+    <ol>
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Create a <code>check_for_nulls</code> test on column <code>billedamount</code> in the table <code>FactBilling</code></em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p><em>Use the check_for_nulls test with column=billedamount and table=FactBilling</em></p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <p>Copy and paste the code below at the end of mytests.py file.</p>
+      <pre><code class="hljs language-json">test9={
+	<span class="hljs-attr">"testname"</span>:<span class="hljs-string">"Check for nulls"</span>,
+	<span class="hljs-attr">"test"</span>:check_for_nulls,
+	<span class="hljs-attr">"column"</span>: <span class="hljs-string">"billedamount"</span>,
+	<span class="hljs-attr">"table"</span>: <span class="hljs-string">"FactBilling"</span>
+}
+</code></pre>
+    </details>
+    <ol start="2">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Create a <code>check_for_duplicates</code> test on column <code>billid</code> in the table <code>FactBilling</code></em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p><em>Use the check_for_duplicates test with column=billid and table=FactBilling</em></p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <p>Copy and paste the code below at the end of mytests.py file.</p>
+      <pre><code class="hljs language-json">test10={
+	<span class="hljs-attr">"testname"</span>:<span class="hljs-string">"Check for duplicates"</span>,
+	<span class="hljs-attr">"test"</span>:check_for_duplicates,
+	<span class="hljs-attr">"column"</span>: <span class="hljs-string">"billid"</span>,
+	<span class="hljs-attr">"table"</span>: <span class="hljs-string">"FactBilling"</span>
+}
+</code></pre>
+    </details>
+    <ol start="3">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Create a <code>check_for_valid_values</code> test on column <code>quarter</code> in the table <code>DimMonth</code>. The valid values are 1, 2, 3, 4</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p><em>Use the check_for_valid_values test with column=quarter and table=DimMonth and valid_values={1, 2, 3, 4}</em></p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <p>Copy and paste the code below at the end of mytests.py file.</p>
+      <pre><code class="hljs language-json">test11={
+    <span class="hljs-attr">"testname"</span>:<span class="hljs-string">"Check for valid values"</span>,
+    <span class="hljs-attr">"test"</span>:check_for_valid_values,
+    <span class="hljs-attr">"column"</span>: <span class="hljs-string">"quarter"</span>,
+    <span class="hljs-attr">"table"</span>: <span class="hljs-string">"DimMonth"</span>,
+    <span class="hljs-attr">"valid_values"</span>:{1,2,3,4}
+}
+</code></pre>
+    </details>
+    <p>Congratulations!! You have successfully finished this lab.</p>
+    <h2>Authors</h2>
+    <p>Ramesh Sannareddy</p>
+    <h3>Other Contributors</h3>
+    <p>Rav Ahuja</p>
+    <h2>Change Log</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date (YYYY-MM-DD)</th>
+          <th>Version</th>
+          <th>Changed By</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-09-22</td>
+          <td>0.1</td>
+          <td>Ramesh Sannareddy</td>
+          <td>Created initial version of the lab</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Copyright (c) 2021 IBM Corporation. All rights reserved.</p>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

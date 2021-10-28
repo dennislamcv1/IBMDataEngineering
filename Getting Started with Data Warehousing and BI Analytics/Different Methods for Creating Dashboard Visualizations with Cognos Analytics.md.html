@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%205%20-%20Different%20Methods%20for%20Creating%20Dashboard%20Visualizations%20with%20Cognos%20Analytics/images/IDSNlogo.png" width="200">
+    <h1>Hands-on Lab 5: Different Methods for Creating Dashboard Visualizations with Cognos Analytics</h1>
+    <p><strong>Estimated time needed:</strong> 45 minutes</p>
+    <p>In this lab, first you will learn how to work with tabs and start a new dashboard within tabs. Then you will learn how to create a simple dashboard. Lastly, you will learn different methods for creating dashboard visualizations.</p>
+    <h1>Software Used in this Lab</h1>
+    <p>Like the videos in the course, for the hands-on labs we will be using IBM Cognos Analytics trial version (currently limited to 30 days) as this is available at no charge.</p>
+    <h1>Dataset Used in this Lab</h1>
+    <p>The dataset used in this lab comes from the VM designed to showcase IBM Cognos Analytics. Source: <a href="https://www.ibm.com/cloud/garage/dte/tutorial/ibm-cognos-analytics-1113-getting-started-exploration-0?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDeveloperSkillsNetworkDV0130ENSkillsNetwork20531073-2021-01-01" target="_blank" rel="external">https://www.ibm.com/cloud/garage/dte/tutorial/ibm-cognos-analytics-1113-getting-started-exploration-0</a>. This dataset is published by IBM. You can download the dataset file directly from here: <a href="CustomerLoyaltyProgram.csv">CustomerLoyaltyProgram.csv</a></p>
+    <h1>Objectives</h1>
+    <p>After completing this lab, you will be able to:</p>
+    <ul>
+      <li>Work with tabs.</li>
+      <li>Start a new dashboard within tabs.</li>
+      <li>Use an automatic method to create a visualization.</li>
+      <li>Use Cognos Assistant to create a visualization.</li>
+      <li>Use a manual method to create a visualization.</li>
+    </ul>
+    <h1>Exercise 1 : Work with Tabs and Start a New Dashboard within Tabs</h1>
+    <p>In this exercise, you will learn how to work with tabs and start a new dashboard within tabs.</p>
+    <ol>
+      <li>
+        <p>To sign in to the Cognos Analytics platform with your IBMid, go to <a href="https://myibm.ibm.com/dashboard/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDeveloperSkillsNetworkDV0130ENSkillsNetwork20531073-2021-01-01" target="_blank" rel="external">myibm.ibm.com/dashboard/</a>.</p>
+      </li>
+      <li>
+        <p>Enter your IBMid and password.</p>
+      </li>
+      <li>
+        <p>Scroll down and click <strong>Launch</strong>.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%205%20-%20Different%20Methods%20for%20Creating%20Dashboard%20Visualizations%20with%20Cognos%20Analytics/images/1.3.png" width="400">
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>From the <strong>Recent</strong> section, click <strong>Simple dashboard</strong>.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%205%20-%20Different%20Methods%20for%20Creating%20Dashboard%20Visualizations%20with%20Cognos%20Analytics/images/1.4.png" width="885">
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        <p>Click <strong>Edit or preview</strong> at the top left corner.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%205%20-%20Different%20Methods%20for%20Creating%20Dashboard%20Visualizations%20with%20Cognos%20Analytics/images/1.5.png" width="325">
+      </li>
+    </ol><br>
+    <ol start="6">
+      <li>
+        <p>Click the <strong>Add new tab</strong> button to the right of the Dashboard A tab.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%205%20-%20Different%20Methods%20for%20Creating%20Dashboard%20Visualizations%20with%20Cognos%20Analytics/images/1.6.png" width="260">
+      </li>
+    </ol><br>
+    <ol start="7">
+      <li>
+        <p>Select the <strong>four-panel template with 2x2 configuration</strong>. Click <strong>Create</strong>.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%205%20-%20Different%20Methods%20for%20Creating%20Dashboard%20Visualizations%20with%20Cognos%20Analytics/images/1.7.png" width="660">
+      </li>
+    </ol><br>
+    <ol start="8">
+      <li>
+        <p>Click on the tab name <strong>Tab 1</strong> to bring up the Tab’s on-demand toolbar. Select the <strong>Edit</strong>.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%205%20-%20Different%20Methods%20for%20Creating%20Dashboard%20Visualizations%20with%20Cognos%20Analytics/images/1.8.png" width="300">
+      </li>
+    </ol><br>
+    <ol start="9">
+      <li><strong>Rename</strong> the tab to "B - Customer”.</li>
+    </ol>
+    <h1>Exercise 2 : Different Methods for Creating Dashboard Visualization</h1>
+    <p>In this exercise, you will learn different methods for creating dashboard visualizations.</p>
+    <ul>
+      <li>
+        <p>As you build the dashboard, the location placement for Widgets in the dashboard template will be referenced using the following Panel numbers</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%205%20-%20Different%20Methods%20for%20Creating%20Dashboard%20Visualizations%20with%20Cognos%20Analytics/images/2.1.png" width="533">
+      </li>
+    </ul><br>
+    <h2>Task A : Using an Automatic Method to Create a Visualization for Panel 1</h2>
+    <ol>
+      <li>
+        <p>From the <strong>Navigation</strong> panel, select <strong>Sources</strong> to open the data source panel, if it is not already open. The <strong>Data Source</strong> panel displays the uploaded file <strong>“CustomerLoyaltyProgram.csv”</strong> as the Selected Source.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%205%20-%20Different%20Methods%20for%20Creating%20Dashboard%20Visualizations%20with%20Cognos%20Analytics/images/2.A.1.png" width="61">
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>From the <strong>Data Source</strong> panel, expand CustomerLoyaltyProgram.csv, if needed.</p>
+      </li>
+      <li>
+        <p>From the <strong>Data Source</strong> panel, press <strong>CTRL</strong> and select <strong>Latitude, Longitude, Quantity sold</strong> and drag them to the center of <strong>Panel 1</strong>, releasing them once you see the <strong>drop zone turn blue</strong>.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%205%20-%20Different%20Methods%20for%20Creating%20Dashboard%20Visualizations%20with%20Cognos%20Analytics/images/2.A.3.png" width="682">
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>Click on the <strong>Map chart in panel 1</strong> to bring it into focus.</p>
+      </li>
+      <li>
+        <p>To change the map style, open the <strong>Properties</strong> panel and click the <strong>down arrow next to Chart</strong> to see the various options of maps available. Select <strong>Streets</strong> for <strong>Style</strong>.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%205%20-%20Different%20Methods%20for%20Creating%20Dashboard%20Visualizations%20with%20Cognos%20Analytics/images/2.A.4.png" width="350">
+      </li>
+    </ol><br>
+    <ol start="6">
+      <li>
+        <p>Open the <strong>Fields</strong> panel to view the data slots. From the <strong>Sources</strong> panel on the left of the screen, drag and drop the <strong>Country, Province or State, Revenue</strong> into the <strong>Locations, Locations, Location color</strong> data slots of <strong>Regions</strong> of the Fields panel respectively.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%205%20-%20Different%20Methods%20for%20Creating%20Dashboard%20Visualizations%20with%20Cognos%20Analytics/images/2.A.5.png" width="350">
+      </li>
+    </ol><br>
+    <ol start="7">
+      <li>
+        <p>Make sure to drag and drop the <strong>Quantity Sold</strong> into <strong>Point color</strong> data slot of <strong>Latitude/longitude</strong> of the Fields panel if needed.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%205%20-%20Different%20Methods%20for%20Creating%20Dashboard%20Visualizations%20with%20Cognos%20Analytics/images/2.A.6.png" width="350">
+      </li>
+    </ol><br>
+    <ol start="8">
+      <li>
+        <p>Click on the <strong>Fields</strong> button to close the fields panel.</p>
+      </li>
+      <li>
+        <p>Click on the <strong>Map chart widget in Panel 1</strong> to bring it into focus if needed. From the on-demand toolbar, click <strong>Edit the title</strong>. Enter the title "Revenue and Quantity Sold by Location" to the visualization.</p>
+      </li>
+      <li>
+        <p>Click the <strong>Properties</strong> button in the top-right corner to open the <strong>Properties</strong> panel and click on the <strong>General</strong> tab. Expand the <strong>down arrow</strong> next to <strong>Appearance</strong>. Click on <strong>Border Color</strong> to open the color options for borders. Apply a “Black” border.</p>
+      </li>
+      <li>
+        <p>To save the current work of the dashboard, press <strong>CTRL+S</strong>.</p>
+      </li>
+      <li>
+        <p>Your <strong>Panel 1 widget</strong> should look like the one below:</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%205%20-%20Different%20Methods%20for%20Creating%20Dashboard%20Visualizations%20with%20Cognos%20Analytics/images/2.A.12.png" width="702">
+      </li>
+    </ol><br>
+    <h2>Task B : Using an Automatic Method to Create a Visualization for Panel 2</h2>
+    <ol>
+      <li>
+        <p>From the <strong>Data Source</strong> panel, press <strong>CTRL</strong> and select <strong>Product Line, Coupon Response, Quantity sold</strong> and drag them to the center of <strong>Panel 2</strong>, releasing them once you see the <strong>drop zone turn blue</strong>.</p>
+      </li>
+      <li>
+        <p>Click on the <strong>Line chart in panel 2</strong> to bring it into focus and render the <strong>on-demand toolbar</strong>.</p>
+      </li>
+      <li>
+        <p>Click the <strong>Change Visualization</strong> button in the on-demand toolbar. Use the <strong>arrow “>”</strong> to expand <strong>All Visualizations</strong>. Scroll down and select <strong>Radial</strong>.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%205%20-%20Different%20Methods%20for%20Creating%20Dashboard%20Visualizations%20with%20Cognos%20Analytics/images/2.B.3.png" width="1022">
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>Click on the <strong>Radial chart in Panel 2</strong> to bring it into focus. Click on the <strong>Fields</strong> button on the <strong>Dashboard toolbar</strong> to open the Fields Panel.</p>
+      </li>
+      <li>
+        <p>Drag and drop <strong>Product Line</strong> to the <strong>Repeat (column)</strong> area.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%205%20-%20Different%20Methods%20for%20Creating%20Dashboard%20Visualizations%20with%20Cognos%20Analytics/images/2.B.5.png" width="300">
+      </li>
+    </ol><br>
+    <ol start="6">
+      <li>
+        <p>Next, move the <strong>Coupon Response</strong> to the <strong>Color</strong> field.</p>
+      </li>
+      <li>
+        <p>Click on the <strong>Fields</strong> button to close the fields panel.</p>
+      </li>
+      <li>
+        <p>Click on the <strong>Radial chart widget in Panel 2</strong> to bring it into focus. From the on-demand toolbar, click <strong>Edit the title</strong>. Enter the title "Marketing Response by Department" to the visualization.</p>
+      </li>
+      <li>
+        <p>Click on the <strong>Radial chart in Panel 2</strong> if needed to bring it into focus.</p>
+      </li>
+      <li>
+        <p>Open the <strong>Properties</strong> panel and click on the <strong>General</strong> tab. Expand the <strong>down arrow</strong> next to <strong>Appearance</strong>. Click on <strong>Border Color</strong> to open the color options for borders. Apply a “Black” border.</p>
+      </li>
+      <li>
+        <p>To save the current work of the dashboard, press <strong>CTRL+S</strong>.</p>
+      </li>
+      <li>
+        <p>Your <strong>Panel 2 widget</strong> should look like the one below:</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%205%20-%20Different%20Methods%20for%20Creating%20Dashboard%20Visualizations%20with%20Cognos%20Analytics/images/2.B.12.png" width="702">
+      </li>
+    </ol><br>
+    <h2>Task C : Using Cognos Assistant to Create a Visualization for Panel 3</h2>
+    <ol>
+      <li>
+        <p>From the <strong>Navigation</strong> panel, select <strong>Assistant</strong> to open the <strong>Cognos Assistant</strong> panel.</p>
+      </li>
+      <li>
+        <p>In the <strong>Ask a question</strong> input text box, at the bottom of the left hand pane, type <strong>"show Quantity Sold and City"</strong> and press <strong>Enter</strong>.</p>
+      </li>
+      <li>
+        <p>Click on <strong>show related visualizations</strong>.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%205%20-%20Different%20Methods%20for%20Creating%20Dashboard%20Visualizations%20with%20Cognos%20Analytics/images/2.C.3.png" width="350">
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>Select the second chart visualization.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%205%20-%20Different%20Methods%20for%20Creating%20Dashboard%20Visualizations%20with%20Cognos%20Analytics/images/2.C.4.png" width="450">
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        <p>From the <strong>Cognos Assistant</strong> panel, select the second chart visualization and drag it to the center of <strong>Panel 3</strong>, releasing it once you see the <strong>drop zone turn blue</strong>.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%205%20-%20Different%20Methods%20for%20Creating%20Dashboard%20Visualizations%20with%20Cognos%20Analytics/images/2.C.5.png" width="952">
+      </li>
+    </ol><br>
+    <ol start="6">
+      <li>
+        <p>Click on the <strong>Line and column chart in Panel 3</strong> if needed to bring it into focus.</p>
+      </li>
+      <li>
+        <p>Open the <strong>Properties</strong> panel and click on the <strong>General</strong> tab. Expand the <strong>down arrow</strong> next to <strong>Appearance</strong>. Click on <strong>Border Color</strong> to open the color options for borders. Apply a “Black” border.</p>
+      </li>
+      <li>
+        <p>To save the current work of the dashboard, press <strong>CTRL+S</strong>.</p>
+      </li>
+      <li>
+        <p>Your <strong>Panel 3 widget</strong> should look like the one below:</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%205%20-%20Different%20Methods%20for%20Creating%20Dashboard%20Visualizations%20with%20Cognos%20Analytics/images/2.C.9.png" width="702">
+      </li>
+    </ol><br>
+    <h2>Task D : Using a Manual Method to Create a Visualization for Panel 4</h2>
+    <ol>
+      <li>
+        <p>From the <strong>Navigation</strong> panel, select <strong>Visualizations</strong> to open the Visualizations library.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%205%20-%20Different%20Methods%20for%20Creating%20Dashboard%20Visualizations%20with%20Cognos%20Analytics/images/2.D.1.png" width="400">
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Select the <strong>Packed Bubble</strong> chart, and drag it to the center of <strong>panel 4</strong> of the dashboard template, releasing it once you see the <strong>drop zone turn blue</strong>.</p>
+      </li>
+      <li>
+        <p>The Packed Bubble chart visualization will open along with the <strong>Fields</strong> panel for you to set up the data definitions for your visualization.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%205%20-%20Different%20Methods%20for%20Creating%20Dashboard%20Visualizations%20with%20Cognos%20Analytics/images/2.D.4.png" width="665">
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>From the <strong>Sources</strong> panel on the left of the screen, drag and drop the <strong>Product Line, Quantity Sold, Loyalty Status</strong> sources into the <strong>Bubbles, Size, Color</strong> data slots of the Fields panel respectively.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%205%20-%20Different%20Methods%20for%20Creating%20Dashboard%20Visualizations%20with%20Cognos%20Analytics/images/2.D.5.png" width="630">
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        <p>Click on the <strong>Fields</strong> button to close the panel.</p>
+      </li>
+      <li>
+        <p>Click on the <strong>Packed bubble chart widget in Panel 4</strong> to bring it into focus. From the on-demand toolbar, click <strong>Edit the title</strong>. Enter the title "Department Sales by Loyalty Status" to the visualization.</p>
+      </li>
+      <li>
+        <p>Click on the <strong>Packed bubble chart in Panel 4</strong> if needed to bring it into focus.</p>
+      </li>
+      <li>
+        <p>Open the <strong>Properties</strong> panel and click on the <strong>General</strong> tab. Expand the <strong>down arrow</strong> next to <strong>Appearance</strong>. Click on <strong>Border Color</strong> to open the color options for borders. Apply a “Black” border.</p>
+      </li>
+      <li>
+        <p>To save the current work of the dashboard, press <strong>CTRL+S</strong>.</p>
+      </li>
+      <li>
+        <p>Your <strong>Panel 4 widget</strong> should look like the one below:</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%205%20-%20Different%20Methods%20for%20Creating%20Dashboard%20Visualizations%20with%20Cognos%20Analytics/images/2.D.10.png" width="702">
+      </li>
+    </ol><br>
+    <h3>Finally, your dashboard "B - Customer" should look like below:</h3>
+    <h3>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DV0130EN-SkillsNetwork/Hands-on%20Labs/Lab%205%20-%20Different%20Methods%20for%20Creating%20Dashboard%20Visualizations%20with%20Cognos%20Analytics/images/2.2.png" width="1078">
+    </h3><br>
+    <h3>Congratulations! You have completed Lab 5B, and you are ready for the next topic.</h3>
+    <h3></h3>
+    <h1>Author(s)</h1>
+    <ul>
+      <li><a href="https://www.linkedin.com/in/sandipsahajoy/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDeveloperSkillsNetworkDV0130ENSkillsNetwork20531073-2021-01-01" target="_blank" rel="external">Sandip Saha Joy</a></li>
+    </ul>
+    <h2>Other Contributor(s)</h2>
+    <ul>
+      <li><a href="https://www.linkedin.com/in/stevelryan?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDeveloperSkillsNetworkDV0130ENSkillsNetwork20531073-2021-01-01" target="_blank" rel="external">Steve Ryan</a></li>
+    </ul>
+    <h1>Changelog</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-06-18</td>
+          <td>1.3</td>
+          <td>Malika Singla</td>
+          <td>Updated screenshots</td>
+        </tr>
+        <tr>
+          <td>2020-09-23</td>
+          <td>1.2</td>
+          <td>Steve Ryan</td>
+          <td>Post review changes</td>
+        </tr>
+        <tr>
+          <td>2020-09-21</td>
+          <td>1.1</td>
+          <td>Steve Ryan</td>
+          <td>ID review</td>
+        </tr>
+        <tr>
+          <td>2020-09-17</td>
+          <td>1.0</td>
+          <td>Sandip Saha Joy</td>
+          <td>Initial version created</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2020. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>
