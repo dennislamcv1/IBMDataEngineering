@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Reading%20-%20User%20Management%20with%20DB2/images/IDSNlogo.png" width="200" height="200">
+    <h1>Reading : User Management with DB2</h1>
+    <p><strong>Estimated time needed:</strong> 10 minutes</p>
+    <p>In this reading, you will learn how to manage Db2 user accounts and roles.</p><br>
+    <h2>Objectives</h2>
+    <p>After completing this reading, you will have be able to manage Db2 user accounts and roles.</p>
+    <h1></h1>
+    <h2>Software Used</h2>
+    <p>In this reading, you will see usage of <a href="https://www.ibm.com/products/db2-database?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank">IBM Db2 Database</a> Standard plan. Db2 is a Relational Database Management System (RDBMS) from IBM, designed to store, analyze and retrieve the data efficiently.</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Reading%20-%20User%20Management%20with%20DB2/images/ibmdb2.png" width="245" height="100">
+    <h1></h1>
+    <h2>Manage Db2 user accounts &#x26; roles</h2>
+    <p>User management is the process of controlling which users are allowed to connect to the Db2 server and what permissions they have on each database. In Db2, users are created and assigned a specific built-in user role with a predefined set of privileges on the system. The built-in user roles are simple to use and easy to manage.</p>
+    <p>In Db2 on Cloud Standard plan, a user is created by the administrator and typically assigned one of the following built-in user roles: Administrator or User. These built-in user roles provide different levels of access commonly needed in a database system. The following general summary describes what each of the built-in user roles can do:</p>
+    <p><strong>Administrator</strong></p>
+    <ul>
+      <li>Has access to all of the features in the console, and has the privileges to manage other users.</li>
+    </ul>
+    <p><strong>User</strong></p>
+    <ul>
+      <li>Has access to many of the features in the console, and has the privileges to manage their own user profile. Users with this role also have full access to their own tables and can use their tables with all permissions, including giving other users permission to access and use their tables.</li>
+    </ul>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Reading%20-%20User%20Management%20with%20DB2/images/1.png" alt="image">
+    </p>
+    <p>Under <strong>Administration</strong> > <strong>User management</strong> of Db2 on Cloud Standard plan, the <strong>Add</strong> option allows you to create/add new user with either of the built-in user roles. You can see some created users shown in the above image, for example <strong>James</strong> with user privilege and <strong>sandip</strong> with administrator privilege.</p>
+    <p>The built-in set of user roles is simple to use and easy to manage, but if it does not provide you with the desired set of fine-grained permissions, you can also create your own user-defined user roles to satisfy your special requirements. A role is a database object that groups together one or more privileges and can be assigned to users. A user that is assigned a role receives all of the privileges of that role. A user can have multiple roles. A role hierarchy is also supported. This allows one of the roles to inherit all of the privileges and authorities of the other role or roles that they have been granted. A user-defined user role simplifies the administration and management of privileges by allowing the administrator to group authorities and privileges into a single role and then grant this role to the users that need those authorities and privileges to perform their jobs.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Reading%20-%20User%20Management%20with%20DB2/images/2.png" alt="image">
+    </p>
+    <p>You can see some created user defined roles shown in the above image, for example <strong>DEVELOPER</strong>, <strong>TESTER</strong>, <strong>OPERATOR</strong>, etc.</p>
+    <h1></h1>
+    <h3>Congratulations! You have completed this reading, and you are ready for the next topic.</h3>
+    <h3><br></h3>
+    <h2>Author(s)</h2>
+    <ul>
+      <li><a href="https://www.linkedin.com/in/sandipsahajoy/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">Sandip Saha Joy</a></li>
+    </ul>
+    <h2>Other Contributor(s)</h2>
+    <ul>
+      <li></li>
+    </ul>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-07-25</td>
+          <td>1.0</td>
+          <td>Sandip Saha Joy</td>
+          <td>Created initial version</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2021. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

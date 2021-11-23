@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <h1>Final Assignment - Database Administration - Part 3</h1>
+    <center>
+      <img src="https://gitlab.com/ibm/skills-network/courses/placeholder101/-/raw/master/labs/module%201/images/IDSNlogo.png" width="300" alt="cognitiveclass.ai logo">
+    </center>
+    <p>Estimated time needed: <strong>45</strong> minutes.</p>
+    <h1>About This SN Labs Cloud IDE</h1>
+    <p>This Skills Network Labs Cloud IDE provides a hands-on environment for course and project related labs. It utilizes Theia, an open-source IDE (Integrated Development Environment) platform, that can be run on desktop or on the cloud. To complete this lab, we will be using the Cloud IDE based on Theia running in a Docker container. You will also need an instance of DB2 running in IBM Cloud.</p>
+    <h2>Important Notice about this lab environment</h2>
+    <p>Please be aware that sessions for this lab environment are not persisted. Every time you connect to this lab, a new environment is created for you. Any data you may have saved in the earlier session would get lost. Plan to complete these labs in a single session, to avoid losing your data.</p>
+    <h1>Scenario</h1>
+    <p>You have been assigned the work to provison a cloud instance of IBM DB2 server and perform the tasks like restoration of data, index creation to improve the query performance. You will create views to make queries easier to write. Optionally You will also connect to the cloud instance of IBM DB2 server and from command line.</p>
+    <h2>Objectives</h2>
+    <p>In part 3 of this assignment you will be working on the following aspects of Database Administration.</p>
+    <ul>
+      <li>Restore data</li>
+      <li>Indexing</li>
+      <li>View creation</li>
+      <li>Connecting from command line</li>
+    </ul>
+    <h1>Note - Screenshots</h1>
+    <p>Throughout this lab you will be prompted to take screenshots and save them on your own device. These screenshots will be needed to be uploaded for peer review in the next section of the course. You can use various free screengrabbing tools to do this or use your operating system's shortcut keys to do this (for example Alt+PrintScreen in Windows).</p>
+    <h1>Exercise 3.1 - Prepare the lab environment</h1>
+    <p>Before you proceed with the assignment, you need to have access to a cloud instance of IBM DB2 database. If you do not have access, use the instructions in this lab <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Sign%20up%20for%20IBM%20Cloud%20-%20Create%20Db2%20service%20instance/instructional-labs.md.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01">Hands-on Lab: Sign up for IBM Cloud and Create a Db2 service instance</a> to create a instance for yourself.</p>
+    <p>Download the file <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Final%20Assignment/billing.csv?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01">billing.csv</a></p>
+    <h1>Exercise 3.2 - Restore data</h1>
+    <h3>Task 3.1 - Restore the table billing.</h3>
+    <p>Use the billing.csv you have downloaded earlier, restore the csv file into a table named billing.</p>
+    <p>Take a screenshot of the import status clearly showing the number of rows imported.</p>
+    <p>Name the screenshot as restore-table.jpg. (images can be saved with either .jpg or .png extension)</p>
+    <h1>Exercise 3.3 - Create a view</h1>
+    <h3>Task 3.2 - Create a view named <code>basicbilldetails</code>with the columns customerid, month, billedamount.</h3>
+    <p>Take a screenshot of the sql statement used to create the view.</p>
+    <p>Name the screenshot as create-view.jpg. (images can be saved with either .jpg or .png extension)</p>
+    <h1>Exercise 3.4 - Indexing</h1>
+    <h3>Task 3.3 - Baseline query performance</h3>
+    <p>Write a query to find out all the rows with a billing amount of 19929.</p>
+    <p>Take a screenshot of the command you used along with the query run time.</p>
+    <p>Name the screenshot as query-base-line-db2.jpg. (images can be saved with either .jpg or .png extension)</p>
+    <h3>Task 3.4 - Create an index.</h3>
+    <p>Create an index that can make the query in the previous task faster. Name the index as <code>billingamount</code>.</p>
+    <p>Take a screenshot of the sql statement you used and the output.</p>
+    <p>Name the screenshot as index-creation-db2.jpg. (images can be saved with either .jpg or .png extension)</p>
+    <h3>Task 3.5 - Document the improvement in query performance.</h3>
+    <p>Find out if the index has any impact on query performance.</p>
+    <p>Re-run the query to find out all the rows with a billing amount of 19929.</p>
+    <p>Take a screenshot of the command you used and the output along with the query time.</p>
+    <p>Note: Sometimes, the query time after index creation may increase. This can happen due to various factors like</p>
+    <ul>
+      <li>bandwidth at the time of firing the query.</li>
+      <li>the load on free cloud tier that your IBM DB2 instance uses is dynamic and other load may impact your query time.</li>
+    </ul>
+    <p>You will NOT be evaluated on the query run time. However, you are encouraged to run the query multiple times and pick the result with lowest query run time.</p>
+    <p>Name the screenshot as query-after-index.jpg. (images can be saved with either .jpg or .png extension)</p>
+    <h1>OPTIONAL Exercise (Non-graded) - Connecting to IBM DB2 from command line</h1>
+    <h3>Bonus Task 3.6 - Connect to the clould instance of IBM DB2 using the db2cli command line tool.</h3>
+    <p>From the theia lab environment, you can use the db2cli to connect the IBM DB2. The generic syntax to connect is given below.</p>
+    <p>db2cli execsql -connString "DATABASE=
+      <databasename>;UID=
+        <username>;PWD=
+          <password>;HOSTNAME=
+            <hostname>;port=
+              <port>;Security=SSL"</port>
+            </hostname>
+          </password>
+        </username>
+      </databasename>
+    </p>
+    <p>Collect the databasename, username, password, hostname and port details using the service credentials of the IBM DB2 cloud console.</p>
+    <p>Run a sql query on the db2cli command line to find out the number of rows in the table billing.</p>
+    <p>Note the row count.</p>
+    <p>End of assignment - Part 3.</p>
+    <h2>Authors</h2>
+    <p>Ramesh Sannareddy</p>
+    <h3>Other Contributors</h3>
+    <p>Rav Ahuja</p>
+    <h2>Change Log</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date (YYYY-MM-DD)</th>
+          <th>Version</th>
+          <th>Changed By</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-10-01</td>
+          <td>0.1</td>
+          <td>Ramesh Sannareddy</td>
+          <td>Created initial version</td>
+        </tr>
+        <tr>
+          <td>2021-10-19</td>
+          <td>0.2</td>
+          <td>Alison Woolford</td>
+          <td>Updated after review</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Copyright (c) 2021 IBM Corporation. All rights reserved.</p>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

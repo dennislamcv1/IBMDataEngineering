@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/IDSNlogo.png" width="200" height="200">
+    <h1>Hands-on Lab: Monitoring and Optimizing Your Databases in MySQL</h1>
+    <p><strong>Estimated time needed:</strong> 45 minutes</p>
+    <p>In this lab, you'll learn how to monitor and optimize your database in MySQL with the help of phpMyAdmin.</p>
+    <h2>Objectives</h2>
+    <p>After completing this lab, you will be able to:</p>
+    <ol>
+      <li>Maintain the health and performance of your database with phpMyAdmin</li>
+      <li>Identify the difference between an unoptimized and optimized database</li>
+      <li>Optimize your database with phpMyAdmin by applying best practices</li>
+    </ol>
+    <h2>Software Used in this Lab</h2>
+    <p>In this lab, you will use <a href="https://www.mysql.com/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">MySQL</a>. MySQL is a Relational Database Management System (RDBMS) designed to efficiently store, manipulate, and retrieve data.</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/mysql.png" alt="Screenshot of MySQL" width="100" height="100">
+    <p>To complete this lab, you will utilize the MySQL relational database service available as part of the IBM Skills Network Labs (SN Labs) Cloud IDE. SN Labs is a virtual lab environment used in this course.</p>
+    <h2>Database Used in this Lab</h2>
+    <p>The World database used in this lab comes from the following source: <a href="https://dev.mysql.com/doc/world-setup/en/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">https://dev.mysql.com/doc/world-setup/en/</a> under <a href="https://creativecommons.org/licenses/by/4.0/deed.en?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">CC BY 4.0 License</a> with <a href="https://tilastokeskus.fi/org/lainsaadanto/copyright_en.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">Copyright 2021 - Statistics Finland</a>.</p>
+    <p>You will use a modified version of the database for the lab, so to follow the lab instructions successfully please use the database provided with the lab, rather than the database from the original source.</p>
+    <p>The following ERD diagram shows the schema of the World database:</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/datasets/World/World_ERD.png" width="680" height="400">
+    <p>The first row is the table name, the second is the primary key, and the remaining items are any additional attributes.</p>
+    <h2>Exercise 1: Create Your Database</h2>
+    <p>To begin, we'll create the <strong>World</strong> database and load the necessary data.</p>
+    <ol>
+      <li>
+        <p>First, we'll launch MySQL. We can do that by navigating to the <strong>Skills Network Toolbox</strong>, selecting <strong>Databases</strong> and then <strong>MySQL</strong>.</p>
+        <p>Press <strong>Start</strong>. This will start a session of MySQL in SN Labs.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/a-open_mySQL.png" alt="Open MySQL">
+        </p>
+        <p>The <strong>Inactive</strong> label will change to <strong>Starting</strong>. This may take a few moments.</p>
+        <p>When it changes to <strong>Active</strong>, it means your session has started.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/a-open_mySQL_active.png" alt="Active MySQL Session">
+        </p>
+      </li>
+      <li>
+        <p>In the menu bar, select <strong>Terminal</strong> > <strong>New Terminal</strong>. This will open the Terminal.</p>
+        <p>To download the zip file containing the <strong>.sql</strong> file for the <strong>World</strong> database, copy and paste the following into the Terminal:</p>
+        <pre><code class="hljs language-awk">wget https:<span class="hljs-regexp">//</span>cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud<span class="hljs-regexp">/IBM-DB0231EN-SkillsNetwork/</span>datasets<span class="hljs-regexp">/World/</span>world_mysql_script.sql
+</code></pre>
+        <p></p>
+      </li>
+      <li>
+        <p>Next, initiate a MySQL command-line session by clicking <strong>MySQL CLI</strong> from the MySQL tab. Doing this will allow us to create a table in MySQL via the command-line.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/a-MySQL_cli.png" alt="Initiate a MySQL command-line session">
+        </p>
+      </li>
+      <li>
+        <p>In the Terminal, create a new database called <strong>world</strong>.</p>
+        <details>
+          <summary>Hint (Click Here)</summary>
+          <p>Recall the statement that we used to create a new database in previous labs.</p>
+        </details>
+        <details>
+          <summary>Solution (Click Here)</summary>
+          <p>In the Terminal, we can create a new database <strong>world</strong> with the following:</p>
+          <pre><code class="hljs language-SQL"><span class="hljs-keyword">CREATE</span> DATABASE world;
+</code></pre>
+          <p></p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/a-create_world_database.png" alt="Create a &#x22;world&#x22; database">
+          </p>
+        </details>
+      </li>
+      <li>
+        <p>Now, we'll want to use the newly created database, <strong>world</strong>. How can we go about doing that?</p>
+        <details>
+          <summary>Hint (Click Here)</summary>
+          <p>Recall the statement that we used to choose a database to use in previous labs.</p>
+        </details>
+        <details>
+          <summary>Solution (Click Here)</summary>
+          <p>To use the newly created <strong>world</strong> database, we can enter the following into the Terminal:</p>
+          <pre><code class="hljs language-SQL">USE world;
+</code></pre>
+          <p></p>
+        </details>
+      </li>
+      <li>
+        <p>In order to complete the database creation process, we'll want to execute the MySQL script containing the data that we downloaded. This file will create tables and insert data into those tables.</p>
+        <details>
+          <summary>Hint (Click Here)</summary>
+          <p>Recall the command that we used to execute a SQL script file in previous labs.</p>
+          <p>The name of the SQL script file is <strong>world_mysql_script.sql</strong>, as can be seen in the Cloud IDE file explorer.</p>
+        </details>
+        <details>
+          <summary>Solution (Click Here)</summary>
+          <p>To execute the SQL script file that we downloaded, we can use the following command:</p>
+          <pre><code class="hljs language-SQL">SOURCE world_mysql_script.sql;
+</code></pre>
+          <p></p>
+        </details>
+        <p>This may take about thirty seconds or so.</p>
+      </li>
+      <li>
+        <p>With our database created, we'll want to take a look at the tables inside it to get a general idea of the data we have. What tables do we have?</p>
+        <details>
+          <summary>Hint (Click Here)</summary>
+          <p>Recall the command that we used to show tables in previous labs.</p>
+        </details>
+        <details>
+          <summary>Solution (Click Here)</summary>
+          <p>We can show the tables in the database with the <code>SHOW TABLES</code> command:</p>
+          <pre><code class="hljs language-SQL"><span class="hljs-keyword">SHOW</span> TABLES;
+</code></pre>
+          <p></p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/a-show_tables_world_database.png" alt="Show &#x22;world&#x22; database tables">
+          </p>
+          <p>As you can see, there are a total of three tables in the <strong>world</strong> database: <strong>city</strong>, <strong>country</strong> and <strong>countrylanguage</strong>.</p>
+        </details>
+      </li>
+    </ol>
+    <h2>Exercise 2: Monitor Your Database</h2>
+    <p>Database monitoring refers to the tasks related to reviewing the operational status of your database. Monitoring is critical in maintaining the health and performance of your database because it'll help you identify issues in a timely manner. In doing so, you'll be able to avoid problems such as database outages that affect your users.</p>
+    <p>With phpMyAdmin, we can take a look at how our database is doing and how we can improve it.</p>
+    <ol>
+      <li>
+        <p>In the MySQL tab, select button next to <strong>phpMyAdmin</strong> to access the tool in a new tab.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/b-access_phpmyadmin.png" alt="Launch phpMyAdmin">
+        </p>
+      </li>
+      <li>
+        <p>On the phpMyAdmin homepage, you'll notice a left sidebar and right panel.</p>
+        <p>On the left sidebar, you'll see all your databases, including the one we just created, <strong>world</strong>.</p>
+        <p>For now, we'll want to focus on the right panel to see more information about our servers and databases.</p>
+        <p>Select <strong>Status</strong>.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/b-phpMyAdmin_homepage.png" alt="phpMyAdmin Homepage with &#x22;Status&#x22; selected">
+        </p>
+      </li>
+      <li>
+        <p>There are several subpages on the <strong>Status</strong> page: <strong>Server</strong>, <strong>Processes</strong>, <strong>Query Statistics</strong>, <strong>All Status Variables</strong>, <strong>Monitor</strong> and <strong>Advisor</strong>. These subpages will give you an inside look at the current processes on your server.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/b-status_page.png" alt="phpMyAdmin Status page">
+        </p>
+        <p>Feel free to explore the rest of the subpages to gain a better understanding of the current status of your server.</p>
+        <p>If you'd like a refresher on the information provided by each subpage, you can revisit the previous reading, <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Reading%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/instructions.md.html" target="_blank" rel="external">Monitoring and Optimizing Your Databases in MySQL</a>.</p>
+        <p>In this lab, we'll be taking a look at the <strong>Monitor</strong> subpage.</p>
+      </li>
+      <li>
+        <p>From the available sections, click <strong>Monitor</strong>.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/b-monitor_status.png" alt="phpMyAdmin Monitor Status">
+        </p>
+        <p>When you first arrive at this page, you may only have three charts: <strong>Questions</strong>, <strong>Connections / Processes</strong> and <strong>Traffic</strong>. We can add a few more graphs to help track important metrics.</p>
+      </li>
+      <li>
+        <p>Select <strong>Settings</strong> then <strong>Add chart</strong>.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/b-monitor_status_settings.png" alt="phpMyAdmin Monitor Status Settings">
+        </p>
+      </li>
+      <li>
+        <p>In the dialog box, you can choose a chart based on a status variable or select <strong>Preset chart</strong>. In this case, we'll be adding two preset charts.</p>
+        <p>First, let's select <strong>System CPU Usage</strong>.</p>
+        <p>Press <strong>Add chart to grid</strong>.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/b-monitor_status_addchart.png" alt="phpMyAdmin Monitor Status - Add Chart">
+        </p>
+        <p>Now, you should see the <strong>System CPU Usage</strong> following chart.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/b-monitor_status_added_chart.png" alt="phpMyAdmin Monitor Status - System CPU Usage Chart">
+        </p>
+        <p>Notice how there was a spike in your charts. Recall that <strong>Questions</strong> includes any queries run in the background by phpMyAdmin. In this case, the interaction was MySQL bringing up the <strong>System CPU Usage</strong> chart.</p>
+      </li>
+      <li>
+        <p>Repeat this process to add the <strong>System memory</strong> chart.</p>
+        <details>
+          <summary>Hint (Click Here)</summary>
+          <p>Review how we added the <strong>System CPU Usage</strong> chart. The process is similar, save for one step.</p>
+        </details>
+        <details>
+          <summary>Solution (Click Here)</summary>
+          <p>When adding the chart, the dialog box should look like the following:</p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/b-monitor_status_add_systemmemory.png" alt="phpMyAdmin Monitor Status - Add system memory chart">
+          </p>
+          <p>Your Monitor page should now look like the following:</p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/b-monitor_status_added_systemmemory.png" alt="phpMyAdmin Monitor Status - System memory chart">
+          </p>
+        </details>
+        <p>What happens when we run a query? Let's take a look!</p>
+      </li>
+      <li>
+        <p>On the left sidebar, press the <code>+</code> sign next to the database <strong>world</strong>. Then, right-click <strong>city</strong> and slect <strong>Open link in new tab</strong>.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/b-run_a_query.png" alt="phpMyAdmin Monitor Status - System memory chart">
+        </p>
+        <p>Doing this will run a <code>SELECT * FROM city</code> query. Notice the spike in the charts. Hovering over the number will provide you more insight into the number of questions, or queries, that are run.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/b-run_a_query_charts.png" alt="phpMyAdmin Monitor Status - Charts">
+        </p>
+        <p>To confirm that we ran the query, we can navigate to the new tab we opened and take a look at the success message:</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/b-run_a_query_query.png" alt="phpMyAdmin Monitor Status - Query">
+        </p>
+        <p>Since phpMyAdmin limits queries to displaying the first 25 rows (similar to the <code>LIMIT</code> clause), the query did not take long to load.</p>
+      </li>
+    </ol>
+    <p>The <strong>Status</strong> page is helpful in monitoring the health and performance of your server and database. Particularly with the <strong>Monitor</strong> page's charts, you'll be able to see real-time information on how your databases are doing. If there are unexpected irregularities, such as a sudden spike in queries or a high volume of incoming traffic, then that may point to a problem that needs to be attended to.</p>
+    <h1>Exercise 3: Optimize Your Database</h1>
+    <p>Database optimization refers to maximizing the speed and efficiency of retrieving data from your database. When you optimize your database, you are improving its performance, which can also improve the performance of slow queries. By optimizing your database, you'll improve the experience for both yourself and your users.</p>
+    <p>We can see this in practice with the following scenario:</p>
+    <p>Imagine that you are the organizer of a sports tournament with a total of 120 participating teams. There's three pieces of information that you've collected from each team: their (unique) team number, their three-letter team code for the system, and the date of the team's creation.</p>
+    <p>How can we go about optimizing a database containing that information? Let's take a look!</p>
+    <h3>Task A: Create Your Table</h3>
+    <ol>
+      <li>
+        <p>To start, we'll create a database in phpMyAdmin.</p>
+        <p>On the left sidebar, select the <strong>New</strong> button to create a new database.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/c-create_new_database.png" alt="Highlighting New Database Button in phpMyAdmin">
+        </p>
+      </li>
+      <li>
+        <p>On the <strong>Databases</strong> page, you can enter a Database name and leave it as the <strong>UTF-8</strong> encoding. UTF-8 is the most commonly used character encoding for content or data.</p>
+        <p>Let's call our database <strong>tournament_teams</strong>.</p>
+        <p>Press <strong>Create</strong>.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/c-create_tournament_teams.png" alt="Create a New Database called &#x22;tournament_teams&#x22; in phpyMyAdmin">
+        </p>
+      </li>
+      <li>
+        <p>Now, we can make a table. Let's call it <strong>teams</strong>.</p>
+        <p>Recall the information we want to store in this database: team number, team code and team creation date. We can make three columns for that.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/c-create_teams_table.png" alt="Create &#x22;teams&#x22; table">
+        </p>
+        <p>Press <strong>Go</strong>.</p>
+      </li>
+      <li>
+        <p>We can now add in the column names and data types.</p>
+        <p>We'll enter the following information into the table. Below are only the values that you'll need to fill out. Anything else can be left as is:</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Length/Values</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>team_no</td>
+              <td>INT</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>team_code</td>
+              <td>CHAR</td>
+              <td>100</td>
+            </tr>
+            <tr>
+              <td>creation_date</td>
+              <td>CHAR</td>
+              <td>100</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>Since the team number is unique, with each of the 120 teams having their own number ranging from 1 to 120, that will be our primary key. We will set that later. It is a numeric data type, so we use <strong>INT</strong> for now.</p>
+        <p>The team code and creation date are both set as the <strong>CHAR</strong> data type. Notice that for the <strong>CHAR</strong> type, we must include the length of the value. To be safe, we've set that to 100.</p>
+        <p>You might be thinking that these data types aren't the best choices for this database. You'd be correct! Given what we know, there are better choices for each of the entries, but let's first take a look at an unoptimized database and how we can optimize it.</p>
+        <p>When all the values are entered, press <strong>Save</strong>.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/c-create_columns_teams.png" alt="Create columns in the &#x22;teams&#x22; table">
+        </p>
+      </li>
+      <li>
+        <p>On the <strong>Structure</strong> page, select the checkbox next to <strong>team_no</strong> and click <strong>Primary</strong>.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/c-set_primary_key.png" alt="Set &#x22;team_no&#x22; as primary key">
+        </p>
+        <p>This will set <strong>team_no</strong> as the primary key of the table. If you were successful in doing so, you'll receive a success message, like the following:</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/c-set_primary_key_success.png" alt="Set &#x22;team_no&#x22; as primary key success message">
+        </p>
+        <p>Notice that <strong>team_no</strong> was automatically added as a PRIMARY index as well.</p>
+      </li>
+      <li>
+        <p>Let's import the data! This sample teams data has been prepared specifically for this lab and is composed of team numbers, team code names, and the creation date of these teams.</p>
+        <p>You can download the file by clicking the following link: <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/tournament_teams_data.sql" target="_blank" rel="external">tournament_teams_data.sql</a>.</p>
+        <p>To import it, navigate to <strong>Import</strong>, then select <strong>Browse</strong> and find the file you just downloaded.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/c-import_data.png" alt="Import data">
+        </p>
+        <p>Press <strong>Go</strong>.</p>
+        <p>When your import is successful, you'll see the following message:</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/c-successful_import.png" alt="Successful import">
+        </p>
+      </li>
+      <li>
+        <p>Now, we can take a look at the imported data by navigating back to <strong>Browse</strong>. This automatically loads a <code>SELECT * FROM teams</code> statement, which will load the first 25 rows from the <strong>teams</strong> table.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/c-select_all_from_teams_top25.png" alt="Select all from teams table with a limit of 25 rows">
+        </p>
+        <p>The limit is implemented by phpMyAdmin, but you can easily show all rows by checking the <strong>Show all</strong> checkbox.</p>
+        <p>You will receive a warning asking if you'd like to see all rows. Since there's only 120 rows in this example, you can click <strong>OK</strong>. In larger datasets, loading all the rows will likely crash your browser.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/c-select_all_from_teams.png" alt="Select all from teams table">
+        </p>
+        <p>We can now confirm that all 120 rows have been loaded.</p>
+      </li>
+      <li>
+        <p>On the left sidebar, select the <strong>tournament_teams</strong> database.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/c-tournament_teams_database_view.png" alt="Database View">
+        </p>
+        <p>With this view, you can see all the tables in the database, including the <strong>teams</strong> table that we just created. As you can see, the size of the database is currently 64 KiB, that is, 64 kilobytes. While this is a small size, do remember that this would not be the case with larger datasets as this sample table only has 120 entries.</p>
+        <p>Keep this number in mind as we start optimizing this table.</p>
+      </li>
+    </ol>
+    <h3>Task B: Optimize Your Data Types</h3>
+    <ol>
+      <li>
+        <p>Under <strong>Action</strong> for the <strong>teams</strong> table, select <strong>Structure</strong>. This will bring you back to the <strong>Structure</strong> page.</p>
+        <p>Next to <strong>team_no</strong>, click <strong>Change</strong>. This function is helpful when you need to make adjustments to a column, for any reason.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/c-change_team_no.png" alt="Change &#x22;team_no&#x22; column">
+        </p>
+      </li>
+      <li>
+        <p>In this editor, let's change the <strong>Type</strong> to one that would be better suited for this column.</p>
+        <details>
+          <summary>Hint (Click Here)</summary>
+          <p>Consider the available numeric integer data types: <strong>TINYINT</strong>, <strong>SMALLINT</strong>, <strong>MEDIUMINT</strong>, <strong>INT</strong> and <strong>BIGINT</strong>. Which one would be most fitting for this situation?</p>
+        </details>
+        <details>
+          <summary>Solution (Click Here)</summary>
+          <p>If you were thinking <strong>TINYINT</strong>, you would be correct! As we know the maximum signed value of <strong>TINYINT</strong> is 127, this data type would work for our maximum number of 120 teams.</p>
+          <p>Please note, if you'd like to add an unsigned integer type, you can do that under the <strong>Attributes</strong> column. In this case, we only have 120 teams, so we are within the <strong>TINYINT</strong> maximum signed value range.</p>
+          <p>Your entry should now look like this:</p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/c-change_teamno_tinyint.png" alt="Change &#x22;team_no&#x22; to TINYINT">
+          </p>
+        </details>
+      </li>
+      <li>
+        <p>Change the data type for <strong>team_code</strong>!</p>
+        <details>
+          <summary>Hint (Click Here)</summary>
+          <p>Consider the string data types: <strong>CHAR</strong> and <strong>VARCHAR</strong>. Given what we know about this data, that all teams have a three-letter team code, which data type and length would be best?</p>
+        </details>
+        <details>
+          <summary>Solution (Click Here)</summary>
+          <p>If you were thinking <strong>CHAR</strong> with a length of <strong>3</strong>, you would be correct! Since we know for sure that every team code is exactly 3 letters, the fixed length <strong>CHAR</strong> data type would be the most suitable in this case.</p>
+          <p>Your entry should now look like this:</p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/c-change_teamcode_char3.png" alt="Change &#x22;team_code&#x22; to CHAR 3">
+          </p>
+        </details>
+      </li>
+      <li>
+        <p>Finally, let's change the <strong>creation_date</strong>.</p>
+        <details>
+          <summary>Hint (Click Here)</summary>
+          <p>Consider the available data types. Which would be the best choice to contain the values in this column?</p>
+        </details>
+        <details>
+          <summary>Solution (Click Here)</summary>
+          <p>If you were thinking <strong>DATE</strong>, you would be correct! As we know, <strong>DATE</strong> is optimized to contain date values, which is exactly what <strong>creation_date</strong> is.</p>
+          <p>Your entry should now look like this:</p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/c-change_creationdate_date.png" alt="Change &#x22;creation_date&#x22; to DATE">
+          </p>
+        </details>
+      </li>
+      <li>
+        <p>After updating your data types, your <strong>Structure</strong> page should look like the following:</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/c-updated_structure_page.png" alt="Updated Structure Page">
+        </p>
+      </li>
+      <li>
+        <p>We can look at our rows by clicking <strong>Browse</strong>.</p>
+        <p>As you can see, we still have all 120 entries. Great! So, let's take a look at the size of this table.</p>
+      </li>
+      <li>
+        <p>Return to the <strong>tournament_teams</strong> database in the left sidebar.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/c-updated_tournament_teams_database.png" alt="Updated Tournament Teams Database">
+        </p>
+        <p>Upon first glance, we can see that the size of the database has reduced to 16 KiB, four times smaller than the original unoptimized database!</p>
+      </li>
+      <li>
+        <p>We can take optimization a step further by selecting the <strong>teams</strong> table and, in the dropbox, selecting <strong>optimize table</strong>. This is equivalent to performing the <code>OPTIMIZE TABLE</code> function in the command-line interface. This command reorganizes the table data and indexes to reduce storage and make accessing the table more efficient. The exact changes made to the table depend on the storage engine in use.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/c-optimize_table_command.png" alt="Optimize Table Command">
+        </p>
+        <p>With the InnoDB engine, which is what we are currently using, the table is actually rebuilt, with the index statistics updated to free unused space.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20MySQL/images/c-optimize_table_results.png" alt="Optimize Table Results">
+        </p>
+        <p>That is what the returned table tells us: InnoDB "optimizes" tables by recreating and analyzing them, and that the optimization had been completed.</p>
+      </li>
+    </ol>
+    <h2>Conclusion</h2>
+    <p>Congratulations! You now know how to monitor and optimize your database with the help of the handy tool, phpMyAdmin. Now, you can apply what you have learned to any database that you create or modify in the future.</p>
+    <h2>Author(s)</h2>
+    <p>Kathy An</p>
+    <h2>Other Contributor(s)</h2>
+    <p>Rav Ahuja</p>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-10-12</td>
+          <td>1.0</td>
+          <td>Kathy An</td>
+          <td>Created initial version</td>
+        </tr>
+        <tr>
+          <td>2021-10-13</td>
+          <td>1.1</td>
+          <td>Steve Hord</td>
+          <td>Copy edits</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2021. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

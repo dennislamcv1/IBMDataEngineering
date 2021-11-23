@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <h1>Final Assignment - Database Administration - Part 1</h1>
+    <center>
+      <img src="https://gitlab.com/ibm/skills-network/courses/placeholder101/-/raw/master/labs/module%201/images/IDSNlogo.png" width="300" alt="cognitiveclass.ai logo">
+    </center>
+    <p>Estimated time needed: <strong>45</strong> minutes.</p>
+    <h1>About This SN Labs Cloud IDE</h1>
+    <p>This Skills Network Labs Cloud IDE provides a hands-on environment for course and project related labs. It utilizes Theia, an open-source IDE (Integrated Development Environment) platform, that can be run on desktop or on the cloud. To complete this lab, we will be using the Cloud IDE based on Theia and PostgreSQL database running in a Docker container.</p>
+    <h2>Important Notice about this lab environment</h2>
+    <p>Please be aware that sessions for this lab environment are not persisted. Every time you connect to this lab, a new environment is created for you. Any data you may have saved in the earlier session would get lost. Plan to complete these labs in a single session, to avoid losing your data.</p>
+    <h1>Scenario</h1>
+    <p>You have assumed the role of database administrator for the PostgreSQL server and you will perform the User Management tasks and handle the backup of the databases.</p>
+    <h2>Objectives</h2>
+    <p>In Part 1 of this assignment you will be working on the following aspects of Database Administration.</p>
+    <ul>
+      <li>Installation/Provisioning</li>
+      <li>Configuration</li>
+      <li>User Management</li>
+      <li>Backup</li>
+    </ul>
+    <h1>Note - Screenshots</h1>
+    <p>Throughout this lab you will be prompted to take screenshots and save them on your own device. These screenshots will be needed to be uploaded for peer review in the next section of the course. You can use various free screengrabbing tools to do this or use your operating system's shortcut keys to do this (for example Alt+PrintScreen in Windows).</p>
+    <h1>Exercise 1.1 - Set up the lab environment</h1>
+    <p>Before you proceed with the assignment</p>
+    <ul>
+      <li>
+        <p>Start the PostgreSQL Server</p>
+      </li>
+      <li>
+        <p>Download the lab setup bash file from <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Final%20Assignment/postgres-setup.sh" target="_blank" rel="external">https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Final%20Assignment/postgres-setup.sh</a></p>
+      </li>
+      <li>
+        <p>Run the bash file</p>
+      </li>
+    </ul>
+    <h3>Task 1.1 - Find the settings in PostgreSQL</h3>
+    <p>What is the maximum number of connections allowed for the postgres server on theia lab?</p>
+    <p>Hint: /home/project/postgres/data/postgresql.conf is the configuration file for PostgreSQL.</p>
+    <p>
+      Take a screenshot of the config file that clearly shows this information.
+      Name the screenshot as max-connections.jpg. (images can be saved with either .jpg or .png extension)
+    </p>
+    <h1>Exercise 1.2 - User Management</h1>
+    <p>
+      Perform these user management tasks on your PostgreSQL server.
+      Perform the tasks 1.2 to 1.5 using the PostgreSQL CLI. DO NOT USE THE PGADMIN GUI.
+    </p>
+    <h3>Task 1.2 - Create an User</h3>
+    <p>Create an user named <code>backup_operator</code></p>
+    <p>
+      Take a screenshot of the command you used and the output.
+      Name the screenshot as create-user.jpg. (images can be saved with either .jpg or .png extension)
+    </p>
+    <h3>Task 1.3 - Create a Role</h3>
+    <p>Create a role named <code>backup</code></p>
+    <p>
+      Take a screenshot of the command you used and the output.
+      Name the screenshot as create-role.jpg. (images can be saved with either .jpg or .png extension)
+    </p>
+    <h3>Task 1.4 - Grant privileges to the role</h3>
+    <p>Grant the following privileges to the <code>backup</code> role.</p>
+    <ul>
+      <li>CONNECT ON tolldata DATABASE.</li>
+      <li>SELECT ON ALL TABLES IN SCHEMA toll.</li>
+    </ul>
+    <p>
+      Take a screenshot of the command you used and the output.
+      Name the screenshot as grant-privs-to-role.jpg. (images can be saved with either .jpg or .png extension)
+    </p>
+    <h3>Task 1.5 - Grant role to an user</h3>
+    <p>Grant the role <code>backup</code> to <code>backup_operator</code></p>
+    <p>
+      Take a screenshot of the command you used and the output.
+      Name the screenshot as grant-role.jpg. (images can be saved with either .jpg or .png extension)
+    </p>
+    <h1>Exercise 1.3 - Backup</h1>
+    <h3>Task 1.6 - Backup a database on PostgreSQL server</h3>
+    <p>Backup the database <code>tolldata</code> using PGADMIN GUI.</p>
+    <p>Backup the database <code>tolldata</code> into a file named <code>tolldatabackup.tar</code>, select the backup format as <code>Tar</code></p>
+    <p>
+      Take a screenshot of the window that shows the filename and format you have specified.
+      Name the screenshot as backup-database.jpg. (images can be saved with either .jpg or .png extension)
+    </p>
+    <p>End of assignment - Part 1.</p>
+    <h2>Authors</h2>
+    <p>Ramesh Sannareddy</p>
+    <h3>Other Contributors</h3>
+    <p>Rav Ahuja</p>
+    <h2>Change Log</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date (YYYY-MM-DD)</th>
+          <th>Version</th>
+          <th>Changed By</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-08-30</td>
+          <td>0.1</td>
+          <td>Ramesh Sannareddy</td>
+          <td>Created initial version</td>
+        </tr>
+        <tr>
+          <td>2021-10-19</td>
+          <td>0.2</td>
+          <td>Alison Woolford</td>
+          <td>Updates after review</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Copyright (c) 2021 IBM Corporation. All rights reserved.</p>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

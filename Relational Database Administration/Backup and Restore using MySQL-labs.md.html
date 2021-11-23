@@ -1,0 +1,723 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/images/IDSNlogo.png" alt="IBM Developer Skills Network Logo" width="200" height="200">
+    <h1>Hands-on Lab : Backup and Restore using MySQL</h1>
+    <p><strong>Estimated time needed:</strong> 25 minutes</p>
+    <p>In this lab, you will learn how to use the MySQL command line interface (CLI) to create different types of backups of a database and restore the structure and data of a database with your created backups when needed.</p><br>
+    <h2>Objectives</h2>
+    <p>After completing this lab, you will be able to use the MySQL command line to:</p>
+    <ul>
+      <li>Perform a Logical Backup and Restore</li>
+      <li>Perform Point-in-Time Backup and Restoration</li>
+      <li>Perform a Physical Backup and Restore</li>
+    </ul>
+    <h1></h1>
+    <h2>Software Used in this Lab</h2>
+    <p>In this lab, you will use <a href="https://www.mysql.com/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01">MySQL</a>. MySQL is a Relational Database Management System (RDBMS) designed to efficiently store, manipulate, and retrieve data.</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/images/mysql.png" alt="MySQL Logo" width="100" height="100">
+    <p></p>
+    <p>To complete this lab you will utilize the MySQL relational database service available as part of the IBM Skills Network Labs (SN Labs) Cloud IDE. SN Labs is a virtual lab environment used in this course.</p><br>
+    <h2>Database Used in this Lab</h2>
+    <p>The World database used in this lab comes from the following source: <a href="https://dev.mysql.com/doc/world-setup/en/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">https://dev.mysql.com/doc/world-setup/en/</a> under <a href="https://creativecommons.org/licenses/by/4.0/deed.en?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">CC BY 4.0 License</a> with <a href="https://tilastokeskus.fi/org/lainsaadanto/copyright_en.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">Copyright 2021 - Statistics Finland</a>.</p>
+    <p>You will use a modified version of the database for the lab, so to follow the lab instructions successfully please use the database provided with the lab, rather than the database from the original source.</p>
+    <p>The following ERD diagram shows the schema of the World database:</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/datasets/World/World_ERD.png" alt="ERD diagram" width="680" height="400">
+    <p>The first row is the table name, the second is the primary key, and the remaining items are any additional attributes.</p><br>
+    <h2>Exercises</h2>
+    <p>This lab is divided into two exercises: an Example Exercise and Practice Exercise.</p>
+    <h1></h1>
+    <h2>Example Exercise A: Perform a Logical Backup and Restore</h2>
+    <p>In this example exercise, you will go through an example covering how to perform a logical backup and restoration of a database table.</p>
+    <p>A logical backup creates a file containing DDL (such as create table) and DML commands (such as insert) that recreate the objects and data in the database. As such, you can use this file to recreate the database on the same or on another system. Generally, when you perform a logical backup and restore, you reclaim any wasted space from the original database since the restoration process creates a clean version of the tables. Logical backups enable you to backup granular objects. For example, you can back up an individual database table, however, you cannot use it to backup log files or database configuration settings. Suppose you are in a situation where you dropped one or more tables of a database accidentally. This is where you make use of the logical backup of a database table to restore the structure and data of the table.</p>
+    <ol>
+      <li>Go to <strong>Skills Network Toolbox</strong> by clicking the icon shown below from the side by side launched Cloud IDE.</li>
+    </ol><br>
+    <ol start="2">
+      <li>From the <strong>Databases</strong> drop down menu, click <strong>MySQL</strong> to open the MySQL service session tab.</li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Click the <strong>Start</strong> button and wait until MySQL service session gets launched.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/images/MySQL_1.png" alt="Screenshot highlighting icon, Database drop down menu, and Start button">
+        </p>
+        <p></p>
+        <p>The MySQL server will take a few moments to start. Once it is ready, you will see the green "Active" label near the top of the window.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/images/MySQL_2.png" alt="Screenshot highlighting Copy button">
+        </p>
+        <ul>
+          <li><strong>NOTE:</strong> Whenever you are required to enter your MySQL service session password from the MySQL service session tab at any step of the lab, copy the password by clicking on the small copy button on the right of the password block. Paste the password into the terminal using <strong>Ctrl + V</strong> (Mac: ⌘ + V), and press <strong>Enter</strong> on the keyboard. For security reasons, you will not see the password as it is entered on the terminal.</li>
+        </ul>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>Click <strong>New Terminal</strong> button from the mysql service session tab. Now you need to fetch two mysql script files to the Cloud IDE user session storage. Copy the command below by clicking on the little copy button on the bottom right of the codeblock. Then paste it into the terminal at the command line prompt using <strong>Ctrl + V</strong> (Mac: ⌘ + V), and <strong>Enter</strong> on keyboard. Do this for each of the commands below one at a time.</p>
+        <ul>
+          <li>
+            <p><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/datasets/World/world_mysql_script.sql" target="_blank" rel="external">world_mysql_script.sql</a></p>
+            <pre><code class="hljs language-awk">wget https:<span class="hljs-regexp">//</span>cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud<span class="hljs-regexp">/IBM-DB0231EN-SkillsNetwork/</span>datasets<span class="hljs-regexp">/World/</span>world_mysql_script.sql
+</code></pre>
+            <p></p>
+          </li>
+          <li>
+            <p><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/datasets/World/world_mysql_update_A.sql" target="_blank" rel="external">world_mysql_update_A.sql</a></p>
+            <pre><code class="hljs language-awk">wget https:<span class="hljs-regexp">//</span>cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud<span class="hljs-regexp">/IBM-DB0231EN-SkillsNetwork/</span>datasets<span class="hljs-regexp">/World/</span>world_mysql_update_A.sql
+</code></pre>
+            <p></p>
+          </li>
+        </ul>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/images/A.3.png" alt="Screenshot of terminal">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        <p>Initiate a mysql command prompt session by clicking the <strong>MySQL CLI</strong> button from the mysql service session tab.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/images/MySQL_3.png" alt="Screenshot highlighting MySQL CLI button">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="6">
+      <li>
+        <p>Create a new database <strong>world</strong> using the command below in the terminal:</p>
+        <pre><code class="hljs language-n1ql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">DATABASE</span> world;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/images/A.5.png" alt="Screenshot showing create database world command in terminal">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="7">
+      <li>
+        <p>To use the newly created world database, use the command below in the terminal:</p>
+        <pre><code class="hljs language-abnf">USE world<span class="hljs-comment">;</span>
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/images/A.6.png" alt="Screenshot showing use world command in terminal">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="8">
+      <li>
+        <p>Execute the world mysql script (<a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/datasets/World/world_mysql_script.sql" target="_blank" rel="external">world_mysql.sql</a>) to complete the world database creation process using the command below in the terminal:</p>
+        <pre><code class="hljs language-abnf">SOURCE world_mysql_script.sql<span class="hljs-comment">;</span>
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/image/MySQL_backup_feedback_2.png" alt="Output of running SOURCE command">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="9">
+      <li>
+        <p>To list all the table names from the world database, use the command below in the terminal:</p>
+        <pre><code class="hljs language-pgsql"><span class="hljs-keyword">SHOW</span> <span class="hljs-keyword">TABLES</span>;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/images/A.8.png" alt="Screenshot showing show tables command in terminal">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="10">
+      <li>
+        <p>Retrieve all the Canada (countrycode='CAN') related records from the <strong>countrylanguage</strong> table using the command below in the terminal:</p>
+        <pre><code class="hljs language-ini">SELECT * FROM countrylanguage WHERE <span class="hljs-attr">countrycode</span>=<span class="hljs-string">'CAN'</span><span class="hljs-comment">;</span>
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/images/A.9.png" alt="Screenshot showing country code command in terminal">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="11">
+      <li>
+        <p>You will observe the returned result set is empty set. This means Canada related records are currently absent from the table. Run the update script (<a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/datasets/World/world_mysql_update_A.sql" target="_blank" rel="external">world_mysql_update_A.sql</a>) to insert the records you were looking for.</p>
+        <pre><code class="hljs language-abnf">SOURCE world_mysql_update_A.sql<span class="hljs-comment">;</span>
+</code></pre>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="12">
+      <li>
+        <p>Now redo step-9 to verify.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/images/A.11.png" alt="Screenshot showing database table">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="13">
+      <li>
+        <p>Quit the MySQL command prompt session using the command below in the terminal:</p>
+        <pre><code class="hljs language-css">\<span class="hljs-selector-tag">q</span>
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/images/A.12.png" alt="Screenshot showing command prompt used to quit the MySQL session">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="14">
+      <li>
+        <p>Now backup the <strong>countrylanguage</strong> table of the <strong>world</strong> database using the command below in the terminal (enter your MySQL service session password from the MySQL service session tab if necessary):</p>
+        <pre><code class="hljs language-routeros">mysqldump <span class="hljs-attribute">--host</span>=127.0.0.1 <span class="hljs-attribute">--port</span>=3306 <span class="hljs-attribute">--user</span>=root --password world countrylanguage > world_countrylanguage_mysql_backup.sql
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/images/A.13.png" alt="Screenshot showing command used to backup the countrylanguage table of the world database">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="15">
+      <li>
+        <p>To view the contents of the backup file within the terminal, use the command below:</p>
+        <pre><code class="hljs language-ebnf"><span class="hljs-attribute">cat world_countrylanguage_mysql_backup</span>.sql
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/images/A.14.png" alt="Screenshot showing command used to view contents of backup file">
+        </p>
+      </li>
+      <li>
+        <p>Run the command below in the terminal (enter your MySQL service session password from the MySQL service session tab if necessary):</p>
+        <pre><code class="hljs language-routeros">mysql <span class="hljs-attribute">--host</span>=127.0.0.1 <span class="hljs-attribute">--port</span>=3306 <span class="hljs-attribute">--user</span>=root --password <span class="hljs-attribute">--execute</span>=<span class="hljs-string">"DROP TABLE world.countrylanguage;"</span>
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/images/A.15.png" alt="Screenshot showing command to run in the terminal">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="17">
+      <li>
+        <p>To list all the table names from the world database, use the command below in the terminal (enter your MySQL service session password from the MySQL service session tab if necessary):</p>
+        <pre><code class="hljs language-routeros">mysql <span class="hljs-attribute">--host</span>=127.0.0.1 <span class="hljs-attribute">--port</span>=3306 <span class="hljs-attribute">--user</span>=root --password <span class="hljs-attribute">--execute</span>=<span class="hljs-string">"SHOW TABLES FROM world;"</span>
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/images/A.16.png" alt="Screenshot showing command used to list all table names from world database">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="18">
+      <li>You will observe the table <strong>countrylanguage</strong> is missing from the world database. Now you are in the situation where you dropped a table of a database accidentally. This is where you will make use of the backup of the database table (you created backup <strong>world_countrylanguage_mysql_backup.sql</strong>) to restore the structure and data of the table.</li>
+    </ol><br>
+    <ol start="19">
+      <li>
+        <p>To restore the structure and data of the table <strong>countrylanguage</strong>, use the command below in the terminal (enter your MySQL service session password from the MySQL service session tab if necessary):</p>
+        <pre><code class="hljs language-routeros">mysql <span class="hljs-attribute">--host</span>=127.0.0.1 <span class="hljs-attribute">--port</span>=3306 <span class="hljs-attribute">--user</span>=root --password world &#x3C; world_countrylanguage_mysql_backup.sql
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/images/A.18.png" alt="Screenshot showing command used to restore the structure and data of the table">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="20">
+      <li>
+        <p>Now redo step-17 to verify.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/images/A.19.png" alt="Screenshot showing verification">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="21">
+      <li>
+        <p>Again retrieve all the Canada (countrycode='CAN') related records from the <strong>countrylanguage</strong> table using the command below in the terminal (enter your MySQL service session password from the MySQL service session tab if necessary):</p>
+        <pre><code class="hljs language-routeros">mysql <span class="hljs-attribute">--host</span>=127.0.0.1 <span class="hljs-attribute">--port</span>=3306 <span class="hljs-attribute">--user</span>=root --password <span class="hljs-attribute">--execute</span>=<span class="hljs-string">"SELECT * FROM world.countrylanguage WHERE countrycode='CAN';"</span>
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/images/A.20.png" alt="Screenshot showing all Canada related records from countrylanguage table">
+        </p>
+      </li>
+    </ol><br>
+    <h1></h1>
+    <h2>Example Exercise B: Perform Point-in-Time Backup and Restore</h2>
+    <p>In this example exercise, you will go through an example on how to perform a point-in-time backup and restore of a database.</p>
+    <p>Say you have a full logical backup of your whole database in your last mysqldump file as of yesterday evening. However, several changes may have been made (including data loss) since then. Using point-in-time backup and restore, you can get each and every change that occurred since then, so that even after your last logical backup you have a record of all new transactions. Point-in-time backup is the set of binary log files generated subsequent to a logical backup operation of a database. The binary log files contain events that describe database changes such as table creation operations or changes to table data. To restore a database to a point-in-time, you will be using binary log files containing changes of a database for a time interval along with the last logical backup of the database.</p>
+    <ol>
+      <li>Click <strong>New Terminal</strong> button from the mysql service session tab.</li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Now you need to fetch a mysql script file to the Cloud IDE user session storage. Copy the command below by clicking on the little copy button on the bottom right of the codeblock. Then paste it into the terminal at the command line prompt using <strong>Ctrl + V</strong> (Mac: ⌘ + V), and <strong>Enter</strong> on keyboard.</p>
+        <ul>
+          <li>
+            <p><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/datasets/World/world_mysql_update_B.sql" target="_blank" rel="external">world_mysql_update_B.sql</a></p>
+            <pre><code class="hljs language-awk">wget https:<span class="hljs-regexp">//</span>cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud<span class="hljs-regexp">/IBM-DB0231EN-SkillsNetwork/</span>datasets<span class="hljs-regexp">/World/</span>world_mysql_update_B.sql
+</code></pre>
+            <p></p>
+          </li>
+        </ul>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>First create a full logical backup of the current state of your whole <strong>world</strong> database. Use the command below in the terminal (enter your MySQL service session password from the MySQL service session tab if necessary):</p>
+        <pre><code class="hljs language-brainfuck"><span class="hljs-comment">mysqldump</span> --<span class="hljs-comment">host=127</span><span class="hljs-string">.</span><span class="hljs-comment">0</span><span class="hljs-string">.</span><span class="hljs-comment">0</span><span class="hljs-string">.</span><span class="hljs-comment">1</span> --<span class="hljs-comment">port=3306</span> --<span class="hljs-comment">user=root</span> --<span class="hljs-comment">password</span> --<span class="hljs-comment">flush</span><span class="hljs-literal">-</span><span class="hljs-comment">logs</span> --<span class="hljs-comment">delete</span><span class="hljs-literal">-</span><span class="hljs-comment">master</span><span class="hljs-literal">-</span><span class="hljs-comment">logs</span>  --<span class="hljs-comment">databases</span> <span class="hljs-comment">world</span> > <span class="hljs-comment">world_mysql_full_backup</span><span class="hljs-string">.</span><span class="hljs-comment">sql</span>
+</code></pre>
+        <p></p>
+        <ul>
+          <li><strong>NOTE:</strong> The two parameters in the command above, <code>--flush-logs</code> (starts writing to a new binlog file) and <code>--delete-master-logs</code> (removes old binlog files) ensures that there will be only binary log files created after a full logical backup.</li>
+        </ul>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>Initiate a mysql command prompt session by clicking the <strong>MySQL CLI</strong> button from the mysql service session tab.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/images/MySQL_3.png" alt="open CLI">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        <p>To use the already created world database of example exercise A, use the command below in the terminal:</p>
+        <pre><code class="hljs language-abnf">use world<span class="hljs-comment">;</span>
+</code></pre>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="6">
+      <li>
+        <p>List all the table names from the world database using the command below in the terminal:</p>
+        <pre><code class="hljs language-pgsql"><span class="hljs-keyword">SHOW</span> <span class="hljs-keyword">TABLES</span>;
+</code></pre>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="7">
+      <li>
+        <p>Retrieve all the Canada (countrycode='CAN') related records from the <strong>city</strong> table using the command below in the terminal:</p>
+        <pre><code class="hljs language-ini">SELECT * FROM city WHERE <span class="hljs-attr">countrycode</span>=<span class="hljs-string">'CAN'</span><span class="hljs-comment">;</span>
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/images/B.7.png" alt="Screenshot showing command used to retrieve all Canada related records from city table">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="8">
+      <li>
+        <p>You will observe the returned result set is empty set. This means Canada related records are currently absent from the table. Run the update script (<a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/datasets/World/world_mysql_update_B.sql" target="_blank" rel="external">world_mysql_update_B.sql</a>) to insert the records you were looking for.</p>
+        <pre><code class="hljs language-abnf">source world_mysql_update_B.sql<span class="hljs-comment">;</span>
+</code></pre>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="9">
+      <li>
+        <p>Now redo step-7 to verify.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/images/B.9.png" alt="Screenshot showing all Canada related records">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="10">
+      <li>
+        <p>Quit the MySQL command prompt session using the command below in the terminal:</p>
+        <pre><code class="hljs language-css">\<span class="hljs-selector-tag">q</span>
+</code></pre>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="11">
+      <li>
+        <p>Now you will create a scenario where a database crash will be conducted intentionally which will result a significant loss of your <strong>world</strong> database files. To create the scenario, copy the command below by clicking on the little copy button on the bottom right of the codeblock. Then paste it into the terminal at the command line prompt using <strong>Ctrl + V</strong> (Mac: ⌘ + V), and <strong>Enter</strong> on keyboard. Do this for each of the commands below one at a time.</p>
+        <pre><code class="hljs language-awk">docker exec mysql_mysql_1 rm -rf <span class="hljs-regexp">/var/</span>lib<span class="hljs-regexp">/mysql/</span>world
+</code></pre>
+        <p></p>
+        <pre><code class="hljs language-perl">docker <span class="hljs-keyword">exec</span> -it mysql_mysql_1 mysqladmin -p <span class="hljs-keyword">shutdown</span>
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/images/B.11.png" alt="Screenshot showing command used to create scenario">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="12">
+      <li>
+        <p>Try to retrieve records from any table of the database using like the command below in the terminal (enter your MySQL service session password from the MySQL service session tab if necessary):</p>
+        <pre><code class="hljs language-routeros">mysql <span class="hljs-attribute">--host</span>=127.0.0.1 <span class="hljs-attribute">--port</span>=3306 <span class="hljs-attribute">--user</span>=root --password <span class="hljs-attribute">--execute</span>=<span class="hljs-string">"SELECT * FROM world.city;"</span>
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/images/B.12.png" alt="Screenshot of command used to retrieve records from table">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="13">
+      <li>
+        <p>You will face errors since a significant loss of your <strong>world</strong> database files happened. Now you have to restore the world database along with the updates you made earlier in this exercise running the update script (<a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/datasets/World/world_mysql_update_B.sql" target="_blank" rel="external">world_mysql_update_B.sql</a>). Display the binary logs using the command below in the terminal (enter your MySQL service session password from the MySQL service session tab if necessary):</p>
+        <pre><code class="hljs language-routeros">mysql <span class="hljs-attribute">--host</span>=127.0.0.1 <span class="hljs-attribute">--port</span>=3306 <span class="hljs-attribute">--user</span>=root --password <span class="hljs-attribute">--execute</span>=<span class="hljs-string">"SHOW BINARY LOGS;"</span>
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/images/B.13.png" alt="Screenshot showing command used to display binary logs">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="14">
+      <li>
+        <p>Write the contents of all binary log files listed above to a single file using the command below in the terminal:</p>
+        <pre><code class="hljs language-awk">docker exec mysql_mysql_1 mysqlbinlog <span class="hljs-regexp">/var/</span>lib<span class="hljs-regexp">/mysql/</span>binlog.<span class="hljs-number">000003</span> <span class="hljs-regexp">/var/</span>lib<span class="hljs-regexp">/mysql/</span>binlog.<span class="hljs-number">000004</span> > logfile.sql
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/images/B.14.png" alt="Screenshot showing command used to write the contents of all binarly log files">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="15">
+      <li>
+        <p>You are ready to perform point-in-time restore. First restore the full logical backup of your whole <strong>world</strong> database you created earlier in this exercise using the command below in the terminal (enter your MySQL service session password from the MySQL service session tab if necessary):</p>
+        <pre><code class="hljs language-routeros">mysql <span class="hljs-attribute">--host</span>=127.0.0.1 <span class="hljs-attribute">--port</span>=3306 <span class="hljs-attribute">--user</span>=root --password &#x3C; world_mysql_full_backup.sql
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/images/B.15.png" alt="Screenshot of command used to restore full logical backup of your whole world database">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="16">
+      <li>
+        <p>To verify if you have the updates from the update script (<a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/datasets/World/world_mysql_update_B.sql" target="_blank" rel="external">world_mysql_update_B.sql</a>), retrieve all the Canada (countrycode='CAN') related records from the <strong>city</strong> table using the command below in the terminal (enter your MySQL service session password from the MySQL service session tab if necessary):</p>
+        <pre><code class="hljs language-routeros">mysql <span class="hljs-attribute">--host</span>=127.0.0.1 <span class="hljs-attribute">--port</span>=3306 <span class="hljs-attribute">--user</span>=root --password <span class="hljs-attribute">--execute</span>=<span class="hljs-string">"SELECT * FROM world.city WHERE countrycode='CAN';"</span>
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/images/B.16.png" alt="Screenshot showing command used to retrieve all Canada related records">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="17">
+      <li>
+        <p>Now run the logfile you created in step-14 using the command below in the terminal (enter your MySQL service session password from the MySQL service session tab if necessary):</p>
+        <pre><code class="hljs language-routeros">mysql <span class="hljs-attribute">--host</span>=127.0.0.1 <span class="hljs-attribute">--port</span>=3306 <span class="hljs-attribute">--user</span>=root --password &#x3C; logfile.sql
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/images/B.17.png" alt="Screenshot of command used to run logfile">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="18">
+      <li>
+        <p>Redo step-16 to verify if you have the updates from the update script (<a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/datasets/World/world_mysql_update_B.sql" target="_blank" rel="external">world_mysql_update_B.sql</a>).</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/images/B.18.png" alt="Screenshot showing updates from update script">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="19">
+      <li>Finally through the point-in-time recovery, you have the <strong>world</strong> database in the same state before you conducted the intentional crash scenario.</li>
+    </ol>
+    <h1></h1>
+    <h2>Example Exercise C: Perform Physical Backup and Restore</h2>
+    <p>In this example exercise, you will go through an example on how to perform a physical backup and restore of a database.</p>
+    <p>A physical or raw backup creates a copy of all the physical storage files and directories that belong to a table, database, or other object, including the data files, configuration files, and log files. Physical backups are often smaller and quicker than logical backups, so are useful for large or important databases that require fast recovery times. You will be performing a storage level snapshots as physical backup. This method is common for databases utilizing specialized cloud storage systems like the one you are using for this lab provide by the Skills Network Labs.</p>
+    <ol>
+      <li>Click <strong>New Terminal</strong> button from the mysql service session tab.</li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>To perform physical backup, you will take a storage snapshot of your MySQL server data directory within the docker container of the Skills Network Labs specialized cloud system. Then copy that to your Cloud IDE user session storage. Use the command below in the terminal:</p>
+        <pre><code class="hljs language-awk">docker cp mysql_mysql_1:<span class="hljs-regexp">/var/</span>lib<span class="hljs-regexp">/mysql /</span>home<span class="hljs-regexp">/project/my</span>sql_backup
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/images/C.2.png" alt="Screenshot showing command used to take a snapshot of server data">
+        </p>
+        <blockquote>
+          <p><strong>TIPS:</strong> Say instead of taking snapshot of the whole MySQL server data directory which may contain several databases, you want to take snapshot of your specific <strong>world</strong> database for physical backup. The command for that should look like: <code>docker cp mysql_mysql_1:/var/lib/mysql/world /home/project/mysql_world_backup</code></p>
+        </blockquote>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Click the <strong>Explorer</strong> icon as shown below in the Cloud IDE to access the user session storage. <strong>mysql_backup</strong> folder will appear which you created as physical backup in step-2. You can click the folder to explore the contents of the created physical backup.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/images/C.3.png" alt="Screenshot highlighting Explorer icon">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>When needed, you can restore the physical backup using the command below in the terminal:</p>
+        <pre><code class="hljs language-gradle">docker cp <span class="hljs-regexp">/home/</span><span class="hljs-keyword">project</span><span class="hljs-regexp">/mysql_backup/</span>. mysql_mysql_1:<span class="hljs-regexp">/var/</span>lib/mysql
+</code></pre>
+        <p></p>
+        <blockquote>
+          <p><strong>NOTE:</strong> For this exercise, you don't need to run this command.</p>
+        </blockquote>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Backup%20and%20Restore%20using%20MySQL/images/C.4.png" alt="Screenshot showing command used to restore the physical backup">
+        </p>
+      </li>
+    </ol><br>
+    <h1></h1>
+    <h2>Practice Exercise 1: Perform Logical Backup and Restore</h2>
+    <p>In this practice exercise, you will practice performing a logical backup and restore of a database table.</p>
+    <blockquote>
+      <p>Scenario: <em>You are planning to update and migrate one of the tables from your <strong>world</strong> database to a new MySQL server. Perform a logical backup of the table <strong>city</strong> from the database <strong>world</strong>. The backup table is expected to contain data of <strong>Bangladesh</strong>. Validate if your created backup is in working state.</em></p>
+    </blockquote>
+    <details>
+      <summary>Hint (Click Here)</summary>
+      <blockquote></blockquote>
+      <ol>
+        <li>Create a new database with any name like <strong>world_P1</strong>.</li>
+        <li>Use <strong>world_mysql_script.sql</strong> script to complete the world_P1 database creation process.</li>
+        <li>Try to retrieve all the records with <strong>BGD</strong> countrycode from the <strong>city</strong> table.</li>
+        <li>If you fail, try updating the database using <strong><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/datasets/World/world_mysql_update_1.sql" target="_blank" rel="external">world_mysql_update_1.sql</a>(<a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/datasets/World/world_mysql_update_1.sql" target="_blank" rel="external">https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/datasets/World/world_mysql_update_1.sql</a>)</strong> script.</li>
+        <li>Perform a logical backup of the <strong>city</strong> table.</li>
+        <li>Drop the <strong>city</strong> table and try to restore it with the backup you created to validate if your created backup is in working state.</li>
+      </ol>
+    </details>
+    <details>
+      <summary>Solution (Click Here)</summary>
+      <blockquote></blockquote>
+      <ol>
+        <li>
+          <p>Fetch the necessary scripts files to the Cloud IDE user session storage using Cloud IDE <strong>Terminal</strong>.</p>
+          <ul>
+            <li>
+              <p><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/datasets/World/world_mysql_script.sql" target="_blank" rel="external">world_mysql_script.sql</a></p>
+              <pre><code class="hljs language-awk">wget https:<span class="hljs-regexp">//</span>cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud<span class="hljs-regexp">/IBM-DB0231EN-SkillsNetwork/</span>datasets<span class="hljs-regexp">/World/</span>world_mysql_script.sql
+</code></pre>
+              <p></p>
+            </li>
+            <li>
+              <p><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/datasets/World/world_mysql_update_1.sql" target="_blank" rel="external">world_mysql_update_1.sql</a></p>
+              <pre><code class="hljs language-awk">wget https:<span class="hljs-regexp">//</span>cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud<span class="hljs-regexp">/IBM-DB0231EN-SkillsNetwork/</span>datasets<span class="hljs-regexp">/World/</span>world_mysql_update_1.sql
+</code></pre>
+              <p></p>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <p>Create a new database with any name like <strong>world_P1</strong> using <strong>MySQL CLI</strong>.</p>
+          <pre><code class="hljs language-n1ql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">database</span> world_P1;
+</code></pre>
+          <p></p>
+          <pre><code class="hljs language-abnf">use world_P1<span class="hljs-comment">;</span>
+</code></pre>
+          <p></p>
+        </li>
+        <li>
+          <p>Use <strong>world_mysql_script.sql</strong> script to complete the world_P1 database creation process.</p>
+          <pre><code class="hljs language-abnf">source world_mysql_script.sql<span class="hljs-comment">;</span>
+</code></pre>
+          <p></p>
+        </li>
+        <li>
+          <p>Try to retrieve all the records with <strong>BGD</strong> countrycode from the <strong>city</strong> table.</p>
+          <pre><code class="hljs language-ini">SELECT * FROM city WHERE <span class="hljs-attr">countrycode</span>=<span class="hljs-string">'BGD'</span><span class="hljs-comment">;</span>
+</code></pre>
+          <p></p>
+        </li>
+        <li>
+          <p>If you fail, try updating the database using <strong>world_mysql_update_1.sql</strong> script.</p>
+          <pre><code class="hljs language-abnf">source world_mysql_update_1.sql<span class="hljs-comment">;</span>
+</code></pre>
+          <p></p>
+          <pre><code class="hljs language-ini">SELECT * FROM city WHERE <span class="hljs-attr">countrycode</span>=<span class="hljs-string">'BGD'</span><span class="hljs-comment">;</span>
+</code></pre>
+          <p></p>
+        </li>
+        <li>
+          <p>Perform a logical backup of the <strong>city</strong> table.</p>
+          <pre><code class="hljs language-css">\<span class="hljs-selector-tag">q</span>
+</code></pre>
+          <p></p>
+          <pre><code class="hljs language-routeros">mysqldump <span class="hljs-attribute">--host</span>=127.0.0.1 <span class="hljs-attribute">--port</span>=3306 <span class="hljs-attribute">--user</span>=root --password world_P1 city > world_P1_city_mysql_backup.sql
+</code></pre>
+          <p></p>
+        </li>
+        <li>
+          <p>Drop the <strong>city</strong> table and try to restore it with the backup you created to validate if your created backup is in working state.</p>
+          <pre><code class="hljs language-routeros">mysql <span class="hljs-attribute">--host</span>=127.0.0.1 <span class="hljs-attribute">--port</span>=3306 <span class="hljs-attribute">--user</span>=root --password <span class="hljs-attribute">--execute</span>=<span class="hljs-string">"DROP TABLE world_P1.city;"</span>
+</code></pre>
+          <p></p>
+          <pre><code class="hljs language-routeros">mysql <span class="hljs-attribute">--host</span>=127.0.0.1 <span class="hljs-attribute">--port</span>=3306 <span class="hljs-attribute">--user</span>=root --password <span class="hljs-attribute">--execute</span>=<span class="hljs-string">"SELECT * FROM world_P1.city;"</span>
+</code></pre>
+          <p></p>
+          <pre><code class="hljs language-routeros">mysql <span class="hljs-attribute">--host</span>=127.0.0.1 <span class="hljs-attribute">--port</span>=3306 <span class="hljs-attribute">--user</span>=root --password world_P1 &#x3C; world_P1_city_mysql_backup.sql
+</code></pre>
+          <p></p>
+          <pre><code class="hljs language-routeros">mysql <span class="hljs-attribute">--host</span>=127.0.0.1 <span class="hljs-attribute">--port</span>=3306 <span class="hljs-attribute">--user</span>=root --password <span class="hljs-attribute">--execute</span>=<span class="hljs-string">"SELECT * FROM world_P1.city;"</span>
+</code></pre>
+          <p></p>
+        </li>
+      </ol>
+    </details>
+    <h1></h1>
+    <h2>Practice Exercise 2: Perform Physical Backup and Restore</h2>
+    <p>In this practice exercise, you will practice performing a physical backup and restore of a database table.</p>
+    <blockquote>
+      <p>Scenario: <em>Perform a physical backup of the database <strong>world</strong>. The backup database is expected to contain data of <strong>Canada</strong> as well as <strong>Bangladesh</strong>.</em></p>
+    </blockquote>
+    <details>
+      <summary>Hint (Click Here)</summary>
+      <blockquote></blockquote>
+      <ol>
+        <li>Create a new database with any name like <strong>world_P2</strong>.</li>
+        <li>Use <strong>world_mysql_script.sql</strong> script to complete the world_P2 database creation process.</li>
+        <li>Try to retrieve all the records with <strong>BGD</strong> as well as <strong>CAN</strong> countrycodes from all the tables.</li>
+        <li>If you fail, try updating the database using <strong><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/datasets/World/world_mysql_update_2.sql" target="_blank" rel="external">world_mysql_update_2.sql</a>(<a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/datasets/World/world_mysql_update_2.sql" target="_blank" rel="external">https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/datasets/World/world_mysql_update_2.sql</a>)</strong> script.</li>
+        <li>Perform a physical backup of the database.</li>
+        <li>Remove the <strong>world_P2</strong> database directory from the mysql server docker container and try to restore it with the backup you created to validate if your created backup is in working state.</li>
+      </ol>
+    </details>
+    <details>
+      <summary>Solution (Click Here)</summary>
+      <blockquote></blockquote>
+      <ol>
+        <li>
+          <p>Fetch the necessary scripts files to the Cloud IDE user session storage using Cloud IDE <strong>Terminal</strong>.</p>
+          <ul>
+            <li>
+              <p><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/datasets/World/world_mysql_script.sql" target="_blank" rel="external">world_mysql_script.sql</a></p>
+              <pre><code class="hljs language-awk">wget https:<span class="hljs-regexp">//</span>cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud<span class="hljs-regexp">/IBM-DB0231EN-SkillsNetwork/</span>datasets<span class="hljs-regexp">/World/</span>world_mysql_script.sql
+</code></pre>
+              <p></p>
+            </li>
+            <li>
+              <p><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/datasets/World/world_mysql_update_2.sql" target="_blank" rel="external">world_mysql_update_2.sql</a></p>
+              <pre><code class="hljs language-awk">wget https:<span class="hljs-regexp">//</span>cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud<span class="hljs-regexp">/IBM-DB0231EN-SkillsNetwork/</span>datasets<span class="hljs-regexp">/World/</span>world_mysql_update_2.sql
+</code></pre>
+              <p></p>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <p>Create a new database with any name like <strong>world_P2</strong> using <strong>MySQL CLI</strong>.</p>
+          <pre><code class="hljs language-n1ql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">database</span> world_P2;
+</code></pre>
+          <p></p>
+          <pre><code class="hljs language-abnf">use world_P2<span class="hljs-comment">;</span>
+</code></pre>
+          <p></p>
+        </li>
+        <li>
+          <p>Use <strong>world_mysql_script.sql</strong> script to complete the world_P2 database creation process.</p>
+          <pre><code class="hljs language-abnf">source world_mysql_script.sql<span class="hljs-comment">;</span>
+</code></pre>
+          <p></p>
+        </li>
+        <li>
+          <p>Try to retrieve all the records with <strong>BGD</strong> and <strong>CAN</strong> countrycode from all the tables.</p>
+          <pre><code class="hljs language-n1ql"><span class="hljs-keyword">SELECT</span> * <span class="hljs-keyword">FROM</span> country <span class="hljs-keyword">WHERE</span> code <span class="hljs-keyword">in</span> (<span class="hljs-string">'BGD'</span>,<span class="hljs-string">'CAN'</span>);
+</code></pre>
+          <p></p>
+          <pre><code class="hljs language-n1ql"><span class="hljs-keyword">SELECT</span> * <span class="hljs-keyword">FROM</span> countrylanguage <span class="hljs-keyword">WHERE</span> countrycode <span class="hljs-keyword">in</span> (<span class="hljs-string">'BGD'</span>,<span class="hljs-string">'CAN'</span>);
+</code></pre>
+          <p></p>
+          <pre><code class="hljs language-n1ql"><span class="hljs-keyword">SELECT</span> * <span class="hljs-keyword">FROM</span> city <span class="hljs-keyword">WHERE</span> countrycode <span class="hljs-keyword">in</span> (<span class="hljs-string">'BGD'</span>,<span class="hljs-string">'CAN'</span>);
+</code></pre>
+          <p></p>
+        </li>
+        <li>
+          <p>If you fail, try updating the database using <strong>world_mysql_update_2.sql</strong> script. Then redo the previous step to validate.</p>
+          <pre><code class="hljs language-abnf">source world_mysql_update_2.sql<span class="hljs-comment">;</span>
+</code></pre>
+          <p></p>
+        </li>
+        <li>
+          <p>Perform a physical backup of the database.</p>
+          <pre><code class="hljs language-css">\<span class="hljs-selector-tag">q</span>
+</code></pre>
+          <p></p>
+          <pre><code class="hljs language-gradle">docker cp mysql_mysql_1:<span class="hljs-regexp">/var/</span>lib<span class="hljs-regexp">/mysql/</span>world_P2 <span class="hljs-regexp">/home/</span><span class="hljs-keyword">project</span>/mysql_world_P2_backup
+</code></pre>
+          <p></p>
+        </li>
+        <li>
+          <p>Remove the <strong>world_P2</strong> database directory from the mysql server docker container and try to restore it with the backup you created to validate if your created backup is in working state.</p>
+          <pre><code class="hljs language-awk">docker exec mysql_mysql_1 rm -rf <span class="hljs-regexp">/var/</span>lib<span class="hljs-regexp">/mysql/</span>world_P2
+</code></pre>
+          <p></p>
+          <pre><code class="hljs language-perl">docker <span class="hljs-keyword">exec</span> -it mysql_mysql_1 mysqladmin -p <span class="hljs-keyword">shutdown</span>
+</code></pre>
+          <p></p>
+          <blockquote>
+            <p><strong>NOTE:</strong> The above command restarts the mysql server which is necessary after making changes to the mysql server data directory.</p>
+          </blockquote>
+          <pre><code class="hljs language-routeros">mysql <span class="hljs-attribute">--host</span>=127.0.0.1 <span class="hljs-attribute">--port</span>=3306 <span class="hljs-attribute">--user</span>=root --password <span class="hljs-attribute">--execute</span>=<span class="hljs-string">"SELECT * FROM world_P2.city;"</span>
+</code></pre>
+          <p></p>
+          <pre><code class="hljs language-gradle">docker cp <span class="hljs-regexp">/home/</span><span class="hljs-keyword">project</span><span class="hljs-regexp">/mysql_world_P2_backup/</span>. mysql_mysql_1:<span class="hljs-regexp">/var/</span>lib<span class="hljs-regexp">/mysql/</span>world_P2
+</code></pre>
+          <p></p>
+          <pre><code class="hljs language-perl">docker <span class="hljs-keyword">exec</span> -it mysql_mysql_1 mysqladmin -p <span class="hljs-keyword">shutdown</span>
+</code></pre>
+          <p></p>
+          <blockquote>
+            <p><strong>NOTE:</strong> The above command restarts the mysql server which is necessary after making changes to the mysql server data directory.</p>
+          </blockquote>
+          <pre><code class="hljs language-routeros">mysql <span class="hljs-attribute">--host</span>=127.0.0.1 <span class="hljs-attribute">--port</span>=3306 <span class="hljs-attribute">--user</span>=root --password <span class="hljs-attribute">--execute</span>=<span class="hljs-string">"SELECT * FROM world_P2.city;"</span>
+</code></pre>
+          <p></p>
+        </li>
+      </ol>
+    </details>
+    <h1></h1>
+    <h3>Congratulations! You have completed this lab, and you are ready for the next topic.</h3>
+    <h3><br></h3>
+    <h2>Author(s)</h2>
+    <ul>
+      <li><a href="https://www.linkedin.com/in/sandipsahajoy/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">Sandip Saha Joy</a></li>
+    </ul>
+    <h3>Other Contributor(s)</h3>
+    <ul>
+      <li><a href="https://www.linkedin.com/in/david-pasternak-6b84a2208/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">David Pasternak</a></li>
+    </ul>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-06-15</td>
+          <td>1.0</td>
+          <td>Sandip Saha Joy</td>
+          <td>Created initial version</td>
+        </tr>
+        <tr>
+          <td>2021-10-04</td>
+          <td>1.1</td>
+          <td>David Pasternak</td>
+          <td>Updated screenshots</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2021. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

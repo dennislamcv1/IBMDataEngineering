@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Backup%20and%20Restore%20using%20PostgreSQL/images/IDSNlogo.png" width="200" height="200">
+    <h1>Hands-on Lab: Backup and Restore using PostgreSQL</h1>
+    <p><strong>Estimated time needed:</strong> 30 minutes</p>
+    <p>In this lab, you will learn how to use the PostgreSQL Command Line Interface (CLI) to restore a full database from a backup. Then using a combination of the CLI and pgAdmin, which is a Graphical User Interface (GUI) for postgreSQL, you will make some changes to this database and perform a full backup. Finally, you will then delete this database to practice a full restoration in the scenario of an accidental deletion.</p>
+    <h1>Software used in this Lab</h1>
+    <p>In this lab, you will be using PostgreSQL. It is a popular open-source object Relational Database Management System (RDBMS) capable of performing a wealth of database administration tasks, such as storing, manipulating, retrieving, and archiving data.</p>
+    <p>To complete this lab, you will be accessing the PostgreSQL service through the IBM Skills Network (SN) Cloud IDE, which is a virtual development environnement you will utilize throughout this course.</p>
+    <h1>Database used in this Lab</h1>
+    <p>In this lab, you will use a database from <a href="https://postgrespro.com/education/demodb?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">https://postgrespro.com/education/demodb</a> distributed under the <a href="https://www.postgresql.org/about/licence/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">PostgreSQL licence</a>. It stores a month of data about airline flights in Russia and is organized according to the following schema:</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Backup%20and%20Restore%20using%20PostgreSQL/images/DB_schema.png" alt="DB_Schema">
+    </p>
+    <h2>Objectives</h2>
+    <p>After completing this lab, you will be able to use the PostgreSQL CLI and pgAdmin to:</p>
+    <ul>
+      <li>Restore a full database from a backup</li>
+      <li>Update a database and perform a full backup</li>
+      <li>Drop a database and then restore it</li>
+    </ul>
+    <h2>Launching PostgreSQL in Cloud IDE</h2>
+    <p>To get started with this lab, launch PostgreSQL using the Cloud IDE. You can do this by following these steps:</p>
+    <ol>
+      <li>
+        <p>Click on the Skills Network extension button on the left side of the window.</p>
+      </li>
+      <li>
+        <p>Open the "DATABASES" drop down menu and click on "PostgreSQL".</p>
+      </li>
+      <li>
+        <p>Click on the "Start" button. PostgreSQL may take a few moments to start.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Backup%20and%20Restore%20using%20PostgreSQL/images/SC_1.png" alt="Screenshot highlighting areas mentioned for steps 1, 2, and 3">
+        </p><br>
+      </li>
+    </ol>
+    <h1>Exercise 1: Restore a Full Database from a Backup</h1>
+    <p><strong>First, we will need to download the database.</strong></p>
+    <ol>
+      <li>
+        <p>Open a new terminal by clicking on the "New Terminal" button near the bottom of the interface.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Backup%20and%20Restore%20using%20PostgreSQL/images/SC_A.png" alt="Screenshot highlighting New Terminal button">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Run the following command in the terminal.</p>
+        <pre><code class="hljs language-awk">wget https:<span class="hljs-regexp">//</span>cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud<span class="hljs-regexp">/example-guided-project/</span>flights_RUSSIA_small.sql
+</code></pre>
+        <p></p>
+      </li>
+    </ol>
+    <p>The file which you downloaded is a full database backup of a month of flight data in Russia. Now, you can perform a full restoration of the dataset by first opening the PostgreSQL CLI.<br></p>
+    <ol start="3">
+      <li>
+        <p>Near the bottom of the window, click on the "PostgreSQL CLI" button to launch the Command Line Interface.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Backup%20and%20Restore%20using%20PostgreSQL/images/SC_2.png" alt="Screenshot highlighting Postgress CLI button">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>In the PostgreSQL CLI, type in the command <code>\i &#x3C;file_name>.</code> In your case, the filename will be the name of the file you downloaded, <code>flights_RUSSIA_small.sql</code>. This will restore the data into a new database called <code>demo</code>.</p>
+        <pre><code class="hljs language-stylus">\<span class="hljs-selector-tag">i</span> flights_RUSSIA_small<span class="hljs-selector-class">.sql</span>
+</code></pre>
+        <p></p>
+        <p>The restorations may take a few moments to complete.</p>
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        <p>After the restoration completes, one way you can check that the database has been restored is with the following command, which lists all the tables in the current database schema.</p>
+        <pre><code class="hljs language-css">\<span class="hljs-selector-tag">dt</span>
+</code></pre>
+        <p></p>
+        <p>You should see the following output:</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Backup%20and%20Restore%20using%20PostgreSQL/images/SC_3.png" alt="Screenshot showing the tables in the database schema">
+        </p>
+      </li>
+    </ol>
+    <h1>Exercise 2: Modify the Database and Perform a Full Backup</h1>
+    <h2>Task A: Modify the Database with the CLI</h2>
+    <ol>
+      <li>
+        <p>One of the tables in the database schema is <code>aircrafts_data</code>. You can take a look at the contents of that table by executing the following command in the PostgreSQL <strong>CLI</strong>:</p>
+        <pre><code class="hljs language-n1ql"><span class="hljs-keyword">SELECT</span> * <span class="hljs-keyword">FROM</span> aircrafts_data;
+</code></pre>
+        <p></p>
+        <p>This will show you the aircraft models in the database, their code, and their range in kilometers.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Backup%20and%20Restore%20using%20PostgreSQL/images/SC_4_5.png" alt="Screenshot showing aircraft models, aircraft codes, and aircraft ranges in database">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Suppose a new model of aircraft is being added to the fleet, and you, as the database administrator, are responsible for updating the database to reflect this addition. The aircraft they wish to add is the <a href="https://en.wikipedia.org/wiki/Airbus_A380?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">Airbus A380</a>, which has a range of 15,700 km and aircraft code "380". You can do this by executing the following command in the PostgreSQL CLI:</p>
+        <pre><code class="hljs language-reasonml">INSERT INTO aircrafts<span class="hljs-constructor">_data(<span class="hljs-params">aircraft_code</span>, <span class="hljs-params">model</span>, <span class="hljs-params">range</span>)</span> VALUES (<span class="hljs-number">380</span>, '{<span class="hljs-string">"en"</span>: <span class="hljs-string">"Airbus A380-800"</span>}', <span class="hljs-number">15700</span>);
+</code></pre>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>To confirm that the information was entered into the database correctly, you can read out the <code>aircrafts_data</code> table again using:</p>
+        <pre><code class="hljs language-n1ql"><span class="hljs-keyword">SELECT</span> * <span class="hljs-keyword">FROM</span> aircrafts_data;
+</code></pre>
+        <p></p>
+        <p>The output will look like this:</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Backup%20and%20Restore%20using%20PostgreSQL/images/SC_5_5.png" alt="Screenshot highlighting new entry">
+        </p>
+        <p>As you can see, there is a new entry in the table corresponding to the new aircraft added to the fleet.</p>
+      </li>
+    </ol><br>
+    <h2>Task B: Backup your Database using pgAdmin</h2>
+    <p>Now that you modified the database (minor modification for demonstration - in reality there would likely be far more additions) it is good practice to backup your database in case of accidental deletion.</p>
+    <ol>
+      <li>
+        <p>To back up the <code>demo</code> database, first exit the PostgreSQL CLI by either entering:</p>
+        <pre><code class="hljs language-css">\<span class="hljs-selector-tag">q</span>
+</code></pre>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Next, open the pgAdmin Graphical User Interface by clicking the "pgAdmin" button in the Cloud IDE interface.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Backup%20and%20Restore%20using%20PostgreSQL/images/pgAdmin_1.png" alt="Screenshot highlighting pgAdmin button">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Once the pgAdmin GUI opens, click on the <code>Servers</code> tab on the left side of the page. You will be prompted to enter a password.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Backup%20and%20Restore%20using%20PostgreSQL/images/pgAdmin_2.png" alt="Screenshot highlighting Servers tab">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>To retrieve your password, click on the "PostgreSQL" tab near the top of the interface.</li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        <p>Click on the Copy icon to the left of your password to copy the session password onto your clipboard.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Backup%20and%20Restore%20using%20PostgreSQL/images/pgAdmin_3.png" alt="Screenshot highlighting PostgreSQL tab and copy icon">
+        </p>
+      </li>
+      <li>
+        <p>Navigate back to the "pgAdmin" tab and paste in your password, then click <code>OK</code>.</p>
+      </li>
+    </ol><br>
+    <ol start="7">
+      <li>Click on <code>Postgres > Databases</code>.</li>
+    </ol><br>
+    <ol start="8">
+      <li>
+        <p>Right click on <code>demo</code> and click the <code>Backup</code> button.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Backup%20and%20Restore%20using%20PostgreSQL/images/pgAdmin_4.png" alt="Screenshot highlighting Postgres dropdown menu, Databases dropdown, Demo dropdown, and Backup button">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="9">
+      <li>
+        <p>Enter a name for the backup (For example, "demo_backup"), set the <code>Format</code> to <code>Tar</code>, then click the "Backup" button.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Backup%20and%20Restore%20using%20PostgreSQL/images/pgAdmin_5.png" alt="Screenshot highlighting Filename, Format, and Backup button">
+        </p>
+      </li>
+    </ol>
+    <h1>Exercise 3: Restore a Full Backup after Accidental Deletion</h1>
+    <p>In this exercise, suppose you find yourself in a situation where you accidentally dropped the entire database. Fortunately, you made a full backup of the database in the previous exercise, which you will use to restore the database.</p>
+    <h2>Task A: "Accidentally" Delete the Database</h2>
+    <ol>
+      <li>
+        <p>In the pgAdmin GUI, right click on the <code>demo</code> database and then click the "Delete/Drop" button.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Backup%20and%20Restore%20using%20PostgreSQL/images/pgAdmin_6.png" alt="Screenshot highlighting demo dropdown and Delete/Drop button">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>When prompted, click "Yes" to confirm the deletion of the database.</li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>You will see that the <code>demo</code> database is no longer listed, which verifies that you have dropped it.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Backup%20and%20Restore%20using%20PostgreSQL/images/pgAdmin_7.png" alt="Screenshot showing demo database no longer listed">
+        </p>
+      </li>
+    </ol><br>
+    <h2>Task B: Restore the Database using the Full Backup</h2>
+    <p>You will now use the full backup you created in Exercise 2 to restore the database which was deleted.</p>
+    <ol>
+      <li>
+        <p>First, you will need an empty database in which to restore the <code>demo</code> database. Create a new database in pgAdmin by right clicking "Databases" then clicking "Create" > "Database...".</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Backup%20and%20Restore%20using%20PostgreSQL/images/pgAdmin_8.png" alt="Screenshot highlighting databases, create, and database">
+        </p>
+      </li>
+      <li>
+        <p>Name the database into which you will restore the original <code>demo</code> database (For example, <code>restored_demo</code>), then click the "Save" button on the bottom right.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Backup%20and%20Restore%20using%20PostgreSQL/images/pgAdmin_9.png" alt="Screenshot highlighting name field and save button">
+        </p>
+      </li>
+      <li>
+        <p>Next, to restore the backup you created in Task A into this new database, right click on the database you created (For example, <code>restored_demo</code>). Then click on the "Restore..." button.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Backup%20and%20Restore%20using%20PostgreSQL/images/pgAdmin_10.png" alt="Screenshot highlighting restored demo and restore buton">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>Click on the button containing three dots by the Filename box.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Backup%20and%20Restore%20using%20PostgreSQL/images/pgAdmin_11.png" alt="Screenshoth highlighting button with three dots">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        <p>Near the bottom left of the window, open the "Format" drop down window and select "All files".</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Backup%20and%20Restore%20using%20PostgreSQL/images/pgAdmin_12.png" alt="Screenshot highlighting format dropdown window">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="6">
+      <li>
+        <p>Select the backup you created in Task A (For example, <code>demo_backup</code>), then click the "Select" button near the bottom right of the window.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Backup%20and%20Restore%20using%20PostgreSQL/images/pgAdmin_13.png" alt="Screenshot highlighting demo_backup and Select button">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="7">
+      <li>
+        <p>Then click on the "Restore" button at the bottom right of the window to restore the database.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Backup%20and%20Restore%20using%20PostgreSQL/images/pgAdmin_14.png" alt="Screenshot highlighting Restore button">
+        </p>
+      </li>
+      <li>
+        <p>You can now verify that the database was restored properly, including the addition you made to the <code>aircrafts_data</code> table. Open up the PostgreSQL CLI:</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Backup%20and%20Restore%20using%20PostgreSQL/images/SC_2.png" alt="Screenshot highlighting Postgres CLI button">
+        </p>
+      </li>
+      <li>
+        <p>In the CLI, enter the command:</p>
+        <pre><code class="hljs language-arduino">\connect restored_demo
+</code></pre>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="10">
+      <li>
+        <p>To set the proper search path for your database, enter the following into the CLI:</p>
+        <pre><code class="hljs language-pgsql"><span class="hljs-keyword">SELECT</span> pg_catalog.set_config(<span class="hljs-string">'search_path'</span>, <span class="hljs-string">'bookings'</span>, <span class="hljs-keyword">false</span>);
+</code></pre>
+      </li>
+    </ol>
+    <p></p>
+    <ol start="11">
+      <li>
+        <p>To see the restored tables in the database, enter:</p>
+        <pre><code class="hljs language-css">\<span class="hljs-selector-tag">dt</span>
+</code></pre>
+        <p></p>
+        <p>You will see the same tables as in the original <code>demo</code> database.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Backup%20and%20Restore%20using%20PostgreSQL/images/feedback_output_1.png" alt="Output of \dt command">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="12">
+      <li>
+        <p>Recall that you added a new aircraft model (Airbus A380) to the original database. Verify that this addition was successfully backed up and restored by entering the following command:</p>
+        <pre><code class="hljs language-n1ql"><span class="hljs-keyword">SELECT</span> * <span class="hljs-keyword">FROM</span> aircrafts_data;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Backup%20and%20Restore%20using%20PostgreSQL/images/feedback_output_2.png" alt="Output of SELECT aircrafts_data query">
+        </p>
+        <p>Notice that the Airbus A380 entry is there! Once again, you can enter <code>\q</code> to exit this view.</p>
+      </li>
+    </ol>
+    <h1>Practice Exercise</h1>
+    <blockquote>
+      <p>Scenario: <em>Suppose a passenger, Saniya Koreleva, books a flight with your airline company. Unfortunately, due to human error her first name was initially entered incorrectly into the database and you wish to correct it.</em></p>
+    </blockquote>
+    <p>In this practice exercise, you will apply the techniques you learned in this lab to modify the database to correct the spelling of the passenger's name. Then, you will practice performing a full backup of the database.</p>
+    <ol>
+      <li>First, in the <code>restored_demo</code> database, take a look at the original entry for the passenger in the "tickets" table using the PostgreSQL Command Line Interface. Use the <code>booking_ref</code> parameter to query the database. The booking reference for this passenger is 0002D8.</li>
+    </ol>
+    <details>
+      <summary>Hint (Click Here)</summary>To query a specific table in the database using some condition, enter a command in the CLI with the following format:
+      <pre><code class="hljs language-pgsql"><span class="hljs-keyword">SELECT</span> * <span class="hljs-keyword">FROM</span> &#x3C;<span class="hljs-keyword">table</span> <span class="hljs-type">name</span>> <span class="hljs-keyword">WHERE</span> &#x3C;condition>;
+</code></pre>
+      <p></p>
+    </details>
+    <details>
+      <summary>Solution (Click Here)</summary>
+      <pre><code class="hljs language-ini">SELECT * FROM tickets WHERE <span class="hljs-attr">booking_ref</span> = <span class="hljs-string">'0002D8'</span><span class="hljs-comment">;</span>
+</code></pre>
+      <p></p>
+      <p>You should see see the following output showing the ticket associated with the booking reference 0002D8 under the name Saniya Koreleva. When you are done, type <code>\q</code> in the CLI to exit the view.</p>
+      <p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Backup%20and%20Restore%20using%20PostgreSQL/images/SC_8.png" alt="Screenshot of output for ticket associated with booking reference 0002D8">
+      </p>
+    </details><br>
+    <ol start="2">
+      <li>Next, suppose the passenger's first name is actually spelled "Sanya" instead of "Saniya". Modify the entry for this passenger to correct the spelling by changing the <code>passenger_name</code> to "SANYA KORELEVA".</li>
+    </ol>
+    <details>
+      <summary>Hint (Click Here)</summary>To change an entry in a table, enter a command in the CLI with the following format:
+      <pre><code class="hljs language-pgsql"><span class="hljs-keyword">UPDATE</span> &#x3C;<span class="hljs-keyword">table</span> <span class="hljs-type">name</span>> <span class="hljs-keyword">SET</span> &#x3C;<span class="hljs-keyword">column</span> A> = &#x3C;condition A> <span class="hljs-keyword">WHERE</span> &#x3C;<span class="hljs-keyword">column</span> B> = &#x3C;condition B>;
+</code></pre>
+      <p></p>
+    </details>
+    <details>
+      <summary>Solution (Click Here)</summary>
+      <pre><code class="hljs language-ini">UPDATE tickets SET <span class="hljs-attr">passenger_name</span> = <span class="hljs-string">'SANYA KORELEVA'</span> WHERE booking_ref = <span class="hljs-string">'0002D8'</span><span class="hljs-comment">;</span>
+</code></pre>
+      <p></p>
+      <p>You can then verify that your change was successful by entering the same command as you did in Step 1.</p>
+    </details>
+    <ol start="3">
+      <li>Now suppose that several other changes were done on the database, such as more bookings were created, flights scheduled, etc., and you wish to perform a full backup of the database. To complete this exercise, perform a full backup of the <code>restored_demo</code> database. Name the back up <code>restored_demo_backup.sql</code>.</li>
+    </ol>
+    <details>
+      <summary>Hint (Click Here)</summary>Recall that you performed a full backup earlier in this lab. Refer to Exercise 2 for a refresher.
+    </details>
+    <details>
+      <summary>Solution (Click Here)</summary>You can use pgAdmin in the same way as you did in Exercise 2 to perform a full backup.
+      <p>An alternative method is to perform the backup using the terminal.</p>
+      <p>In the Cloud IDE terminal, enter the following command to create a backup of the <code>restored_demo</code> called <code>restored_demo_backup.sql</code> database:</p>
+      <pre><code class="hljs language-pgsql">pg_dump <span class="hljs-comment">--username=postgres --host=localhost restored_demo > restored_demo_backup.sql</span>
+</code></pre>
+      <p></p>
+      <p>You can then verify that your change was successful by entering the same command as you did in Step 1.</p>
+    </details><br>
+    <h1>Conclusion</h1>
+    <p>Congratulations! You have successfully completed the lab and have gained some familiarity on how to perform a full backup and restoration of a database using PostgreSQL.</p>
+    <p>To summarize, recall that you covered the following objectives:</p>
+    <ul>
+      <li>Restore a full database from a backup</li>
+      <li>Update a database and perform a full backup</li>
+      <li>Drop a database and then restore it</li>
+    </ul>
+    <h2>Author</h2>
+    <p><a href="https://www.linkedin.com/in/david-pasternak-6b84a2208/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">David Pasternak</a></p>
+    <h3>Other Contributors</h3>
+    <p>Sandip Saha Joy, Rav Ahuja</p>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-06-30</td>
+          <td>1.0</td>
+          <td>David Pasternak</td>
+          <td>Created initial version</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2021. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

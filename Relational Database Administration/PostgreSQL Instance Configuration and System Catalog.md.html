@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20PostgreSQL%20Instance%20Configuration%20and%20System%20Catalog/images/IDSNlogo.png" alt="IDSN logo" width="200" height="200">
+    <h1>PostgreSQL Instance Configuration and System Catalog</h1>
+    <p><strong>Estimated time needed:</strong> 30 minutes</p>
+    <p>In this lab, you will obtains hands-on experience in customizing the configuration of a PostgreSQL server instance, both through the command line interface (CLI) and by editing the configuration files. Furthermore, you will learn to navigate and query the PostgreSQL system catalog, which is a series of tables that store metadata about objects in the database.</p>
+    <h2>Objectives</h2>
+    <p>After completing this lab, you will be able to:</p>
+    <ul>
+      <li>Customize the configuration parameters of your PostgreSQL server instance</li>
+      <li>Query the system catalog to retrieve metadata about database objects</li>
+    </ul>
+    <h2>Software Used in This Lab</h2>
+    <p>In this lab, you will be using PostgreSQL. It is a popular open-source object relational database management system (RDBMS) capable of performing a wealth of database administration tasks such as storing, manipulating, retrieving, and archiving data.</p>
+    <p>To complete this lab, you will be accessing the PostgreSQL service through the IBM Skills Network (SN) Cloud IDE, which is a virtual development environment you will use throughout this course.</p>
+    <h2>Database Used in This Lab</h2>
+    <p>In this lab, you will use a database from <a href="https://postgrespro.com/education/demodb?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">https://postgrespro.com/education/demodb</a> distributed under the <a href="https://www.postgresql.org/about/licence/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">PostgreSQL licence</a>. It stores a month of data about airline flights in Russia and is organized according to the following schema:</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20PostgreSQL%20Instance%20Configuration%20and%20System%20Catalog/images/DB_schema.png" alt="DB_Schema">
+    </p>
+    <h1>Launching PostgreSQL in Cloud IDE</h1>
+    <p>To get started with this lab, launch PostgreSQL using the Cloud IDE. You can do this by following these steps:</p>
+    <ol>
+      <li>
+        <p>Click the Skills Network extension button in the left pane.</p>
+      </li>
+      <li>
+        <p>Open the "DATABASES" drop-down menu and click "PostgreSQL"</p>
+      </li>
+      <li>
+        <p>Click the "Start" button. PostgreSQL may take a few moments to start.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20PostgreSQL%20Instance%20Configuration%20and%20System%20Catalog/images/SC_1.png" alt="SC_1">
+        </p>
+      </li>
+    </ol><br>
+    <h2>Downloading and Creating the Database</h2>
+    <p><strong>First, you will need to download the database.</strong></p>
+    <ol>
+      <li>
+        <p>Open a new terminal by clicking the "New Terminal" button near the bottom of the interface.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20PostgreSQL%20Instance%20Configuration%20and%20System%20Catalog/images/SC_A.png" alt="SC_A">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Run the following command in the terminal:</p>
+        <pre><code class="hljs language-awk">wget https:<span class="hljs-regexp">//</span>cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud<span class="hljs-regexp">/example-guided-project/</span>flights_RUSSIA_small.sql
+</code></pre>
+        <p></p>
+      </li>
+    </ol>
+    <p>The file you downloaded is a full database backup of a month of flight data in Russia. Now, you can perform a full restoration of the data set by first opening the PostgreSQL CLI.</p><br>
+    <ol start="3">
+      <li>
+        <p>Near the bottom of the window, click the "Postgres CLI" button to launch the command line interface.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20PostgreSQL%20Instance%20Configuration%20and%20System%20Catalog/images/SC_2.png" alt="SC_2">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>In the PostgreSQL CLI, enter the command <code>\i &#x3C;file_name>.</code> In your case, the file name will be the name of the file you downloaded, <code>flights_RUSSIA_small.sql</code>. This will restore the data into a new database called <code>demo</code>.</p>
+        <pre><code class="hljs language-stylus">\<span class="hljs-selector-tag">i</span> flights_RUSSIA_small<span class="hljs-selector-class">.sql</span>
+</code></pre>
+        <p></p>
+        <p>The restorations may take a few moments to complete.</p>
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        <p>Verify that the database was properly created by entering the following command:</p>
+        <pre><code class="hljs language-css">\<span class="hljs-selector-tag">dt</span>
+</code></pre>
+        <p></p>
+        <p>You should see the following output showing all the tables that are part of the <code>bookings</code> schema in the <code>demo</code> database.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20PostgreSQL%20Instance%20Configuration%20and%20System%20Catalog/images/SC_3.png" alt="SC_3">
+        </p>
+      </li>
+    </ol>
+    <h1>Exercise 1: Configure Your PostgreSQL Server Instance</h1>
+    <p>A PostgreSQL server instance has a corresponding file named <code>postgresql.conf</code> that contains the configuration parameters for the server. By modifying this file, you can enable, disable, or otherwise customize the settings of your PostgreSQL server instance to best suit your needs as a database administrator. While you can manually modify this <code>postgresql.conf</code> file and restart the server for the changes to take effect, you can also edit some configuration parameters directly from the command line interface (CLI).</p>
+    <p>In this exercise, you will customize the configuration settings for the PostgreSQL instance using the CLI.</p>
+    <ol>
+      <li>
+        <p>First, let's take a look at the current setting of the <code>wal_level</code> parameter. You can do so by entering the following command into the CLI:</p>
+        <pre><code class="hljs language-abnf">SHOW wal_level<span class="hljs-comment">;</span>
+</code></pre>
+        <p></p>
+        <p>Without going into too much detail, the <code>wal_level</code> parameter dictates how much information is written to the write-ahead log (WAL), which can be used for continuous archiving. If you're interested, you can find further information in the <a href="https://www.postgresql.org/docs/9.6/runtime-config-wal.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">PostgreSQL official documentation</a>.</p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>The <code>ALTER SYSTEM</code> command is a way to modify the global defaults of a PostgreSQL instance without having to manually edit the configuration file. Let's give it a try and change the <code>wal_level</code> parameter to <code>logical</code>. To change the parameter, enter the following command into the CLI:</p>
+        <pre><code class="hljs language-gams">ALTER <span class="hljs-keyword">SYSTEM</span> <span class="hljs-keyword">SET</span> wal_level <span class="hljs-comment">=</span> <span class="hljs-comment">'logical'</span>;
+</code></pre>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p><strong>Try it yourself:</strong> Use the CLI to check the current setting of <code>wal_level</code>.</p>
+        <details>
+          <summary><strong>Hint</strong> (Click Here)</summary>
+          <p>Recall that you performed this exact action earlier in this exercise - feel free to look back for reference.</p>
+        </details>
+        <details>
+          <summary><strong>Solution</strong> (Click Here)</summary>
+          <pre><code class="hljs language-abnf">SHOW wal_level<span class="hljs-comment">;</span>
+</code></pre>
+          <p></p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20PostgreSQL%20Instance%20Configuration%20and%20System%20Catalog/images/config_1.png" alt="Showing wal_level after ALTER but before restart">
+          </p>
+          <p>In Step 2, you changed the <code>wal_level</code> parameter from <code>replica</code> to <code>logical</code> yet the command you just entered shows that the parameter is still set to <code>replica</code>. Why would this be? It turns out that some configuration parameters require a server restart before any changes take effect - the <code>wal_level</code> is one such parameter.</p>
+        </details>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        Stop the PostgreSQL server by clicking the "Stop" button and close all CLI and terminal tabs.
+        
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20PostgreSQL%20Instance%20Configuration%20and%20System%20Catalog/images/postgres_stop.png" alt="Stop the PostgreSQL server">
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        Now restart the PostgreSQL server by clicking the "Start" button. It may take a few moments to start up again. When does it so, reopen the PostgreSQL CLI.
+        
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20PostgreSQL%20Instance%20Configuration%20and%20System%20Catalog/images/postgres_start.png" alt="Restart the PostgreSQL server">
+      </li>
+    </ol><br>
+    <ol start="6">
+      <li>
+        <p>When you executed the <code>ALTER SYSTEM</code> command in Step 2 of this exercise, a new file named <code>postgres.auto.conf</code> was created. You can open the file by first opening the file explorer on Cloud IDE then clicking <code>postgres > data > postgresql.auto.conf</code>.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20PostgreSQL%20Instance%20Configuration%20and%20System%20Catalog/images/config_2.png" alt="Opening postgressql.auto.conf with the file explorer">
+        </p><br>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20PostgreSQL%20Instance%20Configuration%20and%20System%20Catalog/images/config_3.png" alt="Contents of postgresql.auto.conf file">
+        </p><br>
+        <p>This file was automatically modified to contain the new parameter you set using the <code>ALTER SYSTEM</code> command in Step 2. When you started up the PostgreSQL server again, it will read this file and set the <code>wal_level</code> parameter to <code>logical</code>.</p>
+      </li>
+    </ol><br>
+    <ol start="7">
+      <li>
+        <p>Finally, and for the last time in this lab, let's confirm the current setting of the <code>wal_level</code> parameter. Enter the following into the CLI:</p>
+        <pre><code class="hljs language-abnf">SHOW wal_level<span class="hljs-comment">;</span>
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20PostgreSQL%20Instance%20Configuration%20and%20System%20Catalog/images/config_4.png" alt="SHOW wal_level output">
+        </p><br>
+        <p>You can see that the parameter was changed successfully after the restart.</p>
+      </li>
+    </ol><br>
+    <ol start="8">
+      <li>
+        <p>For more advanced instance configuration where many parameter changes are required, using a series of <code>ALTER SYSTEM</code> commands may be cumbersome. Instead, you can edit the <code>postgresql.conf</code> file directly. You can once again use the Cloud IDE file explorer to open <code>postgres > data > postgresql.conf</code>.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20PostgreSQL%20Instance%20Configuration%20and%20System%20Catalog/images/config_5.png" alt="File explorer to open postgresql.conf"><br>You can edit the configuration file right in the Cloud IDE file explorer.
+          
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20PostgreSQL%20Instance%20Configuration%20and%20System%20Catalog/images/config_6.png" alt="view of postgresql.conf">
+        </p>
+      </li>
+    </ol>
+    <h1>Exercise 2: Navigate the System Catalog</h1>
+    <p>The system catalog stores schema metadata, such as information about tables and columns and internal bookkeeping information. In PostgreSQL, the system catalogs are regular tables in which you can add columns and insert and update values. In directly modifying the system catalogs, you can cause severe problems in your system, so it is generally recommended to avoid doing so. Instead, the system catalogs are updated automatically when performing other SQL commands. For example, if you run a <code>CREATE DATABASE</code> command, a new database is created on the disk and a new row is automatically inserted into the <code>pg_database</code> system catalog table, storing metadata about that database.</p>
+    <p>Let's explore some of the system catalog tables in PostgreSQL.</p>
+    <ol>
+      <li>
+        <p>Start with a simple query of <code>pg_tables</code>, which is a system catalog containing metadata about each table in the database. Let's query it to display metadata about all the tables belonging to the <code>bookings</code> schema in the <code>demo</code> database by entering the following command into the CLI:</p>
+        <pre><code class="hljs language-pgsql"><span class="hljs-keyword">SELECT</span> * <span class="hljs-keyword">FROM</span> pg_tables <span class="hljs-keyword">WHERE</span> schemaname = <span class="hljs-string">'bookings'</span>;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20PostgreSQL%20Instance%20Configuration%20and%20System%20Catalog/images/catalog_1.png" alt="Result of pg_tables query">
+          As you can see, the 8 tables belonging to the <code>bookings</code> schema are displayed with various pieces of metadata, such as the table owner and other parameters.
+        </p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Suppose as the database administrator, you would like to enable row-level security for the <code>boarding_passes</code> table in the <code>demo</code> database. When row security is enabled on a table, all normal access to the table for selecting or modifying rows must be specified by a row security policy. Since row security policies are not the focus of this lab, we will not go in depth about specifying a policy but will simply enable it for demonstration purposes. However, if you wish to learn more about this topic, you can check out the <a href="https://www.postgresql.org/docs/9.5/ddl-rowsecurity.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">PostgreSQL documentation</a>. To enable row security on the <code>boarding_passes</code> table, enter the following command in the CLI:</p>
+        <pre><code class="hljs language-pgsql"><span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">TABLE</span> boarding_passes <span class="hljs-keyword">ENABLE</span> <span class="hljs-keyword">ROW</span> <span class="hljs-keyword">LEVEL</span> <span class="hljs-keyword">SECURITY</span>;
+</code></pre>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p><strong>Try it yourself:</strong> Use the CLI to query the <code>pg_tables</code> to display metadata about the tables belonging to the <code>bookings</code> schema and confirm that the row security for the <code>boarding_passes</code> was successfully enabled.</p>
+        <details>
+          <summary><strong>Hint</strong> (Click Here)</summary>Recall the command you entered earlier in this exercise to query <code>pg_tables</code>.
+        </details>
+        <details>
+          <summary><strong>Solution</strong> (Click Here)</summary>
+          <pre><code class="hljs language-pgsql"><span class="hljs-keyword">SELECT</span> * <span class="hljs-keyword">FROM</span> pg_tables <span class="hljs-keyword">WHERE</span> schemaname = <span class="hljs-string">'bookings'</span>;
+</code></pre>
+          <p></p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20PostgreSQL%20Instance%20Configuration%20and%20System%20Catalog/images/catalog_2.png" alt="Showing row security enabled">
+          </p>
+          <p>As you can see, the <code>boarding_passes</code> has <code>t</code>, for "true", under the <code>rowsecurity</code> column, which tells us that the row security was enabled successfully.</p>
+        </details>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>Let's connect your work in the previous section about PostgreSQL instance configuration to the system catalogs. Earlier, you used <code>SHOW</code> statements to display configuration parameters. There's also a system catalog called <code>pg_settings</code> that stores data about configuration parameters of the PostgreSQL server. Let's query with the following command:</p>
+        <pre><code class="hljs language-pgsql"><span class="hljs-keyword">SELECT</span> <span class="hljs-type">name</span>, setting, short_desc <span class="hljs-keyword">FROM</span> pg_settings <span class="hljs-keyword">WHERE</span> <span class="hljs-type">name</span> = <span class="hljs-string">'wal_level'</span>;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20PostgreSQL%20Instance%20Configuration%20and%20System%20Catalog/images/catalog_3.png" alt="query results of pg_settings">
+          From the query, you see the same results from the <code>SHOW</code> statement in Exercise 1 and more. In fact, <code>pg_tables</code> contains much more data about a given parameter than is available from the <code>SHOW</code> statement (a full list can be found in the <a href="https://www.postgresql.org/docs/10/view-pg-settings.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">documentation</a>) so, the somewhat more complicated SQL query has its benefits.
+        </p>
+      </li>
+    </ol>
+    <h1>Exercise 3: Try it yourself!</h1>
+    <p>Now that you have seen some examples of configuring a PostgreSQL instance and navigating the system catalogs, it's time to put what you learned to use and give it a go yourself.</p>
+    <p>In this practice exercise, suppose you wanted to change the name of the <code>aircrafts_data</code> to <code>aircraft_fleet</code>.</p>
+    <ol>
+      <li>
+        <p><strong>Try it yourself:</strong> First, try changing the name of the table by directly editing the <code>pg_tables</code> table from the system catalogs.</p>
+        <details>
+          <summary><strong>Hint</strong> (Click Here)</summary>To change an entry in a table, you can use a SQL command of the following form: <code>UPDATE table_name SET column1 = value1, column2 = value2, ... WHERE condition;</code>
+        </details>
+        <details>
+          <summary><strong>Solution</strong> (Click Here)</summary>
+          <pre><code class="hljs language-pgsql"><span class="hljs-keyword">UPDATE</span> pg_tables <span class="hljs-keyword">SET</span> tablename = <span class="hljs-string">'aircraft_fleet'</span> <span class="hljs-keyword">WHERE</span> tablename = <span class="hljs-string">'aircrafts_data'</span>;
+</code></pre>
+          <p></p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20PostgreSQL%20Instance%20Configuration%20and%20System%20Catalog/images/practice_1.png" alt="Showing row security enabled">
+          </p>
+          <p>As you can see, the SQL command to update a table from the system catalog directly results in an error. This is a good safeguard for you as a database administrator since as discussed earlier in the lab, changing individual values in a system catalog directly can severely mess up your database. Let's try a different approach.</p>
+        </details>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>To properly change the name of the <code>aircrafts_data</code>, enter the following command in the CLI:</p>
+        <pre><code class="hljs language-pgsql"><span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">TABLE</span> aircrafts_data <span class="hljs-keyword">RENAME</span> <span class="hljs-keyword">TO</span> aircraft_fleet;
+</code></pre>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p><strong>Try it yourself:</strong> To confirm that the table was successfully renamed, query <code>pg_tables</code> from the system catalog by <code>schemaname</code> 'bookings' to display the <code>tablename</code> column.</p>
+        <details>
+          <summary><strong>Hint</strong> (Click Here)</summary>To query a table to display a specific column for rows satisfying a condition, use a SQL command of the following form:
+          <code>SELECT column1, column2, ... FROM table_name WHERE condition;</code>
+        </details>
+        <details>
+          <summary><strong>Solution</strong> (Click Here)</summary>
+          <pre><code class="hljs language-pgsql"><span class="hljs-keyword">SELECT</span> tablename <span class="hljs-keyword">FROM</span> pg_tables <span class="hljs-keyword">WHERE</span> schemaname = <span class="hljs-string">'bookings'</span>;
+</code></pre>
+          <p></p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20PostgreSQL%20Instance%20Configuration%20and%20System%20Catalog/images/practice_2.png" alt="Showing row security enabled">
+          </p>
+          <p>As you can see, the table was successfully renamed to <code>aircraft_fleet</code> and the changes are automatically reflected in the system catalog.</p>
+        </details>
+      </li>
+    </ol><br>
+    <h1>Conclusion</h1>
+    <p>Congratulations on completing this lab on database adminstration with PostgreSQL! You now have some foundational knowledge on how to configure a PostgreSQL instance and customize it for your specific use cases. In addition, you now have the ability to query the system catalog to retrieve metadata on database objects and you are ready to move on to the next lesson.</p>
+    <h2>Author</h2>
+    <p><a href="https://www.linkedin.com/in/david-pasternak-6b84a2208/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">David Pasternak</a></p>
+    <h3>Other Contributors</h3>
+    <p>Sandip Saha Joy, Rav Ahuja</p>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-09-20</td>
+          <td>0.1</td>
+          <td>David Pasternak</td>
+          <td>Initial version created</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2021. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

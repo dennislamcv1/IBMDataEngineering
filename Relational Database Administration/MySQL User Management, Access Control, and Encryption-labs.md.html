@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20User%20Management%20-%20Access%20Control%20-%20Encryption/images/IDSNlogo.png" width="200" height="200">
+    <h1>Hands-on Lab : MySQL User Management, Access Control, and Encryption</h1>
+    <p><strong>Estimated time needed:</strong> 25 minutes</p>
+    <p>In this lab, first you will learn how to manage MySQL user accounts and roles using phpMyAdmin graphical user interface (GUI) tool. Then you will learn how to control access to MySQL databases and their objects. Finally you will learn how to secure your data adding extra layer of security using data encryption.</p><br>
+    <h2>Objectives</h2>
+    <p>After completing this lab, you will be able to use the phpMyAdmin to:</p>
+    <ul>
+      <li>Manage MySQL user accounts and roles</li>
+      <li>Control access to MySQL databases and their objects</li>
+      <li>Add last line of defense to secure data using encryption</li>
+    </ul>
+    <h2>Software Used in this Lab</h2>
+    <p>In this lab, you will use <a href="https://www.mysql.com/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01">MySQL</a>. MySQL is a Relational Database Management System (RDBMS) designed to efficiently store, manipulate, and retrieve data.</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20User%20Management%20-%20Access%20Control%20-%20Encryption/images/mysql.png" alt="MySQL logo" width="100" height="100">
+    <p></p>
+    <p>To complete this lab you will utilize the MySQL relational database service available as part of the IBM Skills Network Labs (SN Labs) Cloud IDE. SN Labs is a virtual lab environment used in this course.</p><br>
+    <h2>Database Used in this Lab</h2>
+    <p>The World database used in this lab comes from the following source: <a href="https://dev.mysql.com/doc/world-setup/en/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">https://dev.mysql.com/doc/world-setup/en/</a> under <a href="https://creativecommons.org/licenses/by/4.0/deed.en?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">CC BY 4.0 License</a> with <a href="https://tilastokeskus.fi/org/lainsaadanto/copyright_en.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">Copyright 2021 - Statistics Finland</a>.</p>
+    <p>You will use a modified version of the database for the lab, so to follow the lab instructions successfully please use the database provided with the lab, rather than the database from the original source.</p>
+    <p>The following ERD diagram shows the schema of the World database:</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/datasets/World/World_ERD.png" alt="ERD diagram shows schema of World database" width="680" height="400">
+    <p>The first row is the table name, the second is the primary key, and the remaining items are any additional attributes.</p>
+    <h2>Exercise 1: Manage MySQL user accounts and roles</h2>
+    <p>In this example exercise, you will go through an example on how to manage MySQL user accounts and roles using phpMyAdmin.</p>
+    <p>User management is the process of controlling which users are allowed to connect to the MySQL server and what permissions they have on each database. phpMyAdmin does not handle user management, rather it passes the username and password on to MySQL, which then determines whether a user is permitted to perform a particular action. Within phpMyAdmin, administrators have full control over creating users, viewing and editing privileges for existing users, and removing users.</p>
+    <ol>
+      <li>Go to <strong>Skills Network Toolbox</strong> by clicking the following icon from the side by side launched Cloud IDE.</li>
+    </ol><br>
+    <ol start="2">
+      <li>From the <strong>Databases</strong> drop-down menu, click <strong>MySQL</strong> to open the MySQL service session tab.</li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Click the <strong>Start</strong> button and wait until MySQL service session gets launched.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20User%20Management%20-%20Access%20Control%20-%20Encryption/images/MySQL_1.png" alt="Screenshot of the Start button">
+        </p>
+        <p></p>
+        <p>The MySQL server will take a few moments to start. Once it is ready, you will see the green "Active" label near the top of the window.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20User%20Management%20-%20Access%20Control%20-%20Encryption/images/MySQL_2.png" alt="Screenshot shows MySQL server open with Active button highlighted">
+        </p>
+        <p><strong>NOTE</strong>: Whenever you are required to enter your MySQL service session password from the MySQL service session tab at any step of the lab, copy the password by clicking on the small copy button on the right of the password block. Paste the password into the terminal using <strong>Ctrl + V</strong> (Mac: ⌘ + V), and press <strong>Enter</strong> on the keyboard. For security reasons, you will not see the password as it is entered on the terminal.</p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Click <strong>phpMyAdmin</strong> button from the mysql service session tab. You will see the phpMyAdmin GUI tool.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20User%20Management%20-%20Access%20Control%20-%20Encryption/images/A.3.png" alt="Screenshot of phpMyAdmin tool">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>In the tree-view, click <strong>New</strong> to create a new empty database. Then enter <strong>world</strong> as the name of the database and click <strong>Create</strong>.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20User%20Management%20-%20Access%20Control%20-%20Encryption/images/A.4.png" alt="Screenshot shows creating new database and naming it">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        <p>Go to the <strong>Import</strong> tab. Upload the following sql script file using the <strong>Choose File</strong> button (first download the following sql script file to your local computer storage). Then click <strong>Go</strong> button at the bottom. You will be notified when the import successfully gets finished. Click the <strong>Home</strong> icon.</p>
+        <ul>
+          <li><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/datasets/World/world_mysql_script_full.sql" target="_blank" rel="external">world_mysql_script_full.sql</a></li>
+        </ul>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20User%20Management%20-%20Access%20Control%20-%20Encryption/images/A.5.1.png" alt="Screenshot shows Show File and Go buttons">
+        </p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20User%20Management%20-%20Access%20Control%20-%20Encryption/images/A.5.2.png" alt="Screenshot shows Home icon">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="6">
+      <li>
+        <p>Now you will create a user account with custom role "db_owner". Usually a user with db_owner role has all global privileges and access to all exisitng databases. Go to the <strong>User accounts</strong> tab and click <strong>Add user account</strong>.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20User%20Management%20-%20Access%20Control%20-%20Encryption/images/A.6.png" alt="Screenshot shows User accounts tab and Add user account button">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="7">
+      <li>
+        <p>Fill the <strong>Login Information</strong> as shown in following image (enter your own password). Under <strong>Global privileges</strong>, click <strong>Check all</strong>. Scroll down and click <strong>Go</strong>.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20User%20Management%20-%20Access%20Control%20-%20Encryption/images/A.7.1.png" alt="Screenshot shows Login information">
+        </p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20User%20Management%20-%20Access%20Control%20-%20Encryption/images/A.7.2.png" alt="Screenshot shows Global privileges">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="8">
+      <li>
+        <p>You have successfully created a user account with appropiate privileges.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20User%20Management%20-%20Access%20Control%20-%20Encryption/images/A.8.png" alt="Screenshot shows User accounts overview with new db_owner account">
+        </p>
+      </li>
+    </ol><br>
+    <h2>Exercise 2: Control access to MySQL databases and their objects</h2>
+    <p>In this example exercise, you will learn how to control access to MySQL databases and their objects.</p>
+    <p>Making an exception to the user definition of db_owner role you created earlier, you will modify privileges of this user so that this user won't be able to update other columns except a specifc column of a specific table of a specific database. You will restrict db_owner from updating all the other columns except the column <strong>Population</strong> of the table <strong>city</strong> of the database <strong>world</strong>.</p>
+    <ol>
+      <li>
+        <p>Go to <strong>Home</strong> > <strong>User accounts</strong> tab. Click <strong>Edit privileges</strong> option of <strong>db_owner</strong> user name.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20User%20Management%20-%20Access%20Control%20-%20Encryption/images/A.8.png" alt="Screenshot of User accounts overview with db_owner account highlighted">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Under <strong>Database</strong> sub-tab, select <strong>world</strong> database and click <strong>Go</strong>.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20User%20Management%20-%20Access%20Control%20-%20Encryption/images/B.2.png" alt="Screenshot of Edit privileges screen for db_owner account">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Under <strong>Database-specific privileges</strong>, select <strong>Check all</strong> and click <strong>Go</strong> at the bottom.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20User%20Management%20-%20Access%20Control%20-%20Encryption/images/B.3.png" alt="Screenshot of the Database-specific privileges">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>Switch to <strong>Table</strong> sub-tab. Select the table <strong>city</strong> from the drop-down menu and click <strong>Go</strong>.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20User%20Management%20-%20Access%20Control%20-%20Encryption/images/B.4.png" alt="Screenshot of selecting the table">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        <p>Under <strong>Table-specific privileges</strong>, configure all the SQL commands and their custom access to the columns of the table <strong>city</strong> as shown below. Then click <strong>Go</strong>. Such table-specific privilege configuration will restrict db_owner from updating all the other columns except the column <strong>Population</strong> of the table <strong>city</strong> of the database <strong>world</strong>.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20User%20Management%20-%20Access%20Control%20-%20Encryption/images/B.5.png" alt="Screenshot of restricting db_owner privileges">
+        </p>
+      </li>
+    </ol><br>
+    <h2>Exercise 3: Secure data using encryption</h2>
+    <p>In this example exercise, you will learn how to secure your data adding extra layer of security using data encryption. There may be certain parts of your database containing sensitive information which <em>should not</em> be stored in plain text. This is where encryption comes in.</p>
+    <p>You will implement encryption and decryption of a column in the world database using the official AES (Advanced Encryption Standard) algorithm. AES is a symmetric encryption where the same key is used to encrypt and decrypt the data. The AES standard permits various key lengths. By default, key length of 128-bits is used. Key lengths of 196 or 256 bits can be used. The key length is a trade off between performance and security. Let's get started.</p>
+    <ol>
+      <li>Click the <strong>MySQL CLI</strong> button from the mysql service session tab.</li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20User%20Management%20-%20Access%20Control%20-%20Encryption/images/X_1.png" alt="Open MySQL CLI">
+    </p><br>
+    <ol start="2">
+      <li>
+        <p>First, you will need to hash your passphrase (consider your passphrase is <strong>My secret passphrase</strong>) with a specific hash length (consider your hash length is <strong>512</strong>) using a hash function (here you will use hash function from <strong>SHA-2</strong> family). It is good practice to hash the passphrase you use, since storing the passphrase in plaintext is a significant security vulnerability. Use the following command in the terminal to use the SHA2 algorithm to hash your passphrase and assign it to the variable <code>key_str</code>:</p>
+        <pre><code class="hljs language-ini">SET @<span class="hljs-attr">key_str</span> = SHA2(<span class="hljs-string">'My secret passphrase'</span>, <span class="hljs-number">512</span>)<span class="hljs-comment">;</span>
+</code></pre>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Now, let's take a look at the <code>world</code> database. First, you will want to connect to the database by entering the following command in the CLI:</p>
+        <pre><code class="hljs language-abnf">USE world<span class="hljs-comment">;</span>
+</code></pre>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>Next, let's take a quick look at the <code>countrylanguage</code> table in our database with the following command:</p>
+        <pre><code class="hljs language-n1ql"><span class="hljs-keyword">SELECT</span> * <span class="hljs-keyword">FROM</span> countrylanguage <span class="hljs-keyword">LIMIT</span> <span class="hljs-number">5</span>;
+</code></pre>
+        <p></p>
+      </li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20User%20Management%20-%20Access%20Control%20-%20Encryption/images/X_2.png" alt="Look at countrylanguage table in world database">
+    </p><br>
+    <p>For <em>demonstration purposes</em>, <strong>suppose</strong> that the last column in the table, labeled <em>Percentage</em> contains sensitive data, such as a citizen's passport number. Storing such sensitive data in plain text is an enormous security concern, so let's go ahead and encrypt that column.</p><br>
+    <ol start="5">
+      <li>
+        <p>To encrypt the <em>Percentage</em> column, we will first want to convert the data in the column into binary byte strings of length 255 by entering the following command into the CLI:</p>
+        <pre><code class="hljs language-sql"><span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">TABLE</span> countrylanguage MODIFY <span class="hljs-keyword">COLUMN</span> Percentage <span class="hljs-type">varbinary</span>(<span class="hljs-number">255</span>);
+</code></pre>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="6">
+      <li>
+        <p>Now to actually encrypt the <em>Percentage</em> column, we use the AES encryption standard and our hashed passphrase to execute the following command:</p>
+        <pre><code class="hljs language-less"><span class="hljs-selector-tag">UPDATE</span> <span class="hljs-selector-tag">countrylanguage</span> <span class="hljs-selector-tag">SET</span> <span class="hljs-selector-tag">Percentage</span> = <span class="hljs-selector-tag">AES_ENCRYPT</span>(Percentage, <span class="hljs-variable">@key_str</span>);
+</code></pre>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="7">
+      <li>
+        <p>Let's go ahead and see if the column was successfully encrypted by taking another look at the <em>countrylanguage</em> table. We again run the same command as in step 4:</p>
+        <pre><code class="hljs language-n1ql"><span class="hljs-keyword">SELECT</span> * <span class="hljs-keyword">FROM</span> countrylanguage <span class="hljs-keyword">LIMIT</span> <span class="hljs-number">5</span>;
+</code></pre>
+        <p></p>
+      </li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20User%20Management%20-%20Access%20Control%20-%20Encryption/images/X_3.png" alt="The percentage column is encrypted">
+    </p>
+    <p>As you can see, the data on the <em>Percentage</em> column is encrypted and completely illegible.</p><br>
+    <p>The supposedly sensitive data is now encrypted and secured from prying eyes. However, we should still have a way to access the encrypted data when needed. To do this, we use the <code>AES_DECRYPT</code> command, and since AES is symmetric, we use the same key for both encryption and decryption. In our case, recall that the key was a passphrase which was hashed and stored in the variable <code>key_str</code>. Suppose we need to access the sensitive data in that column. We can do so by entering the following command in the CLI:</p>
+    <pre><code class="hljs language-less">```
+<span class="hljs-selector-tag">SELECT</span> <span class="hljs-selector-tag">cast</span>(AES_DECRYPT(Percentage, <span class="hljs-variable">@key_str</span>) as char(<span class="hljs-number">255</span>)) <span class="hljs-selector-tag">FROM</span> <span class="hljs-selector-tag">countrylanguage</span>;
+```
+
+{: <span class="hljs-selector-tag">codeblock</span>}
+</code></pre>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20User%20Management%20-%20Access%20Control%20-%20Encryption/images/X_4.png" alt="View decrypted countrylanguage table">
+    </p><br>
+    <h2>Practice Exercise: Control access to MySQL databases and their objects</h2>
+    <p>In this practice exercise, you will get to put what you learned to use and modify privileges for a user.</p>
+    <blockquote>
+      <p>Scenario: <em>You will modify privileges of the user <strong>db_owner</strong> you created in example exercise A such a way that this user won't be able to insert, update and delete any column of a specific table <strong>country</strong> of the <strong>world</strong> database.</em></p>
+    </blockquote>
+    <details>
+      <summary>Hint (Click Here)</summary>
+      <blockquote>
+        <p>Follow example exercise 2. If necessary create the user account following example exercise 1.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Solution (Click Here)</summary>
+      <blockquote></blockquote>
+      <ol>
+        <li>
+          <p>Go to <strong>Home</strong> > <strong>User accounts</strong> tab. Click <strong>Edit privileges</strong> option of <strong>db_owner</strong> user name.</p>
+        </li>
+        <li>
+          <p>Under <strong>Database</strong> sub-tab, select <strong>world</strong> database and click <strong>Go</strong>.</p>
+        </li>
+        <li>
+          <p>Under <strong>Database-specific privileges</strong>, select <strong>Check all</strong> and click <strong>Go</strong> at the bottom.</p>
+        </li>
+        <li>
+          <p>Switch to <strong>Table</strong> sub-tab. Select the table <strong>country</strong> from the drop-down menu and click <strong>Go</strong>.</p>
+        </li>
+        <li>
+          <p>Under <strong>Table-specific privileges</strong>, configure all the SQL commands and their custom access to the columns of the table <strong>city</strong> as shown in the following image. Then click <strong>Go</strong>. Such table-specific privilege configuration will restrict db_owner from inserting, updating and deleting any column of a specific table <strong>country</strong> of the <strong>world</strong> database.</p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20User%20Management%20-%20Access%20Control%20-%20Encryption/images/PE.5.png" alt="Table-specific privileges">
+          </p>
+        </li>
+      </ol>
+    </details>
+    <h1></h1>
+    <h3>Congratulations! You have completed this lab, and you are ready for the next topic.</h3>
+    <h3><br></h3>
+    <h2>Author(s)</h2>
+    <ul>
+      <li><a href="https://www.linkedin.com/in/sandipsahajoy/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">Sandip Saha Joy</a></li>
+    </ul>
+    <h2>Other Contributor(s)</h2>
+    <ul>
+      <li><a href="https://www.linkedin.com/in/david-pasternak-6b84a2208/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">David Pasternak</a></li>
+    </ul>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-07-13</td>
+          <td>1.0</td>
+          <td>Sandip Saha Joy</td>
+          <td>Created initial version</td>
+        </tr>
+        <tr>
+          <td>2021-10-05</td>
+          <td>1.1</td>
+          <td>David Pasternak</td>
+          <td>Updated instructions</td>
+        </tr>
+        <tr>
+          <td>2021-10-13</td>
+          <td>1.2</td>
+          <td>Steve Hord</td>
+          <td>Copy edits</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2021. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

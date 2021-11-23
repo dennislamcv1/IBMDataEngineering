@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20MySQL%20command%20line/images/IDSNlogo.png" alt="IDSN logo" width="200" height="200">
+    <h1>Hands-on Lab: Automating MySQL Database Tasks Using Shell Scripts</h1>
+    <p><strong>Estimated time needed:</strong> 30 minutes</p>
+    <p>In this lab, you will use the MySQL command line interface (CLI) to automatically back up the database and restore the database when required.</p>
+    <h2>Software Used in This Lab</h2>
+    <p>To complete this lab, you will use the MySQL relational database service available as part of the IBM Skills Network Labs (SN Labs). SN Labs is a virtual lab environment used in this course.</p>
+    <h1></h1>
+    <h2>Database Used in This Lab</h2>
+    <p>You will use a modified version of the Sakila database for the lab, which is an adapted version from the following source: <a href="https://dev.mysql.com/doc/sakila/en/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0110ENSkillsNetwork24601058-2021-01-01" target="_blank" rel="external">https://dev.mysql.com/doc/sakila/en/</a> under <a href="https://opensource.org/licenses/bsd-license.php?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0110ENSkillsNetwork24601058-2021-01-01" target="_blank" rel="external">New BSD license</a> [Copyright 2021 - Oracle Corporation].</p>
+    <h1></h1>
+    <h2>Objectives</h2>
+    <p>After completing this lab, you will be able to use the MySQL command line to:</p>
+    <ul>
+      <li>Create the shell script to back up the database.</li>
+      <li>Create a cron job to run the backup script thereby creating a backup file.</li>
+      <li>Truncate the tables in the database.</li>
+      <li>Restore the database using the backup file.</li>
+    </ul>
+    <h1></h1>
+    <h2>Exercise</h2>
+    <p>In this exercise you will create a database, backup the database using an automated script, and finally truncate and restore it back.</p>
+    <h1></h1>
+    <h3>Task A: Create a Database</h3>
+    <ol>
+      <li>
+        <p>Go to <strong>Terminal > New Terminal</strong> to open a terminal from the side-by-side launched Cloud IDE.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20MySQL%20command%20line/images/A.1.png" alt="new terminal">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>Copy the command below and run it on the terminal to fetch the <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/datasets/sakila/sakila_mysql_dump.sql" target="_blank" rel="external">sakila_mysql_dump.sql</a> file to the Cloud IDE.</li>
+    </ol>
+    <pre><code class="hljs language-awk">wget https:<span class="hljs-regexp">//</span>cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud<span class="hljs-regexp">/IBM-DB0110EN-SkillsNetwork/</span>datasets<span class="hljs-regexp">/sakila/</span>sakila_mysql_dump.sql
+</code></pre>
+    <p></p><br>
+    <ol start="3">
+      <li>Start the MySQL service session in the Cloud IDE using the command below in the terminal. It takes some time to start the server up. Note your MySQL service session password, highlighted in the image, because you may need to use it later in the lab.</li>
+    </ol>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">start_mysql</span>
+</code></pre>
+    <p></p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20MySQL%20command%20line/images/A.4.png" alt="start mysql">
+    </p><br>
+    <ol start="4">
+      <li>Open the <code>.my.cnf</code> as root user, with nano editor.</li>
+    </ol>
+    <pre><code class="hljs language-sh">sudo nano ~/.my.cnf
+</code></pre>
+    <p></p>
+    <ol start="5">
+      <li>Add the password you noted in the previous step to the <code>.my.cnf</code> file. This aids in not entering the password over and over again and keeps the password hidden in the config file.</li>
+    </ol>
+    <pre><code class="hljs language-ini"><span class="hljs-section">[mysql]</span>
+<span class="hljs-attr">host</span> = <span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>
+<span class="hljs-attr">port</span> = <span class="hljs-number">3306</span>
+<span class="hljs-attr">user</span> = root
+<span class="hljs-attr">password</span> = &#x3C;Your MySQL Password>
+
+<span class="hljs-section">[mysqlimport]</span>
+<span class="hljs-attr">host</span> = <span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>
+<span class="hljs-attr">port</span> = <span class="hljs-number">3306</span>
+<span class="hljs-attr">user</span> = root
+<span class="hljs-attr">password</span> = &#x3C;Your MySQL Password>
+
+<span class="hljs-section">[mysqldump]</span>
+<span class="hljs-attr">host</span> = <span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>
+<span class="hljs-attr">port</span> = <span class="hljs-number">3306</span>
+<span class="hljs-attr">user</span> = root
+<span class="hljs-attr">password</span> = &#x3C;Your MySQL Password>
+
+<span class="hljs-section">[mysqlshow]</span>
+<span class="hljs-attr">host</span> = <span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>
+<span class="hljs-attr">port</span> = <span class="hljs-number">3306</span>
+<span class="hljs-attr">user</span> = root
+<span class="hljs-attr">password</span> = &#x3C;Your MySQL Password>
+
+<span class="hljs-section">[mysqlcheck]</span>
+<span class="hljs-attr">host</span> = <span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>
+<span class="hljs-attr">port</span> = <span class="hljs-number">3306</span>
+<span class="hljs-attr">user</span> = root
+<span class="hljs-attr">password</span> = &#x3C;Your MySQL Password>
+
+<span class="hljs-section">[mysqladmin]</span>
+<span class="hljs-attr">host</span> = <span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>
+<span class="hljs-attr">port</span> = <span class="hljs-number">3306</span>
+<span class="hljs-attr">user</span> = root
+<span class="hljs-attr">password</span> = &#x3C;Your MySQL Password>
+</code></pre>
+    <ol start="6">
+      <li>
+        <p>Press Ctrl+O followed by the Enter key to save the file.</p>
+      </li>
+      <li>
+        <p>Press Ctrl+X to quit the nano editor.</p>
+      </li>
+      <li>
+        <p>Initiate the mysql command prompt session within the MySQL service session using the command below in the terminal:</p>
+      </li>
+    </ol>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">mysql</span>
+</code></pre>
+    <p></p><br>
+    <ol start="5">
+      <li>Enter your MySQL service session password highlighted in the image above.</li>
+    </ol><br>
+    <ol start="6">
+      <li>
+        <p>Create a new database <strong>sakila</strong> using the command below in the terminal and proceed to Task B:</p>
+        <pre><code class="hljs language-n1ql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">database</span> sakila;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20MySQL%20command%20line/images/A.6.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <h1></h1>
+    <h3>Task B: Restore the Structure and Data of a Table</h3>
+    <ol>
+      <li>
+        <p>To use the newly created empty sakila database, use the command below in the terminal:</p>
+        <pre><code class="hljs language-abnf">use sakila<span class="hljs-comment">;</span>
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20MySQL%20command%20line/images/B.1.png" alt="use sakila">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Restore the sakila mysql dump file (containing the sakila database table definitions and data) to the newly created empty sakila database using the command below in the terminal:</p>
+        <pre><code class="hljs language-abnf">source sakila_mysql_dump.sql<span class="hljs-comment">;</span>
+</code></pre>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>To check, list all the table names from the sakila database using the command below in the terminal</p>
+        <pre><code class="hljs language-pgsql"><span class="hljs-keyword">SHOW</span> <span class="hljs-keyword">FULL</span> <span class="hljs-keyword">TABLES</span> <span class="hljs-keyword">WHERE</span> table_type = <span class="hljs-string">'BASE TABLE'</span>;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20MySQL%20command%20line/images/C.1.png" alt="show full tables">
+        </p>
+      </li>
+    </ol><br>
+    <h1></h1>
+    <h3>Task C: Understanding the Process Involved in Creating MySQL Database Backups</h3>
+    <p>You will create a shell script that does the following:</p>
+    <ul>
+      <li>
+        <p>Writes the database to an sqlfile created with a timestamp, using the <code>mysqldump</code> command</p>
+      </li>
+      <li>
+        <p>Zips the sqlfile into a zip file using the <code>gzip</code> command</p>
+      </li>
+      <li>
+        <p>Removes the sqlfile using rm command</p>
+      </li>
+      <li>
+        <p>Deletes the backup after 30 days</p>
+      </li>
+    </ul>
+    <p>Before you create the script, let's understand each of the command blocks you will be adding to the file.</p>
+    <ul>
+      <li>To start with, you have a database that you want to back up. You will store the name of the database in a variable.</li>
+    </ul>
+    <pre><code class="hljs language-sh">DATABASE=<span class="hljs-string">'sakila'</span>
+</code></pre>
+    <ul>
+      <li>It is always a good practice to print some logs, which can help in debugging.</li>
+    </ul>
+    <pre><code class="hljs language-sh"><span class="hljs-built_in">echo</span> <span class="hljs-string">"Pulling Database: This may take a few minutes"</span>
+</code></pre>
+    <ul>
+      <li>You will also set the backup folder where the SQL and zipped files will be stored.</li>
+    </ul>
+    <pre><code class="hljs language-sh">backupfolder=/home/theia/backups
+</code></pre>
+    <ul>
+      <li>You will decide and set the number of days the backup will need to be kept.</li>
+    </ul>
+    <pre><code class="hljs language-sh">keep_day=30
+</code></pre>
+    <ul>
+      <li>You will set the name of the SQL file where you will dump the database as "all-database-" suffixed with the current timestamp and .sql extension, and the zip file in which you will compress the SQL file as "all-database-" suffixed with the current timestamp and .gz extension.</li>
+    </ul>
+    <pre><code class="hljs language-sh">sqlfile=<span class="hljs-variable">$backupfolder</span>/all-database-$(date +%d-%m-%Y_%H-%M-%S).sql
+zipfile=<span class="hljs-variable">$backupfolder</span>/all-database-$(date +%d-%m-%Y_%H-%M-%S).gz
+</code></pre>
+    <ul>
+      <li>Now that all the placeholders are created, you will create the SQL backup. In MySQL, it can be accomplished with the <code>mysqldump</code> command. Depending on whether the operation is successful or not, a log is printed. If the operation is successful, you will compress the .sql file into a .gz and delete the the .sql file.</li>
+    </ul>
+    <pre><code class="hljs language-sh"><span class="hljs-keyword">if</span> mysqldump  <span class="hljs-variable">$DATABASE</span> > <span class="hljs-variable">$sqlfile</span> ; <span class="hljs-keyword">then</span>
+   <span class="hljs-built_in">echo</span> <span class="hljs-string">'Sql dump created'</span>
+    <span class="hljs-comment"># Compress backup </span>
+    <span class="hljs-keyword">if</span> gzip -c <span class="hljs-variable">$sqlfile</span> > <span class="hljs-variable">$zipfile</span>; <span class="hljs-keyword">then</span>
+        <span class="hljs-built_in">echo</span> <span class="hljs-string">'The backup was successfully compressed'</span>
+    <span class="hljs-keyword">else</span>
+        <span class="hljs-built_in">echo</span> <span class="hljs-string">'Error compressing backupBackup was not created!'</span> 
+        <span class="hljs-built_in">exit</span>
+    <span class="hljs-keyword">fi</span>
+    rm <span class="hljs-variable">$sqlfile</span> 
+<span class="hljs-keyword">else</span>
+   <span class="hljs-built_in">echo</span> <span class="hljs-string">'pg_dump return non-zero code No backup was created!'</span> 
+   <span class="hljs-built_in">exit</span>
+<span class="hljs-keyword">fi</span>
+</code></pre>
+    <ul>
+      <li>Finally, you will remove any backups that are in the system for longer than the time you decided to retain the backup.</li>
+    </ul>
+    <pre><code class="hljs language-routeros"><span class="hljs-builtin-name">find</span> <span class="hljs-variable">$backupfolder</span> -mtime +<span class="hljs-variable">$keep_day</span> -delete
+</code></pre>
+    <p>Now that you have examined the components and understood what the shell script does, let's create a file and save the script in it.</p>
+    <h3>Task D: Creating a Shell Script for MySQL Database Backups</h3>
+    <ol>
+      <li>Select <strong>File</strong> menu and then select <strong>New File</strong> to create a new shell script named <code>sqlbackup.sh</code>.</li>
+    </ol>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Automate%20Backup%20in%20MySQL/images/one.png" style="margin-left:30px">
+    <p>Enter the following code in the new file:</p>
+    <pre><code class="hljs language-sh"><span class="hljs-meta">#!/bin/sh</span>
+<span class="hljs-comment"># The above line tells the interpreter this code needs to be run as a shell script.</span>
+
+<span class="hljs-comment"># Set the database name to a variable. </span>
+DATABASE=<span class="hljs-string">'sakila'</span>
+
+<span class="hljs-comment"># This will be printed on to the screen. In the case of cron job, it will be printed to the logs.</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"Pulling Database: This may take a few minutes"</span>
+
+<span class="hljs-comment"># Set the folder where the database backup will be stored</span>
+backupfolder=/home/theia/backups
+
+<span class="hljs-comment"># Number of days to store the backup </span>
+keep_day=30
+
+sqlfile=<span class="hljs-variable">$backupfolder</span>/all-database-$(date +%d-%m-%Y_%H-%M-%S).sql
+zipfile=<span class="hljs-variable">$backupfolder</span>/all-database-$(date +%d-%m-%Y_%H-%M-%S).gz
+
+<span class="hljs-comment"># Create a backup</span>
+
+<span class="hljs-keyword">if</span> mysqldump  <span class="hljs-variable">$DATABASE</span> > <span class="hljs-variable">$sqlfile</span> ; <span class="hljs-keyword">then</span>
+   <span class="hljs-built_in">echo</span> <span class="hljs-string">'Sql dump created'</span>
+    <span class="hljs-comment"># Compress backup </span>
+    <span class="hljs-keyword">if</span> gzip -c <span class="hljs-variable">$sqlfile</span> > <span class="hljs-variable">$zipfile</span>; <span class="hljs-keyword">then</span>
+        <span class="hljs-built_in">echo</span> <span class="hljs-string">'The backup was successfully compressed'</span>
+    <span class="hljs-keyword">else</span>
+        <span class="hljs-built_in">echo</span> <span class="hljs-string">'Error compressing backupBackup was not created!'</span> 
+        <span class="hljs-built_in">exit</span>
+    <span class="hljs-keyword">fi</span>
+    rm <span class="hljs-variable">$sqlfile</span> 
+<span class="hljs-keyword">else</span>
+   <span class="hljs-built_in">echo</span> <span class="hljs-string">'pg_dump return non-zero code No backup was created!'</span> 
+   <span class="hljs-built_in">exit</span>
+<span class="hljs-keyword">fi</span>
+
+<span class="hljs-comment"># Delete old backups </span>
+find <span class="hljs-variable">$backupfolder</span> -mtime +<span class="hljs-variable">$keep_day</span> -delete
+</code></pre>
+    <p></p>
+    <ol start="2">
+      <li>
+        <p>Save your script using the<strong>Save</strong> option or pressing Commands+S (in Mac) or Ctrl+S (Windows).</p>
+      </li>
+      <li>
+        <p>Now you need to give executable permission for the shell script file, to the owner (yourself), by running the following command in the terminal. <code>u</code> stands for user or creator, <code>x</code> stands for execute, and <code>r</code> stands for read permission:</p>
+      </li>
+    </ol>
+    <pre><code class="hljs language-sh">sudo chmod u+x+r sqlbackup.sh
+</code></pre>
+    <p></p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Automate%20Backup%20in%20MySQL/images/three.png" alt="executable permission">
+    </p>
+    <ol start="4">
+      <li>You decided to create the backups in a folder, but that folder doesn't exist in the environment. You need to create it by running the following command:</li>
+    </ol>
+    <pre><code class="hljs language-sh">  mkdir /home/theia/backups
+</code></pre>
+    <p></p>
+    <h1></h1>
+    <h3>Task E: Setting Up a Cron Job</h3>
+    <ul>
+      <li>
+        <p>Cron is a system that helps Linux users schedule any task. It can be a shell script or a simple bash command.</p>
+      </li>
+      <li>
+        <p>A cron job helps us automate our routine tasks and it can be hourly, daily, monthly, etc.</p>
+      </li>
+      <li>
+        <p>A crontab (cron table) is a text file that specifies the schedule of cron jobs.</p>
+      </li>
+      <li>
+        <p>Each line in the crontab file contains six fields separated by a space followed by the command to be run.</p>
+      </li>
+    </ul>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Automate%20Backup%20in%20MySQL/images/crontabimage.png" alt="crontab image">
+    </p>
+    <p>The first five fields may contain one or more values separated by a comma or a range of values separated by a hyphen.</p>
+    <p>* The asterisk operator means any value or always. If you have the asterisk symbol in the Hour field, it means the task will be performed each hour.</p>
+    <p>, The comma operator allows you to specify a list of values for repetition. For example, if you have 1,3,5 in the Hour field, the task will run at 1 a.m., 3 a.m. and 5 a.m.</p>
+    <p>- The hyphen operator allows you to specify a range of values. If you have 1-5 in the Day of week field, the task will run every weekday (from Monday to Friday).</p>
+    <p>/ The slash operator allows you to specify values that will be repeated over a certain interval between them. For example, if you have */4 in the Hour field, it means the action will be performed every four hours. It is same as specifying 0,4,8,12,16,20. Instead of an asterisk before the slash operator, you can also use a range of values. For example, 1-30/10 means the same as 1,11,21.</p>
+    <p>To understand how a crontab works, let's set up a cron job that happens every 2 minutes.</p>
+    <ol>
+      <li>To start the crontab, run the following command in the terminal:</li>
+    </ol>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">crontab -e</span>
+
+</code></pre>
+    <p></p>
+    <p>This will open a crontab editor as follows.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Automate%20Backup%20in%20MySQL/images/seven.png" alt="open cron editor">
+    </p>
+    <ol start="2">
+      <li>Scroll to the bottom of the editor page using the down arrow key and copy and paste the following code:</li>
+    </ol>
+    <pre><code class="hljs language-gradle">*<span class="hljs-regexp">/2 * * * * /</span>home<span class="hljs-regexp">/project/</span>sqlbackup.sh > <span class="hljs-regexp">/home/</span><span class="hljs-keyword">project</span>/backup.log
+</code></pre>
+    <p></p>
+    <ol start="3">
+      <li>
+        <p>Press Ctrl+O followed by the Enter key to save the file.</p>
+      </li>
+      <li>
+        <p>Press Ctrl+X to quit the cron editor.</p>
+      </li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Automate%20Backup%20in%20MySQL/images/eight.png" alt="quit cron editor">
+    </p>
+    <ol start="5">
+      <li>The cron service needs to be explicitly started. Start the cron service by executing the following command:</li>
+    </ol>
+    <pre><code class="hljs language-sh">sudo service cron start
+</code></pre>
+    <p></p>
+    <ol start="6">
+      <li>After 2 minutes, execute the following command to check whether the backup file are created:</li>
+    </ol>
+    <pre><code class="hljs language-sh">ls -l /home/theia/backups
+</code></pre>
+    <p></p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Automate%20Backup%20in%20MySQL/images/nine.png" alt="backups">
+    </p>
+    <blockquote>
+      <p>In a real-life scenario, the cron service is a long-running service that runs in the background. To stop the cron job you can run <code>sudo service cron stop</code>.</p>
+    </blockquote>
+    <ol start="7">
+      <li>In this example, the cron is set for backup every 2 minutes. Stop the cron service using the below command:</li>
+    </ol>
+    <pre><code class="hljs language-sh">sudo service cron stop
+</code></pre>
+    <p></p>
+    <h3>Practice Exercise</h3>
+    <ol>
+      <li>Change the crontab schedule to create a backup every week on Monday at 12:00 a.m.
+        <details style="margin-left:50px">
+          <summary>Click here for solution</summary>0 12 * * 1 /home/project/sqlbackup.sh > /home/project/backup.log
+        </details>
+      </li>
+      <li>Change the crontab schedule to create a backup every day at 6:00 a.m.
+        <details style="margin-left:50px">
+          <summary>Click here for solution</summary>0 6 * * * /home/project/sqlbackup.sh > /home/project/backup.log
+        </details>
+      </li>
+    </ol>
+    <h3>Task F: Truncate the Tables in the Database</h3>
+    <p>Now that you have automated the backup task, let's replicate a scenario where the data is corrupted or lost and you will remove all the data in the database and restore the data from the backup.</p>
+    <p>We will create a truncate script that does the following:</p>
+    <ul>
+      <li>
+        <p>Connects to mysql RDBMS using the credentials.</p>
+      </li>
+      <li>
+        <p>Lists tables using <code>show tables</code> and feeds the output using pipe(|) operator to the next command.</p>
+      </li>
+      <li>
+        <p>Iterates through each table using a while loop and truncates the table.</p>
+      </li>
+    </ul>
+    <ol>
+      <li>Create a new file named <strong>truncate.sh</strong> under home/project.</li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Automate%20Backup%20in%20MySQL/images/ten.png" alt="new truncate file">
+    </p>
+    <ol start="2">
+      <li>Copy this script and paste it in the new file.</li>
+    </ol>
+    <pre><code class="hljs language-sh"><span class="hljs-meta">#!/bin/sh</span>
+ 
+DATABASE=sakila
+
+mysql -Nse <span class="hljs-string">'show tables'</span> sakila | \
+    <span class="hljs-keyword">while</span> <span class="hljs-built_in">read</span> table; <span class="hljs-keyword">do</span> mysql --host=127.0.0.1 --port=3306 -u <span class="hljs-variable">$MYSQL_USER</span> -p<span class="hljs-variable">$MYSQL_PASSWD</span> \
+    -e <span class="hljs-string">"use sakila;SET FOREIGN_KEY_CHECKS=0;truncate table <span class="hljs-variable">$table</span>;SET FOREIGN_KEY_CHECKS=1;"</span> ;<span class="hljs-keyword">done</span>
+
+</code></pre>
+    <p></p>
+    <ol start="3">
+      <li>Change the permission of the file by running the following command:</li>
+    </ol>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">sudo chmod u</span>+x+r truncate.sh
+</code></pre>
+    <p></p>
+    <ol start="4">
+      <li>Execute the script to truncate the tables.</li>
+    </ol>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">sudo</span> ./truncate.sh
+</code></pre>
+    <p></p>
+    <ol start="5">
+      <li>To check whether the tables in the database are truncated, log in to the database with the credentials.</li>
+    </ol>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">mysql</span>
+
+</code></pre>
+    <p></p>
+    <p>The mysql interface appears</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Automate%20Backup%20in%20MySQL/images/eleven.png" alt="mysql interface">
+    </p>
+    <ol start="6">
+      <li>Switch to the <strong>sakila</strong> database.</li>
+    </ol>
+    <pre><code class="hljs language-abnf"> use sakila<span class="hljs-comment">;</span>
+</code></pre>
+    <p></p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Automate%20Backup%20in%20MySQL/images/twelve.png" alt="sakila database">
+    </p>
+    <ol start="7">
+      <li>Check all the tables in the database.</li>
+    </ol>
+    <pre><code class="hljs language-pgsql"><span class="hljs-keyword">show</span> <span class="hljs-keyword">tables</span>;
+</code></pre>
+    <p></p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Automate%20Backup%20in%20MySQL/images/twelvea.png" alt="show tables">
+    </p>
+    <ol start="8">
+      <li>Retrieve all the rows from staff table. If the <code>truncate</code> was successful, the output should be an <strong>Empty set</strong>.</li>
+    </ol>
+    <pre><code class="hljs language-axapta">  <span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> staff;
+</code></pre>
+    <p></p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Automate%20Backup%20in%20MySQL/images/thirteen.png" alt="retrieve all rows from staff table">
+    </p>
+    <ol start="9">
+      <li>Quit the mysql prompt.</li>
+    </ol>
+    <pre><code class="hljs language-css">\<span class="hljs-selector-tag">q</span>
+</code></pre>
+    <p></p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20MySQL%20command%20line/images/C.4.png" alt="quit mysql">
+    </p>
+    <h1></h1>
+    <h3>Task G: Restore the Database</h3>
+    <p>To restore the database:</p>
+    <ul>
+      <li>
+        <p>You pick up a compressed zip file present in the backup folder and unzip it to extract the sql file using the gunzip command.</p>
+      </li>
+      <li>
+        <p>You connect to the mysql database and restore the database with the sqlfile.</p>
+      </li>
+    </ul>
+    <ol>
+      <li>In the terminal window, run the following command to find the list of backup files that have been created.</li>
+    </ol>
+    <pre><code class="hljs language-awk">ls -l <span class="hljs-regexp">/home/</span>theia/backups
+</code></pre>
+    <p></p>
+    <ol start="2">
+      <li>
+        <p>Select the file that you want to restore the data from and copy the file name.</p>
+      </li>
+      <li>
+        <p>Unzip the file and extract the SQL file from the backup file.</p>
+      </li>
+    </ol>
+    <pre><code class="hljs language-sh">gunzip /home/theia/backups/&#x3C;backup zip file name>
+</code></pre>
+    <p></p>
+    <ol start="4">
+      <li>Populate and restore the database with the sqlfile that results from the unzip operation.</li>
+    </ol>
+    <pre><code class="hljs language-gradle">mysql sakila &#x3C; <span class="hljs-regexp">/home/</span>theia<span class="hljs-regexp">/backups/</span>&#x3C;backup sql <span class="hljs-keyword">file</span> name>
+</code></pre>
+    <p></p>
+    <p>Once the command is executed, you will be prompted to enter your mysql login password. Paste the password that you have copied before using Ctrl+V and press Enter.</p>
+    <ol start="5">
+      <li>To check the restored database, go to the mysql prompt.</li>
+    </ol>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">mysql</span>
+</code></pre>
+    <p></p>
+    <ol start="6">
+      <li>Use the <strong>sakila</strong> database:</li>
+    </ol>
+    <pre><code class="hljs language-abnf"> use sakila<span class="hljs-comment">;</span>
+</code></pre>
+    <p></p>
+    <ol start="7">
+      <li>Select all the rows from any one of the tables, as given below. You should find that the database is restored.</li>
+    </ol>
+    <pre><code class="hljs language-axapta">  <span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> staff;
+</code></pre>
+    <p></p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Automate%20Backup%20in%20MySQL/images/sixteen.png" alt="select from staff">
+    </p>
+    <ol start="8">
+      <li>Quit the MySQL command prompt session using the command below in the terminal and proceed to Task D:</li>
+    </ol>
+    <pre><code class="hljs language-css">\<span class="hljs-selector-tag">q</span> 
+</code></pre>
+    <p></p>
+    <h3>Practice Exercise</h3>
+    <ol>
+      <li>Create a shell script which takes the database name and back up directory as parameters and backsup the database as &#x3C;dbname>_timestamp.sql in the backup directory. If the database doesn't exist, it should display appropriate message. If the backup dir doesn't exist, it should create one.</li>
+    </ol>
+    <details>
+      <summary>Click here for the solution</summary>
+      <pre><code class="hljs language-sh">dbname=$(mysql -e <span class="hljs-string">"SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '<span class="hljs-variable">$1</span>'"</span> | grep <span class="hljs-variable">$1</span>)
+
+<span class="hljs-keyword">if</span> [ ! -d <span class="hljs-variable">$2</span> ]; <span class="hljs-keyword">then</span> 
+    mkdir <span class="hljs-variable">$2</span>
+<span class="hljs-keyword">fi</span>
+
+<span class="hljs-keyword">if</span> [ <span class="hljs-variable">$1</span> == <span class="hljs-variable">$dbname</span> ]; <span class="hljs-keyword">then</span>
+    sqlfile=<span class="hljs-variable">$2</span>/<span class="hljs-variable">$1</span>-$(date +%d-%m-%Y).sql
+    <span class="hljs-keyword">if</span> mysqldump  <span class="hljs-variable">$1</span> > <span class="hljs-variable">$sqlfile</span> ; <span class="hljs-keyword">then</span>
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">'Sql dump created'</span>
+    <span class="hljs-keyword">else</span>
+        <span class="hljs-built_in">echo</span> <span class="hljs-string">'Error creating backup!'</span>
+    <span class="hljs-keyword">fi</span>
+<span class="hljs-keyword">else</span>
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"Database doesn't exist"</span>
+<span class="hljs-keyword">fi</span>
+</code></pre>
+    </details>
+    <ol start="2">
+      <li>Write a shell script which takes the database name and the script file as parameters and restores the database from the sql file.</li>
+    </ol>
+    <details>
+      <summary>Click here for the solution</summary>
+      <pre><code class="hljs language-sh">
+<span class="hljs-keyword">if</span> [ -f <span class="hljs-variable">$2</span> ]; <span class="hljs-keyword">then</span> 
+    dbname=$(mysql -e <span class="hljs-string">"SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '<span class="hljs-variable">$1</span>'"</span> | grep <span class="hljs-variable">$1</span>)
+    <span class="hljs-keyword">if</span> [ <span class="hljs-variable">$1</span> != <span class="hljs-variable">$dbname</span> ]; <span class="hljs-keyword">then</span>
+        <span class="hljs-built_in">echo</span> <span class="hljs-string">"Created DB as it didn't exist"</span>
+        mysql -e <span class="hljs-string">"Create database <span class="hljs-variable">$1</span>"</span>
+    <span class="hljs-keyword">fi</span>
+    mysql -e <span class="hljs-string">"use <span class="hljs-variable">$1</span>"</span>
+    mysql <span class="hljs-variable">$1</span> &#x3C; <span class="hljs-variable">$2</span>
+<span class="hljs-keyword">else</span>
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"File doesn't exist"</span>
+<span class="hljs-keyword">fi</span>
+</code></pre>
+    </details>
+    <h3>Optional Exercise</h3>
+    <ol>
+      <li>You can clean up the backups folder by using the following command:</li>
+    </ol>
+    <pre><code class="hljs language-awk">sudo rm -rfv <span class="hljs-regexp">/home/</span>theia/backups
+</code></pre>
+    <p></p>
+    <h2>Author(s)</h2>
+    <ul>
+      <li><a href="https://www.linkedin.com/in/lakshmi-holla-b39062149/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">Lakshmi Holla</a></li>
+    </ul>
+    <h3>Other Contributor(s)</h3>
+    <ul>
+      <li>
+        <p><a href="https://www.linkedin.com/in/malika-goyal-04798622/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">Malika Singla</a></p>
+      </li>
+      <li>
+        <p><a href="https://www.linkedin.com/in/lavanya-sunderarajan-199a445/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">Lavanya</a></p>
+      </li>
+    </ul>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-10-07</td>
+          <td>1.0</td>
+          <td>Lakshmi Holla</td>
+          <td>Created initial version</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">Â© IBM Corporation 2021. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

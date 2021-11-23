@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/IDSNlogo.png" alt="IDSN logo" width="200" height="200">
+    <h1>Troubleshooting in PostgreSQL</h1>
+    <p><strong>Estimated time needed:</strong> 30 minutes</p>
+    <p>In this lab, you will obtain hands-on experience in troubleshooting common issues you may encounter as a database administrator. The most common problems encountered with databases are caused by poor performance, improper configuration, or poor connectivity. You will use a PostgreSQL server instance to explore some of these possible problems and rectify them.</p>
+    <h2>Objectives</h2>
+    <p>After completing this lab, you will be able to:</p>
+    <ul>
+      <li>Enable error logging for your PostgreSQL instance.</li>
+      <li>Access server logs for troubleshooting.</li>
+      <li>Diagnose commonly encountered issues caused by poor performance, improper configuration, or poor connectivity.</li>
+      <li>Resolve common issues you may encounter as a database administrator.</li>
+    </ul>
+    <h2>Software Used in This Lab</h2>
+    <p>In this lab, you will be using PostgreSQL. It is a popular open source object relational database management system (RDBMS) capable of performing a wealth of database administration tasks, such as storing, manipulating, retrieving, and archiving data.</p>
+    <p>To complete this lab, you will be accessing the PostgreSQL service through the IBM Skills Network (SN) Cloud IDE, which is a virtual development environnement you will use throughout this course.</p>
+    <h2>Database Used in This Lab</h2>
+    <p>In this lab, you will use a database from <a href="https://postgrespro.com/education/demodb?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">https://postgrespro.com/education/demodb</a> distributed under the <a href="https://www.postgresql.org/about/licence/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">PostgreSQL license</a>. It stores a month of data about airline flights in Russia and is organized according to the following schema:</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/DB_schema.png" alt="DB_Schema">
+    </p>
+    <h2>Exercise 1: Set Up Your Database in PostgreSQL</h2>
+    <h3>Task A: Launch PostgreSQL in Cloud IDE</h3>
+    <p>To get started with this lab, launch PostgreSQL using the Cloud IDE. You can do this by following these steps:</p>
+    <ol>
+      <li>
+        <p>Select the Skills Network extension button in the left pane.</p>
+      </li>
+      <li>
+        <p>Open the "DATABASES" dropdown menu and select "PostgreSQL."</p>
+      </li>
+      <li>
+        <p>Select the "Start" button. PostgreSQL may take a few moments to start.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/SC_1.png" alt="SC_1">
+        </p>
+      </li>
+    </ol><br>
+    <h3>Task B: Download and Create the Database</h3>
+    <p><strong>First, you will need to download the database.</strong></p>
+    <ol>
+      <li>
+        <p>Open a new terminal by selecting the "New Terminal" button near the bottom of the interface.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/openTerminal.png" alt="SC_A">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Run the following command in the terminal:</p>
+        <pre><code class="hljs language-awk">wget https:<span class="hljs-regexp">//</span>cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud<span class="hljs-regexp">/example-guided-project/</span>flights_RUSSIA_small.sql
+</code></pre>
+        <p></p>
+      </li>
+    </ol>
+    <p>The file that you downloaded is a full database backup of a month of flight data in Russia. Now, you can perform a full restoration of the data set by first opening the PostgreSQL CLI.</p><br>
+    <ol start="3">
+      <li>
+        <p>Near the bottom of the window, select the "PostgreSQL CLI" button to launch the command line interface (CLI).</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/openCLI.png" alt="SC_2">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>In the PostgreSQL CLI, enter the command to restore the data you downloaded into a new database called <strong>demo</strong>.</p>
+        <details>
+          <summary>Hint (click here)</summary>
+          <p>In the PostgreSQL CLI, enter the command <code>\i &#x3C;file_name>.</code> In your case, the file name will be the name of the file you downloaded, <code>flights_RUSSIA_small.sql</code>. This will restore the data into a new database called <code>demo</code>.</p>
+        </details>
+        <details>
+          <summary>Solution (click here)</summary>
+          <pre><code class="hljs language-stylus">\<span class="hljs-selector-tag">i</span> flights_RUSSIA_small<span class="hljs-selector-class">.sql</span>
+</code></pre>
+          <p></p>
+          <p>The restorations may take a few moments to complete.</p>
+        </details>
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        <p>Verify that the database was properly created by entering the following command:</p>
+        <pre><code class="hljs language-css">\<span class="hljs-selector-tag">dt</span>
+</code></pre>
+        <p></p>
+        <p>You should see the following output showing all the tables that are part of the <code>bookings</code> schema in the <code>demo</code> database.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/SC_3.png" alt="SC_3">
+        </p>
+      </li>
+    </ol>
+    <h2>Exercise 2: Enable Error Logging and Observe Logs</h2>
+    <h3>Task A: Enable Server Logging</h3>
+    <p>First, to enable error logging on your PostgreSQL server instance, you will need to configure your server to support it. You can do so by using the Cloud IDE file explorer to open <code>postgresql.conf</code>, which stores the configuration parameters that are read upon server startup. Let's go ahead and do it.</p><br>
+    <ol>
+      <li>
+        <p>You can open the file by first opening the file explorer on Cloud IDE then selecting <code>postgres > data > postgresql.conf</code>.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/enable_log_1.png" alt="Opening postgressql.conf with the file explorer">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>With the configuration file open, scroll down to line 431. Replace <code>logging_collector = off</code> with <code>logging_collector = on</code> and uncomment the parameter by removing the <code>#</code> before the line.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/enable_log_2.png" alt="enable logging">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>Save the changes to <code>postgresql.conf</code> by either navigating to <strong>File > Save</strong> at the top toolbar or by pressing <strong>Ctrl + S</strong> (Mac: ⌘ + S).</li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>Changing this parameter requires a server restart in order to take effect. Select the PostgreSQL tab in Cloud IDE.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/enable_log_3.png" alt="Switching back to PostgreSQL tab">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        <p>Stop the PostgreSQL server by selecting the "Stop" button and close all CLI and terminal tabs.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/postgres_stop.png" alt="Stop the PostgreSQL server">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="6">
+      <li>
+        <p>Now restart the PostgreSQL server by selecting the "Start" button. It may take a few moments to start up again. When it does so, reopen the PostgreSQL CLI.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/postgres_start.png" alt="Restart the PostgreSQL server">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="7">
+      <li>
+        <p>Confirm that the configuration parameter was successfully changed and loaded into the PostgreSQL instance by entering the following command into the CLI:</p>
+        <pre><code class="hljs language-abnf">SHOW logging_collector<span class="hljs-comment">;</span>
+</code></pre>
+        <p></p>
+        <p>You should see that the command returns <strong>on</strong>.</p><br>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/enable_log_4.png" alt="results of SHOW logging_collector">
+        </p>
+      </li>
+    </ol>
+    <h3>Task B: View the Server Logs</h3>
+    <p>In this task, you will navigate the Cloud IDE file explorer to open up and inspect the server logs created after you enabled the logging in the previous task. The logs can be a valuable tool when troubleshooting issues as a database administrator. For now, let's look at the logs created during normal operation, with nothing broken yet.</p><br>
+    <ol>
+      <li>
+        <p>To find where the system logs are stored, enter the following command into the CLI:</p>
+        <pre><code class="hljs language-abnf">SHOW log_directory<span class="hljs-comment">;</span>
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/show_log_directory.png" alt="Show output of log directory">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>Open up the file explorer on Cloud IDE and navigate through <strong>postgres > data > log</strong>.</li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>You will see a file with a name of the form <code>postgresql-YYYY-MM-DD-&#x3C;numbers>.log</code>. Go ahead and open it.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/view_log_1.png" alt="Open up logging">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        Inspect and familiarize yourself with the logs given for a PostgreSQL server startup. Every time you start the server again, a new <code>.log</code> file will be created in the <strong>log</strong> folder.
+        
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/view_log_2.png" alt="Contents of server log">
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        Navigate back to the PostgreSQL tab.
+        
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/view_log_3.png" alt="Open up PostgreSQL tab">
+      </li>
+    </ol><br>
+    <ol start="6">
+      <li>
+        <p><strong>Try it yourself:</strong> Stop the PostgreSQL server and close all terminal tabs.</p>
+        <details>
+          <summary>Hint (click here)</summary>Recall how you stopped the PostgreSQL server in the previous task.
+        </details>
+        <details>
+          <summary>Solution (click here)</summary>
+          <p>
+            Stop the PostgreSQL server by selecting the <strong>Stop</strong> button and close all terminal and CLI tabs.
+            
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/postgres_stop.png" alt="Stop PostgreSQL Server">
+          </p>
+        </details>
+      </li>
+    </ol>
+    <h2>Exercise 3: Test the Performance of the PostgreSQL Server</h2>
+    <p>The most common problems encountered with databases are caused by poor performance, improper configuration, or poor connectivity. ​Server configuration issues, such as inadequate hardware resources or misconfigured settings, can significantly impact performance.​ In this exercise, you will gain some hands-on experience in studying the performance of the PostgreSQL server and inspecting the logs to identify and resolve slow performance and connection disruptions.</p><br>
+    <h3>Task A: Preparation for the Exercise</h3>
+    <p>Before you get started, you'll have to set up a few things so that you can begin troubleshooting. In this task, you will first delete the <strong>postgresql.conf</strong> file and replace it with a new configuration file that has some parameters changed. This task is entirely setup and will allow you to complete the remainder of the tasks where you will test the performance of the server.</p>
+    <ol>
+      <li>
+        In Cloud IDE, open up a new terminal by navigating to the top menu bar and selecting <strong>Terminal > New terminal</strong>.
+        
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/EX2_setup_1.png" alt="Open a new Terminal">
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>In the terminal, enter the following command to download a new <code>postgresql.conf</code> configuration file:</p>
+        <pre><code class="hljs language-awk">wget https:<span class="hljs-regexp">//</span>cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud<span class="hljs-regexp">/IBM-DB0231EN-SkillsNetwork/</span>labs<span class="hljs-regexp">/PostgreSQL/</span>Lab%<span class="hljs-number">20</span>-%<span class="hljs-number">20</span>Troubleshooting/postgresql.conf
+</code></pre>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>Open up the file explorer on Cloud IDE and navigate to <strong>postgres > data</strong>.</li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>Right-click <code>postgresql.conf</code> in this directory and select <strong>Delete</strong>.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/EX2_setup_2.png" alt="Delete old postgresql.conf file">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        <p>You will be prompted to confirm that you wish to delete this file. Select <strong>OK</strong> to confirm.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/EX2_setup_3.png" alt="Confirm deletion">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="6">
+      <li>
+        <p>In the file explorer, you will see the <code>postgresql.conf</code> file you downloaded in Step 1 sitting in the root directory. Drag it into the <strong>postgres > data</strong> directory, as shown below.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/EX2_setup_4.png" alt="Replace with downloaded config file">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="7">
+      <li>
+        <p>Now go ahead and start up the PostgreSQL server again by selecting the <strong>Start</strong> button.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/postgres_start.png" alt="Start the PostgreSQL server">
+        </p>
+      </li>
+    </ol><br>
+    <h3>Task B: Test the Performance of the Server</h3>
+    <p>In this part of the exercise, you will run a few SQL commands and analyze the server's performance, inspect the error logs, then finally, identify and resolve issues that could be hindering the performance of the database.</p>
+    <p>Let's try running some queries on the database and analyze its performance.</p>
+    <ol>
+      <li>
+        <p>First, open up the PostgreSQL command line interface (CLI) by selecting the <strong>PostgreSQL CLI</strong> button.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/openCLI.png" alt="Open CLI">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p><strong>Try it yourself:</strong> Use the CLI to connect to the <strong>demo</strong> database.</p>
+        <details>
+          <summary>Solution (click here)</summary>Connect to the **demo** database by entering the following command into the CLI:
+          <pre><code class="hljs language-arduino">\connect demo
+</code></pre>
+          <p></p>
+        </details>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>To inspect how long each query or command takes, enable the timer with the following command in the CLI:</p>
+        <pre><code class="hljs language-livescript"><span class="hljs-string">\timing</span>
+</code></pre>
+        <p>
+          {: codeblock}
+          This will tell you how long each query takes (in milliseconds).
+        </p>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>Let's start off with a very simple query on the <strong>aircrafts_data</strong> table. Enter the following into the CLI:</p>
+        <pre><code class="hljs language-n1ql"><span class="hljs-keyword">SELECT</span> * <span class="hljs-keyword">FROM</span> aircrafts_data;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/X_troubleshoot_1.png" alt="results of simple query"><br>As you can see, this query was on a small table and was quick--only about 1 millisecond. No problems here.
+        </p>
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        <p>Let's try something a little more computationally heavy and see how the server handles it. The following command goes through each element in the <strong>boarding_passes</strong> table and reassigns each value to itself. In other words, it does not change the table but allows you to see how the server handles this task. Enter the following into the CLI:</p>
+        <pre><code class="hljs language-ini">UPDATE boarding_passes SET <span class="hljs-attr">ticket_no</span> = ticket_<span class="hljs-literal">no</span>, flight_id = flight_id, boarding_<span class="hljs-literal">no</span> = boarding_<span class="hljs-literal">no</span>, seat_<span class="hljs-literal">no</span> = seat_<span class="hljs-literal">no</span><span class="hljs-comment">;</span>
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/X_troubleshoot_2.png" alt="Results of complicated query">
+          This heavier command took almost a minute to execute--a fairly long time, but the server was nonetheless able to complete the command. Still, you may want to improve this performance.
+        </p>
+      </li>
+    </ol><br>
+    <ol start="6">
+      <li>
+        <p>Now, as the database administrator, you will likely not be the <em>only</em> one who needs to access the database you are working with. Other users will likely need to connect to the database for a wide variety of reasons, including retrieving and inputting data. Let's simulate additional users connecting to the database. You can do this by opening additional <strong>PostgreSQL CLI</strong> terminals in Cloud IDE, as each one establishes a new connection to the server. Click <strong>PostgreSQL CLI</strong> three times, opening three new CLI terminals:</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/openCLIx3.png" alt="Open 3 new CLI terminals">
+        </p>
+        <p>
+          After clicking the button the third time, you will be presented with the following message in the new terminal:
+          
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/X_troubleshoot_3.png" alt="PostgreSQL failed connections">
+          What happened here? Let's do some investigating and find out what the issue is, but first, go ahead and close all the terminals you opened up.
+        </p>
+      </li>
+    </ol>
+    <h2>Exercise 4: Troubleshoot</h2>
+    <p>In the previous exercise, you encountered a problem and the server shut down. Now it's time to figure out what happened, why it happened, and how to fix it so that it does not happen again.</p>
+    <h3>Task A: Diagnose the Issue</h3>
+    <ol>
+      <li>First, let's check the server logs to see what happened. Open up the Cloud IDE file explorer and navigate to <strong>postgres > data > log</strong>.</li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Since you restarted the server in the previous exercise, a new log file will have been created for this new session. Open up the most recent one.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/diagnose_1.png" alt="Open server logs 2">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>
+          Inspect the most recent logs, as you encountered the problem in Exercise 3.
+          
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/diagnose_3.png" alt="Server logs after crash">
+        </p>
+        <p>
+          As you can see, some error logs were created from opening that last CLI terminal, with the message <code>FATAL: sorry, too many clients already</code>.
+          This message is repeated several times as the connection is repeatedly attempting to re-establish.
+        </p>
+      </li>
+    </ol>
+    <p>Some of the most common connectivity problems are not being able to connect to the database server, the database server or instance not running properly, and client login credentials being incorrect.​ You can likely rule out the last two, since the login credentials are automatically inputted for us on Cloud IDE and you know that the server instance is running properly, since you are already connected to it on 3 other terminals. This likely means you could be experiencing some problems connecting to the database server when you open the fourth connection. But why is this?</p>
+    <p>Server configuration issues, such as inadequate hardware resources or misconfigured settings, can significantly impact performance.​ Perhaps this could explain the connection problem as well as the slow performance you saw on the database query in Exercise 3. Let's take a look at the server configuration and see if you can spot anything.</p>
+    <ol start="4">
+      <li>
+        <p>Using the Cloud IDE file explorer, navigate to <strong>postgres > data</strong> and open the <strong>postgresql.conf</strong> configuration file.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/enable_log_1.png" alt="Open postgresql.conf">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        If you scroll down to line 64 of the file, you will find <strong>max_connections = 4</strong>.
+        
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/diagnose_4.png" alt="max connections parameter">
+        Aha! That's where the issue was coming from. This parameter sets the maximum number of connections that can be made to the server at any given time. So when you tried to open that fourth CLI terminal, the max number of connections was reached, giving that FATAL error in the logs. Therefore, the problem you encountered comes from improper server configuration, since it's reasonable to expect more than four users to be connected to the database. Let's go ahead and fix the issue.
+      </li>
+    </ol><br>
+    <h3>Task B: Resolve the Issue</h3>
+    <p>In Task A, you discovered that the issues you encountered in Exercise 3 were caused by improper server configuration. Now let's modify the configuration parameters to resolve the issue.</p>
+    <ol>
+      <li>
+        <p>With the <strong>postgresql.conf</strong> file open, change the <strong>max_connections</strong> parameter from 4 to 100. A maximum connections of 100 is a standard value that will support more than enough connections for most applications.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/resolve_1.png" alt="Set max connections to 100">
+          That should fix the issue you encountered when opening those additional CLI terminals.
+        </p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Since the server can now support far more connections than before, it will also need more available memory to support these connections. The <strong>shared_buffers</strong> configuration parameter sets the amount of memory the database server has at its disposal for shared memory buffers. Scroll down to line 121 to find the <strong>shared_buffers</strong> parameter.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/resolve_2.png" alt="shared_buffers parameter">
+        </p>
+        <p>Notice that the parameter is set to 128kB, which is the minimum value.</p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>Increase the available memory by changing the <strong>shared_buffers</strong> parameter from <strong>128kB</strong> to <strong>128MB</strong>.</li>
+    </ol><br>
+    <ol start="4">
+      <li>While you're at it, you can also increase the server performance so that the slow query you executed in Exercise 3 will run more quickly. Increase the <strong>work_mem</strong> parameter from the minimum <strong>64kB</strong> to <strong>4MB</strong>.</li>
+    </ol><br>
+    <ol start="5">
+      <li>Change the <strong>maintenance_work_mem</strong> from the minimum <strong>1MB</strong> to a more standard <strong>64MB</strong>.</li>
+    </ol><br>
+    <ol start="6">
+      <li>Save the changes to <code>postgresql.conf</code> by either navigating to <strong>File > Save</strong> at the top toolbar or by pressing <strong>Ctrl + S</strong> (Mac: ⌘ + S).</li>
+    </ol><br>
+    <ol start="7">
+      <li>
+        <p>Close all open terminal tabs and stop the PostgreSQL server by selecting the <strong>Stop</strong> button.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/postgres_stop.png" alt="Stop PostgreSQL Server">
+        </p>
+      </li>
+    </ol>
+    <h2>Exercise 5: Try it Yourself!</h2>
+    <p>The changes you made to the PostgreSQL server configuration parameters should fix the problems you encountered in Exercise 3. However, it's certainly good practice to test this out and confirm that your fix was successful. In this practice exercise, you will run through much of the same process you did in Exercise 3 to confirm that the issues you encountered are resolved and will not arise again.</p>
+    <ol>
+      <li>
+        <p><strong>Try it yourself:</strong> Restart the PostgreSQL server.</p>
+        <details>
+          <summary>Solution (Click Here)</summary>As before, select the "Start" button to start the PostgreSQL server.
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/postgres_start.png" alt="Start PostgreSQL Server">
+          </p>
+        </details>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p><strong>Try it yourself:</strong> Compare the performance of querying the <strong>aircrafts_data</strong> table now compared to before changing the configuration parameters.</p>
+        <details>
+          <summary>Hint (Click Here)</summary>You'll first need to open up the PostgreSQL CLI, connect to the <strong>demo</strong> database, and enable timing.
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/postgres_start.png" alt="Start PostgreSQL Server">
+          </p>
+        </details>
+        <details>
+          <summary>Solution (Click Here)</summary>1. Open up a PostgreSQL CLI terminal.
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/openCLI.png" alt="open CLI">
+          </p><br>
+          <ol start="2">
+            <li>Connect to the <strong>demo</strong> database by entering the following into the CLI:</li>
+          </ol>
+          <pre><code class="hljs language-arduino">\connect demo
+</code></pre>
+          <p></p><br>
+          <ol start="3">
+            <li>Enable timing with the following command in the CLI:</li>
+          </ol>
+          <pre><code class="hljs language-livescript"><span class="hljs-string">\timing</span>
+</code></pre>
+          <p></p><br>
+          <ol start="4">
+            <li>Enter the following query into the CLI:</li>
+          </ol>
+          <pre><code class="hljs language-n1ql"><span class="hljs-keyword">SELECT</span> * <span class="hljs-keyword">FROM</span> aircrafts_data;
+</code></pre>
+          <p></p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/practice_1.png" alt="results of simple query">
+          </p>
+          <p>As you can see, the query took less than 1 millisecond. Extremely quick, but fairly similar to the results before you changed the configuration parameters. This is because this query is on such a small table that the server didn't get close to the memory limits when executing it, so there was no issue with that query to begin with.</p>
+        </details>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Run the same command in the CLI that you did in Step 5 of Exercise 3 and compare the performance before and after changing the configuration parameters. To save you the scrolling and losing your place, the command you entered earlier is given below:</p>
+        <pre><code class="hljs language-ini">UPDATE boarding_passes SET <span class="hljs-attr">ticket_no</span> = ticket_<span class="hljs-literal">no</span>, flight_id = flight_id, boarding_<span class="hljs-literal">no</span> = boarding_<span class="hljs-literal">no</span>, seat_<span class="hljs-literal">no</span> = seat_<span class="hljs-literal">no</span><span class="hljs-comment">;</span>
+</code></pre>
+        <p></p>
+        <details>
+          <summary>Results (Click Here)</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/practice_2.png" alt="Results of advanced query">
+          </p>
+          <p>After increasing the <strong>shared_buffers</strong> and <strong>work_mem</strong> parameters, you saw a significant improvement in performance! This command took only about 10 seconds to execute as opposed to close to a minute as before. By reconfiguring the server, you greatly improved server performance. Well done!</p>
+        </details>
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        <p><strong>Try it yourself:</strong> Finally, test to confirm that the server can now handle <em>at least</em> 5 connections.</p>
+        <details>
+          <summary>Hint (Click Here)</summary>Recall that opening additional PostgreSQL terminals constitute additional connections to the server.
+        </details>
+        <details>
+          <summary>Solution (Click Here)</summary>
+          <ol>
+            <li>Click the "PostgreSQL CLI" button four times.</li>
+          </ol>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/openCLIx4.png" alt="Open 4 new CLI tabs">
+          </p><br>
+          <ol start="2">
+            <li>Notice that no error was raised on the fifth terminal and the CLI is still open.</li>
+          </ol><br>
+          <ol start="3">
+            <li>You could even enter a test command, such as <code>\du</code> to confirm the CLI is working.</li>
+          </ol>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Troubleshooting/images/practice_3.png" alt="CLI is open">
+          </p><br>
+          <ol start="4">
+            <li>Furthermore, you could check the server logs to confirm that no error was raised and everything is running as intended.</li>
+          </ol>
+        </details>
+      </li>
+    </ol>
+    <h2>Conclusion</h2>
+    <p>Congratulations on completing this lab on troubleshooting a relational database management system. You now have some foundational knowledge on how to identify and resolve some common issues you may face in PostgreSQL as a database administrator.</p>
+    <h1></h1>
+    <h2>Author</h2>
+    <p><a href="https://www.linkedin.com/in/david-pasternak-6b84a2208/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">David Pasternak</a></p>
+    <h3>Other Contributors</h3>
+    <p>Rav Ahuja</p>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-10-12</td>
+          <td>0.1</td>
+          <td>David Pasternak</td>
+          <td>Initial version created</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2021. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

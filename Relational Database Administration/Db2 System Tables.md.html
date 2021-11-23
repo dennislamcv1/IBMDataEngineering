@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Db2%20System%20Tables/images/IDSNlogo.png" alt="IDSN logo" width="200" height="200">
+    <h1>Hands-on Lab: Db2 System Tables</h1>
+    <p><strong>Estimated time needed:</strong> 20 minutes</p>
+    <p>In this lab, you will learn how to access and work with system tables in the Db2 relational database management system. Every Db2 database contains system catalog tables that store metadata and definitions of the database objects such as tables, views, indexes, etc.</p><br>
+    <h2>Objectives</h2>
+    <p>After completing this lab, you will be able to use Db2 on Cloud to:</p>
+    <ul>
+      <li>Explore the system catalog tables of your Db2 database</li>
+      <li>Query the system catalog to retrieve metadata from tables in your database</li>
+      <li>Query the system catalog to retrieve column metadata</li>
+    </ul>
+    <h1></h1>
+    <h2>Software Used in This Lab</h2>
+    <p>In this lab, you will use <a href="https://www.ibm.com/products/db2-database?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank">IBM Db2 Database</a>. Db2 is a Relational Database Management System (RDBMS) from IBM, designed to store, analyze and retrieve data efficiently.</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Db2%20System%20Tables/images/ibmdb2.png" alt="IBMDb2" width="245" height="100">
+    <p>To complete this lab, you will use a Db2 database service on IBM Cloud. If you did not complete the following lab earlier, you may not have access to Db2 on Cloud and should complete that lab before starting this lab.</p>
+    <ul>
+      <li><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Sign%20up%20for%20IBM%20Cloud%20-%20Create%20Db2%20service%20instance/instructional-labs.md.html" target="_blank" rel="external">Hands-on Lab : Sign up for IBM Cloud and Create Db2 service instance</a></li>
+    </ul><br>
+    <h2>Database Used in This Lab</h2>
+    <p>The database used in this lab is an internal database. You will be working on a sample HR database. This HR database schema consists of 5 tables called EMPLOYEES, JOB_HISTORY, JOBS, DEPARTMENTS and LOCATIONS. Each table has a few rows of sample data. The following diagram shows the tables for the HR database:</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Db2%20System%20Tables/images/Sample_HR_DB.png" alt="Sample HR Database Diagram">
+    </p><br>
+    <h2>Exercise 1: Load the Database into Db2</h2>
+    <p>To get started, let's open up Db2 on IBM Cloud and create the sample HR database.</p>
+    <ol>
+      <li>Download the sample HR database by clicking the following link: <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/datasets/HR_Database/HR_Database_Create_Tables_Script.sql" target="_blank" rel="external">Sample HR Database</a></li>
+    </ol><br>
+    <ol start="2">
+      <li>Open up and log in to the <a href="https://cloud.ibm.com/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">IBM Cloud</a>.</li>
+    </ol><br>
+    <ol start="3">
+      <li>In left pane, click the "Resource list" button.</li>
+    </ol><br>
+    <ol start="4">
+      <li>Under the "Services and software" subsection, select the Db2 database. It will be titled some variation of "Db2-<em>xx</em>" where <em>xx</em> is some combination of letters and numbers.</li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Db2%20System%20Tables/images/SC_1.png" alt="Open Db2">
+    </p><br>
+    <ol start="5">
+      <li>Click the "Go to UI" button to open the user interface for Db2.</li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Db2%20System%20Tables/images/SC_2.png" alt="Open Db2 UI">
+    </p><br>
+    <ol start="6">
+      <li>To upload the sample HR database you are working with, click the "Run SQL" button on the menu tab in the left pane.</li>
+    </ol><br>
+    <ol start="7">
+      <li>Click the "From file" button.</li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Db2%20System%20Tables/images/SC_3.png" alt="Upload SQL script from file">
+    </p><br>
+    <ol start="8">
+      <li>Upload the <code>HR_Database_Create_Tables_Script.sql</code> file you downloaded in Step 1.</li>
+    </ol><br>
+    <ol start="9">
+      <li>Click the "Run all" button.</li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Db2%20System%20Tables/images/SC_4.png" alt="Upload SQL script and Run all">
+    </p><br>
+    <p>After executing this SQL code, your Db2 server will now have a database containing several tables.</p>
+    <h1>Exercise 2: Access the Db2 System Tables</h1>
+    <p>Every Db2 database has a <strong>SYSTABLES</strong> catalog table. From the official <a href="https://www.ibm.com/docs/en/db2-for-zos/11?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01&#x26;topic=tables-systables" target="_blank" rel="external">IBM Db2 documentation</a>, the SYSTABLES table contains one row for each table, view, or alias. Each table row indicates whether the object that it describes is a table, view, or alias, its name, who created it, the database that it belongs to, the table space it belongs to, and other information. The SYSTABLES table also has a REMARKS column in which you can store your own information about the table in question.</p>
+    <p>In essence, the SYSTABLES catalog table contains metadata about all other database objects in the Db2 server. Let's go ahead and see how you can access some of this useful metadata.</p>
+    <h3>Task A: Perform a Simple Query on SYSTABLES</h3>
+    <ol>
+      <li>
+        <p>Click the "Add new script" button.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Db2%20System%20Tables/images/SC_5.png" alt="Add a new script">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Click "Create new" to open an empty SQL editor.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Db2%20System%20Tables/images/SC_6.png" alt="Create new SQL script">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Let's start off with the most basic query on the <code>SYSTABLES</code> table by taking a look at the whole table. Enter the following code into the SQL editor and click the "Run all" button.</p>
+        <pre><code class="hljs language-n1ql"><span class="hljs-keyword">SELECT</span> * <span class="hljs-keyword">FROM</span> SYSIBM.SYSTABLES;
+</code></pre>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Db2%20System%20Tables/images/SC_7.png" alt="SELECT entire SYSTABLES">
+          The result of the query is shown on the right-hand side of the screen. There are numerous results with only the first few displayed. You can see the first few columns showing the name of the table, its creator, and the type of the database object (T for table). The first five shown are all system tables and you can see that the creator is <code>SYSIBM</code>.
+        </p>
+      </li>
+    </ol>
+    <h3>Task B: Query SYSTABLES by CREATOR</h3>
+    <p>Let's do a slightly more advanced query on <code>SYSIBM.SYSTABLES</code> to retrieve the metadata for the tables you created for your sample HR database. One way to do this is to query the table based on the <code>CREATOR</code>column, which stores the schema that the given table belongs to.</p>
+    <ol>
+      <li>
+        <p>First, you need to find the schema name for your Db2 database. In the left pane, click the "Data" button.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Db2%20System%20Tables/images/SC_8.png" alt="Open the data tab">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Click the "Tables" button located in the top menu bar.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Db2%20System%20Tables/images/SC_9.png" alt="Open the tables tab">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Copy the name you see under the "Name" field and either write it down or paste it in a text editor of your choice. This is the schema name. In the screenshot below, this name is <code>ZLV36117</code>. In your case, it will certainly be a different name.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Db2%20System%20Tables/images/SC_10.png" alt="Name of schema under name field">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>In the left pane, click the "SQL" button.</li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        <p>Enter the following SQL command to query the <code>SYSTABLES</code>, replacing the part within the single quotes with the name you copied in Step 3:</p>
+        <pre><code class="hljs language-ini">SELECT * FROM SYSIBM.SYSTABLES WHERE <span class="hljs-attr">CREATOR</span> = <span class="hljs-string">'&#x3C;insert name here>'</span><span class="hljs-comment">;</span>
+</code></pre>
+      </li>
+    </ol><br>
+    <ol start="6">
+      <li>
+        <p>Finally, click the "Run all" button to run the SQL script you created.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Db2%20System%20Tables/images/SC_11.png" alt="Run more advanced query by CREATOR">
+        </p><br>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Db2%20System%20Tables/images/SC_12.png" alt="Results of more advanced query">
+          Again, on the right-hand side of the screen you can see the results of the query you executed. You can see the five tables that belong to the sample HR database and that their type is "T" for table.
+        </p>
+      </li>
+    </ol>
+    <h3>Task C: Try Updating a System Table</h3>
+    <p>In a Db2 database, the system tables cannot be edited directly with <code>INSERT</code>, <code>UPDATE</code>, or <code>DELETE</code> statements. When you create, modify, or delete other objects in the database, the system tables are automatically updated to reflect the changes. Therefore, system tables are only for <em>retrieving</em> metadata about other objects in your database, you do not modify them directly.</p>
+    <p>The current name for the "CREATOR" of the five tables that belong to the sample HR database appears to be some random combination of letters and numbers, but suppose you wanted to modify the entries in "SYSTABLES" to have a different schema name in the "CREATOR" column for those tables.</p>
+    <p>Let's see what happens if you try to modify the "CREATOR" column in "SYSTABLES".</p>
+    <ol>
+      <li>
+        <p>In the SQL editor, enter the following command and replace <code>&#x3C;current creator name></code> with the schema name you copied earlier in Step 3 of Task B. Replace <code>&#x3C;new creator name></code> with a new name of your choice, then click the "Run all" button.</p>
+        <pre><code class="hljs language-ini">UPDATE SYSIBM.SYSTABLES SET <span class="hljs-attr">CREATOR</span> = <span class="hljs-string">'&#x3C;current creator name>'</span> WHERE CREATOR =<span class="hljs-string">'&#x3C;new creator name>'</span><span class="hljs-comment">;</span>
+</code></pre>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Db2%20System%20Tables/images/SC_13.png" alt="Run SQL code to update SYSTABLE"><br>Running this code results in the following error in the output:
+        </p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Db2%20System%20Tables/images/SC_14.png" alt="Output error from UPDATE on SYSTABLES">
+        </p>
+        <p>As you can see, attempting to execute an <code>UPDATE</code> command directly on SYSIBM.SYSTABLES, which is a system table, results in an error.</p>
+      </li>
+    </ol><br>
+    <h1>Exercise 3: Try it yourself!</h1>
+    <p>As mentioned in the previous exercise, Db2 system tables cannot be modified directly. Instead, they store metadata about all objects in the database and are automatically updated to reflect any changes made to them, including the creation or deletion of database objects.</p>
+    <p>You will now get an opportunity to apply what you learned and see this in action for yourself. In this practice exercise, use the SQL editor along with the steps given below.</p>
+    <ol>
+      <li>
+        <p><strong>Try it yourself:</strong> Query the <code>SYSTABLES</code> table by the schema name to display the five tables that belong to the sample HR database.</p>
+        <details>
+          <summary><strong>Hint</strong> (Click Here)</summary>Recall that you performed this exact action in Task B of Exercise 2.
+        </details>
+        <details>
+          <summary><strong>Solution</strong> (Click Here)</summary>
+          <pre><code class="hljs language-ini">SELECT * FROM SYSIBM.SYSTABLES WHERE <span class="hljs-attr">CREATOR</span> = <span class="hljs-string">'&#x3C;insert schema name here>'</span><span class="hljs-comment">;</span>
+</code></pre>
+        </details>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p><strong>Try it yourself:</strong> Try directly deleting the row corresponding to the EMPLOYEES table from the SYSIBM.SYSTABLES system table.</p>
+        <details>
+          <summary><strong>Hint</strong> (Click Here)</summary>You can delete a row from a table using a SQL command of the following form:
+          <pre><code class="hljs language-pgsql"><span class="hljs-keyword">DELETE</span> <span class="hljs-keyword">FROM</span> &#x3C;<span class="hljs-built_in">table_name</span>> <span class="hljs-keyword">WHERE</span> &#x3C;condition>;
+</code></pre>
+        </details>
+        <details>
+          <summary><strong>Solution</strong> (Click Here)</summary>
+          <pre><code class="hljs language-pgsql"><span class="hljs-keyword">DELETE</span> <span class="hljs-keyword">FROM</span> SYSIBM.SYSTABLES <span class="hljs-keyword">WHERE</span> <span class="hljs-type">NAME</span> = <span class="hljs-string">'EMPLOYEES'</span>;
+</code></pre>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Db2%20System%20Tables/images/SC_15.png" alt="Results of running DELETE statement of SYSTABLES">
+            As you may have guessed, this command raises an error since we cannot use <code>DELETE</code> commands directly on system tables.
+          </p>
+        </details>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p><strong>Try it yourself:</strong> Drop the EMPLOYEES table from the database.</p>
+        <details>
+          <summary><strong>Hint</strong> (Click Here)</summary>You can drop a table from a database using a SQL command of the following form:
+          <pre><code class="hljs language-pgsql"><span class="hljs-keyword">DROP</span> <span class="hljs-keyword">TABLE</span> &#x3C;<span class="hljs-keyword">table</span> <span class="hljs-type">name</span>>;
+</code></pre>
+        </details>
+        <details>
+          <summary><strong>Solution</strong> (Click Here)</summary>
+          <pre><code class="hljs language-pgsql"><span class="hljs-keyword">DROP</span> <span class="hljs-keyword">TABLE</span> EMPLOYEES;
+</code></pre>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Db2%20System%20Tables/images/SC_16.png" alt="Results of running DROP TABLE EMPLOYEES;">
+          </p>
+        </details>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p><strong>Try it yourself:</strong> Once again, query the <code>SYSTABLES</code> table by schema name to confirm that the EMPLOYEES table was successfully dropped from the database.</p>
+        <details>
+          <summary><strong>Hint</strong> (Click Here)</summary>This is the same query you ran in step 1 of this practice exercise.
+        </details>
+        <details>
+          <summary><strong>Solution</strong> (Click Here)</summary>
+          <pre><code class="hljs language-ini">SELECT * FROM SYSIBM.SYSTABLES WHERE <span class="hljs-attr">CREATOR</span> = <span class="hljs-string">'&#x3C;insert schema name here>'</span><span class="hljs-comment">;</span>
+</code></pre>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Db2%20System%20Tables/images/SC_17.png" alt="Results of query">
+          </p>
+          <p>As you can see, the SYSTABLES table was automatically updated to reflect that the EMPLOYEES table was dropped from the database. Now only 4 tables are present. You did not have to modify the SYSTABLES directly.</p>
+        </details>
+      </li>
+    </ol><br>
+    <h2>Conclusion</h2>
+    <p>Congratulations on completing this hands-on lab! You now have some understanding and experience of working with the system tables of a Db2 server and are ready for the next step in developing your skill set as a database administrator.</p>
+    <h2>Author</h2>
+    <p><a href="https://www.linkedin.com/in/david-pasternak-6b84a2208/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">David Pasternak</a></p>
+    <h3>Other Contributors</h3>
+    <p>Rav Ahuja, Sandip Saha Joy</p>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-09-08</td>
+          <td>1.0</td>
+          <td>David Pasternak</td>
+          <td>Created initial version</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2021. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

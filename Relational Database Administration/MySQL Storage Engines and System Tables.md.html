@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20Storage%20Engines%20and%20System%20Tables/images/IDSNlogo.png" width="200" height="200">
+    <h1>Hands-on Lab: MySQL Storage Engines and System Tables</h1>
+    <p><strong>Estimated time needed:</strong> 25 minutes</p>
+    <p>In this lab, you will use the MySQL Command Line Interface (CLI) to carry out a variety of functions related to selecting and understanding some of the alternative storage engines available in MySQL. You will then continue on to explore the system tables in MySQL which contain meta data about the objects in the server.<br></p>
+    <h2>Objectives</h2>
+    <p>After completing this lab, you will be able to use the MySQL command line interface to:</p>
+    <ul>
+      <li>Create tables using alternative storage engines.</li>
+      <li>Query MySQL system tables to retrieve meta data about objects in the database.</li>
+    </ul>
+    <h1></h1>
+    <h2>Software Used in this Lab</h2>
+    <p>In this lab, you will use <a href="https://www.mysql.com/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01">MySQL</a>. MySQL is a Relational Database Management System (RDBMS) designed to efficiently store, manipulate, and retrieve data.</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20Storage%20Engines%20and%20System%20Tables/images/mysql.png" width="100" height="100">
+    <p></p>
+    <p>To complete this lab you will utilize the MySQL relational database service available as part of the IBM Skills Network Labs (SN Labs) Cloud IDE. SN Labs is a virtual lab environment used in this course.</p><br>
+    <h2>Database Used in this Lab</h2>
+    <p>The World database used in this lab comes from the following source: <a href="https://dev.mysql.com/doc/world-setup/en/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">https://dev.mysql.com/doc/world-setup/en/</a> under <a href="https://creativecommons.org/licenses/by/4.0/deed.en?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">CC BY 4.0 License</a> with <a href="https://tilastokeskus.fi/org/lainsaadanto/copyright_en.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">Copyright 2021 - Statistics Finland</a>.</p>
+    <p>You will use a modified version of the database for the lab, so to follow the lab instructions successfully please use the database provided with the lab, rather than the database from the original source.</p>
+    <p>The following ERD diagram shows the schema of the World database:</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/datasets/World/World_ERD.png" width="680" height="400">
+    <p>The first row is the table name, the second is the primary key, and the remaining items are any additional attributes.</p><br>
+    <h1>Exercise 1: Create your database</h1>
+    <ol>
+      <li>Go to <strong>Skills Network Toolbox</strong> by clicking the icon shown below from the side by side launched Cloud IDE.</li>
+    </ol><br>
+    <ol start="2">
+      <li>From the <strong>Databases</strong> drop down menu, click <strong>MySQL</strong> to open the MySQL service session tab.</li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Click the <strong>Start</strong> button and wait until MySQL service session gets launched.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20Storage%20Engines%20and%20System%20Tables/images/MySQL_1.png" alt="image">
+        </p>
+        <p></p>
+        <p>The MySQL server will take a few moments to start. Once it is ready, you will see the green "Active" label near the top of the window.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20Storage%20Engines%20and%20System%20Tables/images/MySQL_2.png" alt="image">
+        </p>
+        <ul>
+          <li><strong>NOTE:</strong> Whenever you are required to enter your MySQL service session password from the MySQL service session tab at any step of the lab, copy the password by clicking on the small copy button on the right of the password block. Paste the password into the terminal using <strong>Ctrl + V</strong> (Mac: ⌘ + V), and press <strong>Enter</strong> on the keyboard. For security reasons, you will not see the password as it is entered on the terminal.</li>
+        </ul>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>Click <strong>New Terminal</strong> button from the mysql service session tab. Now you need to fetch two mysql script files to the Cloud IDE user session storage. Copy the command below by clicking on the little copy button on the bottom right of the codeblock. Then paste it into the terminal at the command line prompt using <strong>Ctrl + V</strong> (Mac: ⌘ + V), and <strong>Enter</strong> on keyboard. Do this for each of the commands below one at a time.</p>
+        <ul>
+          <li>
+            <p><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/datasets/World/world_mysql_script.sql" target="_blank" rel="external">world_mysql_script.sql</a></p>
+            <pre><code class="hljs language-awk">wget https:<span class="hljs-regexp">//</span>cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud<span class="hljs-regexp">/IBM-DB0231EN-SkillsNetwork/</span>datasets<span class="hljs-regexp">/World/</span>world_mysql_script.sql
+</code></pre>
+            <p></p>
+          </li>
+        </ul>
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        <p>Initiate a mysql command prompt session by clicking the <strong>MySQL CLI</strong> button from the mysql service session tab.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20Storage%20Engines%20and%20System%20Tables/images/MySQL_3.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="6">
+      <li>
+        <p>Create a new database <strong>world</strong> using the command below in the terminal:</p>
+        <pre><code class="hljs language-n1ql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">DATABASE</span> world;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20Storage%20Engines%20and%20System%20Tables/images/A.5.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="7">
+      <li>
+        <p>To use the newly created world database, use the command below in the terminal:</p>
+        <pre><code class="hljs language-abnf">USE world<span class="hljs-comment">;</span>
+</code></pre>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="8">
+      <li>
+        <p>Execute the world mysql script (<a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/datasets/World/world_mysql_script.sql" target="_blank" rel="external">world_mysql.sql</a>) to complete the world database creation process using the command below in the terminal:</p>
+        <pre><code class="hljs language-abnf">SOURCE world_mysql_script.sql<span class="hljs-comment">;</span>
+</code></pre>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="9">
+      <li>
+        <p>To list all the table names from the world database, use the command below in the terminal:</p>
+        <pre><code class="hljs language-pgsql"><span class="hljs-keyword">SHOW</span> <span class="hljs-keyword">TABLES</span>;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20Storage%20Engines%20and%20System%20Tables/images/A.8.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <h1>Exercise 2: Manage MySQL Storage Engines</h1>
+    <p>In MySQL, <em><strong>Storage Engines</strong></em> are components that handle SQL operations for different table types. The default and most general purpose storage engine in MySQL is <strong>InnoDB</strong>. When you create a new table in MySQL using the <code>CREATE TABLE</code> command in the Command Line Interface, it creates a InnoDB table by default. This is the most widely useful one and is recommended for most general applications except for a few specialized cases.</p>
+    <p>As detailed in the <a href="https://dev.mysql.com/doc/refman/8.0/en/storage-engines.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">MySQL documentation</a>, MySQL is built with a pluggable storage engine architecture that allows storage engines to be easily loaded into and unloaded from a running MySQL server.</p>
+    <ol>
+      <li>
+        <p>To see a list of the Storage Engines supported on your MySQL server, enter the following command into the MySQL Command Line Interface:</p>
+        <pre><code class="hljs language-sql_more"><span class="hljs-keyword">SHOW</span> <span class="hljs-keyword">ENGINES</span>;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20Storage%20Engines%20and%20System%20Tables/images/engines_1.png" alt="SHOW ENGINES CLI command output">
+        </p>
+        <p>As you can see, there are several columns. The first column gives the name of the Storage Engine and the next column tells us whether that engine is supported on your MySQL server. As you can see, the InnoDB engine is listed as the DEFAULT.</p>
+      </li>
+    </ol><br>
+    <h3>The CSV Storage Engine</h3>
+    <p>From the <code>SHOW ENGINES;</code> command you ran earlier, you can see that the <strong>CSV</strong> Engine is supported on the current running MySQL server. CSV files, short for <em>Comma Separated Values</em>, are delimited text files that uses a comma to separate values.</p>
+    <p>Let's go ahead and try making a table in our database using the CSV storage engine.</p>
+    <ol>
+      <li>
+        <p>To create a new table with a storage engine other than the default InnoDB database, we specify the storage engine we wish to use inside the <code>CREATE TABLE</code> command. Let's create a new table called "test_csv" using the CSV engine by entering the following command into the CLI:</p>
+        <pre><code class="hljs language-sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> csv_test (i <span class="hljs-type">INT</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>, c <span class="hljs-type">CHAR</span>(<span class="hljs-number">10</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>) ENGINE <span class="hljs-operator">=</span> CSV;
+</code></pre>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Let's confirm that the table was successfully created with the following command:</p>
+        <pre><code class="hljs language-pgsql"><span class="hljs-keyword">SHOW</span> <span class="hljs-keyword">TABLES</span>;
+</code></pre>
+        <p></p>
+      </li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20Storage%20Engines%20and%20System%20Tables/images/engines_2.png" alt="Output of SHOW TABLES command">
+    </p><br>
+    <ol start="3">
+      <li>
+        <p>let's add some sample data into our table. We will add three entries with the following command:</p>
+        <pre><code class="hljs language-scheme">INSERT INTO csv_test VALUES(<span class="hljs-name">1</span>,<span class="hljs-symbol">'data</span> one'),(<span class="hljs-name">2</span>,<span class="hljs-symbol">'data</span> two'),(<span class="hljs-name">2</span>,<span class="hljs-symbol">'data</span> three')<span class="hljs-comment">;</span>
+</code></pre>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>Take a look at the new values you entered with the CLI:</p>
+        <pre><code class="hljs language-n1ql"><span class="hljs-keyword">SELECT</span> * <span class="hljs-keyword">FROM</span> csv_test;
+</code></pre>
+        <p></p>
+      </li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20Storage%20Engines%20and%20System%20Tables/images/engines_3.png" alt="See contents of CSV table">
+    </p>
+    <p>As you can see, CSV storage engines function in many of the same ways as the default InnoDB engines, however, there are a few limitations. These include not supporting indexing or partitioning.</p>
+    <p>As you saw for yourself from the output of the <code>SHOW ENGINES;</code> command there are many different storage engines. We encourage you to explore and experiment with them yourself! You can read more about their specific use cases and limitations in the <a href="https://dev.mysql.com/doc/refman/8.0/en/storage-engines.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">MySQL documentation</a>.</p>
+    <h1>Exercise 3: Navigate the MySQL System Tables</h1>
+    <p>The MySQL server contains a database called <code>mysql</code>. This is the system database that contains information <em>required</em> for the server to run, such as meta data on all the other tables in the database. This database is one of the special cases where the default InnoDB storage engine is <em>not</em> used. Instead, the tables in the <code>mysql</code> database used the MyISAM storage engine. In general, we mostly query the system tables and rarely modify them directly.</p>
+    <p>The tables in the <code>mysql</code> database fall into several categories, some of which include:</p>
+    <ul>
+      <li>Grant System Tables</li>
+      <li>Object Information System Tables</li>
+      <li>Log System Tables</li>
+      <li>Server-Side Help System Tables</li>
+    </ul>
+    <p>For your reference, an exhaustive list of the categories can be found in <a href="https://dev.mysql.com/doc/refman/5.7/en/system-schema.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">Section 5.7</a> of the MySQL documentation.</p>
+    <h3>Grant System Table Category</h3>
+    <p>Let's take a deeper look at the <strong>Grant System Table</strong> category. They contain information about the user accounts and the privileges granted to them.</p>
+    <ol>
+      <li>
+        <p>First, let's see all the databases on the MySQL server by entering the following command into the CLI:</p>
+        <pre><code class="hljs language-sql_more"><span class="hljs-keyword">SHOW</span> <span class="hljs-keyword">DATABASES</span>;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20Storage%20Engines%20and%20System%20Tables/images/system_1.png" alt="The databases on the server">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Now connect to the <strong>mysql</strong> data by entering:</p>
+        <pre><code class="hljs language-abnf">USE mysql<span class="hljs-comment">;</span>
+</code></pre>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Take a look at all the tables in the database by entering the following in the CLI:</p>
+        <pre><code class="hljs language-pgsql"><span class="hljs-keyword">SHOW</span> <span class="hljs-keyword">TABLES</span>;
+</code></pre>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>The <strong>user</strong> table contains user accounts, global privileges, and other nonprivilege columns. There are many columns in this table and is a little unwieldy to look at so let's take a look at just the first column which lists the names of the users in the database. Enter the following into the CLI:</p>
+        <pre><code class="hljs language-n1ql"><span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">User</span> <span class="hljs-keyword">from</span> <span class="hljs-keyword">user</span>;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20Storage%20Engines%20and%20System%20Tables/images/system_2.png" alt="User column in user database">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        <p>Let's add a new user to the database and see if the change is reflected in the user table. We will go into depth about adding users to a database later in the course in the <em>Hands-on Lab: MySQL User Management, Access Control, and Encryption</em> but for now, we'll just execute a simple command in the CLI that will create a new user named "test_user":</p>
+        <pre><code class="hljs language-crmsh">CREATE <span class="hljs-keyword">USER</span> <span class="hljs-title">test_user</span>;
+</code></pre>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="6">
+      <li>
+        <p><strong>Try it yourself:</strong> Confirm that the <em>user</em> table in the <em>mysql</em> database was automatically updated to reflect the addition of the new user you created. <em>Enter the appropriate command into the CLI to show the the User column in the user table.</em></p>
+        <details>
+          <summary><strong>Hint</strong> (Click Here)</summary>Take a peek at the command you entered in step 4.
+        </details>
+        <details>
+          <summary><strong>Solution</strong> (Click Here)</summary>
+          <pre><code class="hljs language-n1ql"><span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">User</span> <span class="hljs-keyword">from</span> <span class="hljs-keyword">user</span>;
+</code></pre>
+          <p></p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20Storage%20Engines%20and%20System%20Tables/images/system_3.png" alt="User column in user database">
+          </p>
+          <p>As you can see, "test_user" was added to this table automatically, you didn't have to use any <code>INSERT</code> commands. This is, in general, the case for system tables - you rarely should have to edit them directly. Instead, they are typically queried.</p>
+        </details>
+      </li>
+    </ol><br>
+    <h3>Query the <code>INFORMATION_SCHEMA</code> Database Tables</h3>
+    <p>The <code>INFORMATION_SCHEMA</code> is a database found inside every MySQL server. It contains meta data about the MySQL server such as the name of a database or table, the data type of a column, or access privileges. Note that this database contains <em>read-only</em> tables, so you cannot directly use any <code>INSERT</code>, <code>UPDATE</code>, or <code>DELETE</code> commands on them. Let's go ahead and connect to the database.</p>
+    <ol>
+      <li>
+        <p><strong>TRY IT YOURSELF:</strong> Using the MySQL CLI, view all the databases on the server.</p>
+        <details>
+          <summary><strong>Hint</strong> (Click Here)</summary>You already did this is Step 1 of the previous section about tbe Grant System Table category. Feel free to refer back to that for some guidance.
+        </details>
+        <details>
+          <summary><strong>Solution</strong> (Click Here)</summary>
+          <pre><code class="hljs language-sql_more"><span class="hljs-keyword">SHOW</span> <span class="hljs-keyword">DATABASES</span>;
+</code></pre>
+          <p></p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20Storage%20Engines%20and%20System%20Tables/images/system_4.png" alt="SHOW DATABASES; output">
+            As you can see, the <code>information_schema</code> database is there by default.
+          </p>
+        </details>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p><strong>Try it yourself:</strong> Enter the relevant command in the CLI to connect to the <code>information_schema</code> database.</p>
+        <details>
+          <summary><strong>Hint</strong> (Click Here)</summary>Recall the command you entered in the previous section to connect to the `mysql` database. How can it be modified to connect to the `information_schema` database?
+        </details>
+        <details>
+          <summary><strong>Solution</strong> (Click Here)</summary>
+          <pre><code class="hljs language-abnf">USE information_schema<span class="hljs-comment">;</span>
+</code></pre>
+          <p></p>
+        </details>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>In the <code>information_schema</code> database, there exists a table called <code>COLUMNS</code> which contains meta data about the columns for all tables and views in the server. One of the columns in this table contains the names of all the other columns in every table. Let's go ahead and look at the names of the columns in the <code>country</code> table in the <code>world</code> database by entering the following command in the CLI:</p>
+        <pre><code class="hljs language-pgsql"><span class="hljs-keyword">SELECT</span> <span class="hljs-built_in">COLUMN_NAME</span> <span class="hljs-keyword">FROM</span> <span class="hljs-keyword">COLUMNS</span> <span class="hljs-keyword">WHERE</span> <span class="hljs-built_in">TABLE_NAME</span> = <span class="hljs-string">'country'</span>;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20Storage%20Engines%20and%20System%20Tables/images/system_5.png" alt="Column names in country table">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>Another point of interest in the <code>information_schema</code> database is the <code>TABLES</code> table which contains meta data about all the tables in the server. One of the columns in this table contains information about a table's storage engine type. To tie this back to our earlier discussion about storage engines, run the following command in the CLI to view the storage engine type for the 'country', 'city', 'countrylanguage', and finally the 'csv_test' table you created:</p>
+        <pre><code class="hljs language-pgsql"><span class="hljs-keyword">SELECT</span> <span class="hljs-built_in">table_name</span>, engine <span class="hljs-keyword">FROM</span> INFORMATION_SCHEMA.<span class="hljs-keyword">TABLES</span> 
+<span class="hljs-keyword">WHERE</span> <span class="hljs-built_in">table_name</span> = <span class="hljs-string">'country'</span> <span class="hljs-keyword">OR</span> <span class="hljs-built_in">table_name</span> = <span class="hljs-string">'city'</span> 
+<span class="hljs-keyword">OR</span> <span class="hljs-built_in">table_name</span> = <span class="hljs-string">'countrylanguage'</span> <span class="hljs-keyword">OR</span> <span class="hljs-built_in">table_name</span> = <span class="hljs-string">'csv_test'</span>;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20Storage%20Engines%20and%20System%20Tables/images/system_6.png" alt="Engine type of tables of interest">
+        </p>
+        <p>As expected, the first three tables mentioned use the default InnoDB storage engine, while the 'csv_test' table uses the CSV storage engine.</p>
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        <p>Finally, the <code>TABLES</code> table in the <code>information_schema</code> database contains information on the the size of a given table in bytes. This information is stored in two columns: <strong>data_length</strong> and <strong>index_length</strong> which stores the size of the data in the table and the size of the index file for that table, respectively. Therefore, the total size of the table is the sum of the values in these two columns. This value would be given in bytes, however, if you wish to use a more convenient unit, the sum can be converted to kB by dividing by 1024. You can find the size of the tables (in kB) you queried in the previous step with the following command in the CLI:</p>
+        <pre><code class="hljs language-pgsql"><span class="hljs-keyword">SELECT</span> <span class="hljs-built_in">table_name</span>, (data_length + index_length)/<span class="hljs-number">1024</span> <span class="hljs-keyword">FROM</span> INFORMATION_SCHEMA.<span class="hljs-keyword">TABLES</span> 
+<span class="hljs-keyword">WHERE</span> <span class="hljs-built_in">table_name</span> = <span class="hljs-string">'country'</span> <span class="hljs-keyword">OR</span> <span class="hljs-built_in">table_name</span> = <span class="hljs-string">'city'</span> 
+<span class="hljs-keyword">OR</span> <span class="hljs-built_in">table_name</span> = <span class="hljs-string">'countrylanguage'</span> <span class="hljs-keyword">OR</span> <span class="hljs-built_in">table_name</span> = <span class="hljs-string">'csv_test'</span>;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20Storage%20Engines%20and%20System%20Tables/images/table_size.png" alt="Results of table size query">
+        </p>
+      </li>
+    </ol>
+    <h1>Exercise 4: Try it Yourself!</h1>
+    <p>In this practice exercise, you will put together what you learned about storage engines in MySQL to first create a new table using the non-default MyISAM storage engine. You will then apply what you learned about MySQL System Tables to fetch metadata about your newly created table.</p>
+    <ol>
+      <li>
+        <p><strong>Try it yourself:</strong> First, connect to the <code>world</code> database using the CLI:</p>
+        <details>
+          <summary><strong>Hint</strong> (Click Here)</summary>The command to connect to a database takes on the following general form:
+          <pre><code class="hljs language-sql_more"><span class="hljs-keyword">USE</span> &#x3C;<span class="hljs-keyword">database</span> <span class="hljs-keyword">name</span>>;
+</code></pre>
+          <p></p>
+        </details>
+        <details>
+          <summary><strong>Solution</strong> (Click Here)</summary>
+          <pre><code class="hljs language-abnf">USE world<span class="hljs-comment">;</span>
+</code></pre>
+          <p></p>
+        </details>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p><strong>Try it yourself:</strong> Create a new table called <code>MyISAM_test</code> that uses the <code>MYISAM</code> storage engine.</p>
+        <details>
+          <summary><strong>Hint</strong> (Click Here)</summary>Recall that you did something very similar in Exercise 2 when you created a new table using th csv storage engine. What can you change in the command you used to accomplish this task?
+          <p>To save you the scrolling, here's the command you used in Exercise 2 to create <code>csv_test</code>:</p>
+          <pre><code class="hljs language-sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> csv_test (i <span class="hljs-type">INT</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>, c <span class="hljs-type">CHAR</span>(<span class="hljs-number">10</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>) ENGINE <span class="hljs-operator">=</span> CSV;
+</code></pre>
+          <p></p>
+        </details>
+        <details>
+          <summary><strong>Solution</strong> (Click Here)</summary>
+          <pre><code class="hljs language-sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> MyISAM_test (i <span class="hljs-type">INT</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>, c <span class="hljs-type">CHAR</span>(<span class="hljs-number">10</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>) ENGINE <span class="hljs-operator">=</span> MYISAM;
+</code></pre>
+          <p></p>
+          <p>This will create an empty table called <code>MyISAM_test</code> where the first column, named <code>i</code> will eventually contain an integer, and the second column named <code>c</code> will contain up to 10 characters.</p>
+        </details>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p><strong>Try it yourself:</strong> Next, you'll want to query a table in the <code>information_schema</code> database, but before that, you'll have to connect to the database first. Use the CLI to connect to the <code>information_schema</code> database.</p>
+        <details>
+          <summary><strong>Hint</strong> (Click Here)</summary>
+          <p>Recall what you did in Step 1 of this practice exercise. This step is very similar.</p>
+        </details>
+        <details>
+          <summary><strong>Solution</strong> (Click Here)</summary>
+          <pre><code class="hljs language-abnf">USE information_schema<span class="hljs-comment">;</span>
+</code></pre>
+          <p></p>
+        </details>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p><strong>Try it yourself:</strong> Using the CLI, query the <code>TABLES</code> table in the <code>information_schema</code> database to display the <code>table_name</code> and <code>engine</code> columns of all tables that have <code>table_schema = 'world'</code>. Confirm that the table you created in this exercise is there and it has the correct storage engine.</p>
+        <details>
+          <summary><strong>Hint</strong> (Click Here)</summary>
+          <p>To query specific columns in a table based on some condition, use a command of the form:</p>
+          <pre><code class="hljs language-pgsql"><span class="hljs-keyword">SELECT</span> &#x3C;column_1>, &#x3C;column_2>, ... <span class="hljs-keyword">FROM</span> &#x3C;<span class="hljs-keyword">table</span> <span class="hljs-type">name</span>> <span class="hljs-keyword">WHERE</span> &#x3C;condition>;
+</code></pre>
+          <p></p>
+          <p><strong>Bonus hint:</strong> In this case, the table name should be <code>INFORMATION_SCHEMA.TABLES</code>.</p>
+        </details>
+        <details>
+          <summary><strong>Solution</strong> (Click Here)</summary>
+          <pre><code class="hljs language-pgsql"><span class="hljs-keyword">SELECT</span> <span class="hljs-built_in">table_name</span>, engine <span class="hljs-keyword">FROM</span> INFORMATION_SCHEMA.<span class="hljs-keyword">TABLES</span> <span class="hljs-keyword">WHERE</span> table_schema = <span class="hljs-string">'world'</span>;
+</code></pre>
+          <p></p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20MySQL%20Storage%20Engines%20and%20System%20Tables/images/practice_1.png" alt="output of solution">
+            As you can see, the <code>MyISAM_test</code> table is there and it uses the MyISAM storage engine as expected.
+          </p>
+        </details>
+      </li>
+    </ol><br>
+    <h1>Conclusion</h1>
+    <p>Congratulations! You have completed this hands on lab and now understand the basics of MySQL storage engines and have the skills to create new tables with alternate storage engines for specialized use cases. Furthermore, you have gained some familiarity with system tables in MySQL and how to query them to retrieve meta data about other objects in your database.</p>
+    <h2>Author</h2>
+    <ul>
+      <li><a href="https://www.linkedin.com/in/david-pasternak-6b84a2208/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">David Pasternak</a></li>
+    </ul>
+    <h2>Other Contributors</h2>
+    <ul>
+      <li>Sandip Saha Joy</li>
+    </ul>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-09-10</td>
+          <td>1.0</td>
+          <td>David Pasternak</td>
+          <td>Created initial version</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2021. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/IDSNlogo.png" width="200" height="200">
+    <h1>Hands-on Lab: Improving Performance of Slow Queries in MySQL</h1>
+    <p><strong>Estimated time needed:</strong> 45 minutes</p>
+    <p>In this lab, you will learn how to improve the performance of your slow queries in MySQL, which can be particularly helpful with large databases.</p>
+    <h1>Objectives</h1>
+    <p>After completing this lab, you will be able to:</p>
+    <ol>
+      <li>Use the <code>EXPLAIN</code> statement to check the performance of your query</li>
+      <li>Add indexes to improve the performance of your query</li>
+      <li>Apply other best practices such as using the <code>UNION ALL</code> clause to improve query performance</li>
+    </ol>
+    <h1>Software Used in this Lab</h1>
+    <p>In this lab, you will use <a href="https://www.mysql.com/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">MySQL</a>. MySQL is a Relational Database Management System (RDBMS) designed to efficiently store, manipulate, and retrieve data.</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/mysql.png" width="100" height="100">
+    <p>To complete this lab, you will utilize the MySQL relational database service available as part of the IBM Skills Network Labs (SN Labs) Cloud IDE. SN Labs is a virtual lab environment used in this course.</p>
+    <h1>Database Used in this Lab</h1>
+    <p>The Employees database used in this lab comes from the following source: <a href="https://dev.mysql.com/doc/employee/en/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">https://dev.mysql.com/doc/employee/en/</a> under the <a href="https://creativecommons.org/licenses/by-sa/3.0/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">CC BY-SA 3.0 License</a>.</p>
+    <p>The following entity relationship diagram (ERD) shows the schema of the Employees database:</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/employees-schema.png" height="400">
+    <p>The first row of each table is the table name, the rows with keys next to them indicate the primary keys, and the remaining rows are additional attributes.</p>
+    <h1>Exercise 1: Load the Database</h1>
+    <p>Let's begin by retrieving the database and loading it so that it can be used.</p>
+    <ol>
+      <li>
+        <p>In the menu bar, select <code>Terminal > New Terminal</code>. This will open the Terminal.</p>
+        <p>To download the zip file containing the database, copy and paste the following into the Terminal:</p>
+        <pre><code class="hljs language-awk">wget https:<span class="hljs-regexp">//</span>cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud<span class="hljs-regexp">/IBM-DB0231EN-SkillsNetwork/</span>datasets/employeesdb.zip
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/a-download_database.png" alt="Download Database">
+        </p>
+      </li>
+      <li>
+        <p>Next, we'll need to unzip its contents. We can do that with the following command:</p>
+        <pre><code class="hljs language-ebnf"><span class="hljs-attribute">unzip employeesdb</span>.zip
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/a-unzip_database.png" alt="Unzipping the Downloaded Database">
+        </p>
+      </li>
+      <li>
+        <p>Now, let's change directories so that we're able to access the files in the newly created <strong>employeesdb</strong> folder.</p>
+        <pre><code class="hljs language-bash"><span class="hljs-built_in">cd</span> employeesdb
+</code></pre>
+        <p></p>
+        <p>Check the line next to <strong>theia@theiadocker</strong>. If it reads <strong>/home/project/employeesdb</strong>, then you have successfully changed directories!</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/a-change_directories.png" alt="Changing Directories">
+        </p>
+      </li>
+      <li>
+        <p>In order to import the data, we'll need to load the data through MySQL. We can do that by navigating to the <strong>Skills Network Toolbox</strong>, selecting <strong>Databases</strong> and then selecting <strong>MySQL</strong>.</p>
+        <p>Press <strong>Start</strong>. This will start a session of MySQL in SN Labs.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/a-open_mySQL.png" alt="Open MySQL">
+        </p>
+        <p>The <strong>Inactive</strong> label will change to <strong>Starting</strong>. This may take a few moments.</p>
+        <p>When it changes to <strong>Active</strong>, it means your session has started.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/a-open_mySQL_active.png" alt="Active MySQL Session">
+        </p>
+        <p>Take note of your password. You will need this to start MySQL.</p>
+        <p>You can copy your password by clicking the button next to it, as shown in the screenshot below:</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/a-open_mySQL_active_password.png" alt="Copy MySQL Password">
+        </p>
+      </li>
+      <li>
+        <p>With your password handy, we can now import the data. You can do this by entering the following into the Terminal:</p>
+        <pre><code class="hljs language-routeros">mysql <span class="hljs-attribute">--host</span>=127.0.0.1 <span class="hljs-attribute">--port</span>=3306 <span class="hljs-attribute">--user</span>=root --password -t &#x3C; employees.sql
+</code></pre>
+        <p></p>
+        <p>When prompted for your password, paste the password that you copied earlier into the Terminal and press <strong>Enter</strong>.</p>
+        <p>Please note, you won't be able to see your password when typing it in. Not to worry, this is expected!</p>
+      </li>
+      <li>
+        <p>Your data will now load. This may take a minute or so.</p>
+        <p>When you've finished loading the data, you'll see the following:</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/a-successfully_imported_data.png" alt="Successfully Imported Data">
+        </p>
+        <p>This means that your data has been imported.</p>
+      </li>
+      <li>
+        <p>To enter the MySQL command-line interface, return to your MySQL tab and select <strong>MySQL CLI</strong>.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/a-start_mySQL.png" alt="Start_mySQL">
+        </p>
+      </li>
+      <li>
+        <p>Recall that the name of the database that we're using is <strong>Employees</strong>. To access it, we can use this command:</p>
+        <pre><code class="hljs language-actionscript"><span class="hljs-keyword">use</span> employees
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/a-database_changed.png" alt="Use Employees Database">
+        </p>
+      </li>
+      <li>
+        <p>Let's see which tables are available in this database:</p>
+        <pre><code class="hljs language-pgsql"><span class="hljs-keyword">show</span> <span class="hljs-keyword">tables</span>;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/a-show_tables.png" alt="Show Tables in Employees Database">
+        </p>
+        <p>In this database, there are 8 tables, which we can confirm with the database's ERD.</p>
+      </li>
+    </ol>
+    <p>Now that your database is all set up, let's take a look at how we can check a query's performance!</p>
+    <h1>Exercise 2: Check Your Query's Performance with EXPLAIN</h1>
+    <p>The <code>EXPLAIN</code> statement, which provides information about how MySQL executes your statement, will offer you insight about the number of rows your query is planning on looking through. This statement can be helpful when your query is running slow. For example, is it running slow because it's scanning the entire table each time?</p>
+    <ol>
+      <li>
+        <p>Let's start with selecting all the data from the <strong>employees</strong> table:</p>
+        <pre><code class="hljs language-SQL"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> employees;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/b-select_all_output.png" alt="Select All Output">
+        </p>
+        <p>As you can see, all 300,024 rows were loaded, taking about 0.34 seconds.</p>
+      </li>
+      <li>
+        <p>We can use <code>EXPLAIN</code> to see how many rows were scanned:</p>
+        <pre><code class="hljs language-SQL">EXPLAIN <span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> employees;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/b-explain_select_all_output.png" alt="EXPLAIN Select All Output">
+        </p>
+        <p>Notice how <code>EXPLAIN</code> shows that it is examining 298,980 rows, almost the entire table! With a larger table, this could result in the query running slowly.</p>
+      </li>
+    </ol>
+    <p>So, how can we make this query faster? That's where indexes come in!</p>
+    <h1>Exercise 3: Add an Index to Your Table</h1>
+    <ol>
+      <li>
+        <p>To begin, let's take at the existing indexes. We can do that by entering the following command:</p>
+        <pre><code class="hljs language-SQL"><span class="hljs-keyword">SHOW</span> INDEX <span class="hljs-keyword">FROM</span> employees;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/c-show_indexes_primarykey.png" alt="Primary Key Indexes">
+        </p>
+        <p>Remember that indexes for primary keys are created automatically, as we can see above. An index has already been created for the primary key, <strong>emp_no</strong>. If we think about this, this makes sense because each employee number is unique to the employee, with no NULL values.</p>
+      </li>
+      <li>
+        <p>Now, let's say we wanted to see all the information about employees who were hired on or after January 1, 2000. We can do that with the query:</p>
+        <pre><code class="hljs language-SQL"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> employees <span class="hljs-keyword">WHERE</span> hire_date <span class="hljs-operator">>=</span> <span class="hljs-string">'2000-01-01'</span>;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/c-sample_hiredate.png" alt="Select All Columns With Hire Date Before January 1, 2000">
+        </p>
+        <p>As we can see, the 13 rows returned took about 0.17 seconds to execute. That may not seem like a long time with this table, but keep in mind that with larger tables, this time can vary greatly.</p>
+      </li>
+      <li>
+        <p>With the <code>EXPLAIN</code> statement, we can check how many rows this query is scanning:</p>
+        <pre><code class="hljs language-SQL">EXPLAIN <span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> employees <span class="hljs-keyword">WHERE</span> hire_date <span class="hljs-operator">>=</span> <span class="hljs-string">'2000-01-01'</span>;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/c-sample_explain_hiredate.png" alt="EXPLAIN Select All Columns With Hire Date Before January 1, 2000">
+        </p>
+        <p>This query results in a scan of 299,423 rows, which is nearly the entire table!</p>
+        <p>By adding an index to the <strong>hire_date</strong> column, we'll be able to reduce the query's need to search through every entry of the table, instead only searching through what it needs.</p>
+      </li>
+      <li>
+        <p>You can add an index with the following:</p>
+        <pre><code class="hljs language-SQL"><span class="hljs-keyword">CREATE</span> INDEX hire_date_index <span class="hljs-keyword">ON</span> employees(hire_date);
+</code></pre>
+        <p></p>
+        <p>The <code>CREATE INDEX</code> command creates an index called <strong>hire_date_index</strong> on the table <strong>employees</strong> on column <strong>hire_date</strong>.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/c-create_hiredate_index.png" alt="Create an Index on Hire Date">
+        </p>
+      </li>
+      <li>
+        <p>To check your index, you can use the <code>SHOW INDEX</code> command:</p>
+        <pre><code class="hljs language-SQL"><span class="hljs-keyword">SHOW</span> INDEX <span class="hljs-keyword">FROM</span> employees;
+</code></pre>
+        <p></p>
+        <p>Now you can see that we have both the <strong>emp_no</strong> index and <strong>hire_date</strong> index.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/c-show_index_primarykey_and_hiredateindex.png" alt="Show Primary and New Hire Date Indexes">
+        </p>
+        <p>With the index added,</p>
+      </li>
+      <li>
+        <p>Once more, let's select all the employees who were hired on or after January 1, 2000.</p>
+        <pre><code class="hljs language-SQL"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> employees <span class="hljs-keyword">WHERE</span> hire_date <span class="hljs-operator">>=</span> <span class="hljs-string">'2000-01-01'</span>;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/c-sample_hiredate_with_index.png" alt="Select All Columns With Hire Date Before January 1, 2000 With Index">
+        </p>
+        <p>The difference is quite evident! Rather than taking about 0.17 seconds to execute the query, it takes 0.00 seconds—almost no time at all.</p>
+      </li>
+      <li>
+        <p>We can use the <code>EXPLAIN</code> statement to see how many rows were scanned:</p>
+        <pre><code class="hljs language-SQL">EXPLAIN <span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> employees <span class="hljs-keyword">WHERE</span> hire_date <span class="hljs-operator">>=</span> <span class="hljs-string">'2000-01-01'</span>;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/c-sample_explain_hiredate_with_index.png" alt="EXPLAIN Select All Columns With Hire Date Before January 1, 2000 with Index">
+        </p>
+        <p>Under <strong>rows</strong>, we can see that only the necessary 13 columns were scanned, leading to the improved performance.</p>
+        <p>Under <strong>Extra</strong>, you can also see that it has been explicitly stated that the index was used, that index being <strong>hire_date_index</strong> based on the <strong>possible_keys</strong> column.</p>
+      </li>
+    </ol>
+    <p>Now, if you want to remove the index, enter the following into the Terminal:</p>
+    <pre><code class="hljs language-SQL"><span class="hljs-keyword">DROP</span> INDEX hire_date_index <span class="hljs-keyword">ON</span> employees;
+</code></pre>
+    <p></p>
+    <p>This will remove the <strong>hire_date_index</strong> on the <strong>employees</strong> table. You can check with the <code>SHOW INDEX</code> command to confirm:</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/c-drop_and_show_index.png" alt="Drop Hire Date Index and Show Current Indexes in Employee Table">
+    </p>
+    <h1>Exercise 4: Use an UNION ALL Clause</h1>
+    <p>Sometimes, you might want to run a query using the <code>OR</code> operator with <code>LIKE</code> statements. In this case, using a <code>UNION ALL</code> clause can improve the speed of your query, particularly if the columns on both sides of the <code>OR</code> operator are indexed.</p>
+    <ol>
+      <li>
+        <p>To start, let's run this query:</p>
+        <pre><code class="hljs language-SQL"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> employees <span class="hljs-keyword">WHERE</span> first_name <span class="hljs-keyword">LIKE</span> <span class="hljs-string">'C%'</span> <span class="hljs-keyword">OR</span> last_name <span class="hljs-keyword">LIKE</span> <span class="hljs-string">'C%'</span>;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/d-sample_or_query.png" alt="Sample OR Query">
+        </p>
+        <p>This query searches for first names or last names that start with "C". It returned 28,970 rows, taking about 0.20 seconds.</p>
+      </li>
+      <li>
+        <p>Check using the <code>EXPLAIN</code> command to see how many rows are being scanned!</p>
+        <details>
+          <summary>Hint (Click Here)</summary>
+          <p>Review how we used the <code>EXPLAIN</code> statement in Exercise A and apply it to the above query.</p>
+        </details>
+        <details>
+          <summary>Solution (Click Here)</summary>
+          <p>Your statement should look like the following:</p>
+          <pre><code class="hljs language-SQL">EXPLAIN <span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> employees <span class="hljs-keyword">WHERE</span> first_name <span class="hljs-keyword">LIKE</span> <span class="hljs-string">'C%'</span> <span class="hljs-keyword">OR</span> last_name <span class="hljs-keyword">LIKE</span> <span class="hljs-string">'C%'</span>;
+</code></pre>
+          <p></p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/d-explain_sample_or_query.png" alt="EXPLAIN Sample OR Query">
+          </p>
+        </details>
+        <p>Once more, we can see that almost all the rows are being scanned, so let's add indexes to both the <strong>first_name</strong> and <strong>last_name</strong> columns.</p>
+      </li>
+      <li>
+        <p>Try adding an index to both the <strong>first_name</strong> and <strong>last_name</strong> columns.</p>
+        <details>
+          <summary>Hint (Click Here)</summary>
+          <p>Consider how we created an index in Exercise B. How can you apply this to a different column?</p>
+        </details>
+        <details>
+          <summary>Solution (Click Here)</summary>
+          <p>You can add the indexes with the following:</p>
+          <pre><code class="hljs language-SQL"><span class="hljs-keyword">CREATE</span> INDEX first_name_index <span class="hljs-keyword">ON</span> employees(first_name);
+<span class="hljs-keyword">CREATE</span> INDEX last_name_index <span class="hljs-keyword">ON</span> employees(last_name);
+</code></pre>
+          <p></p>
+          <p>Please note, the name of your indexes (<strong>first_name_index</strong> and <strong>last_name_index</strong>) can be named differently.</p>
+          <p>You can also check to see if your indexes have been added with the <code>SHOW INDEX</code> command:</p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/d-add_indexes_show_index.png" alt="Add an Index to First Name and Last Name and Show Current Indexes">
+          </p>
+        </details>
+      </li>
+      <li>
+        <p>Great! With your indexes now in place, we can re-run the query:</p>
+        <pre><code class="hljs language-SQL"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> employees <span class="hljs-keyword">WHERE</span> first_name <span class="hljs-keyword">LIKE</span> <span class="hljs-string">'C%'</span> <span class="hljs-keyword">OR</span> last_name <span class="hljs-keyword">LIKE</span> <span class="hljs-string">'C%'</span>;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/d-sample_or_query_rerun.png" alt="Re-running Sample OR Query">
+        </p>
+        <p>Let's also see how many rows are being scanned:</p>
+        <pre><code class="hljs language-SQL">EXPLAIN <span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> employees <span class="hljs-keyword">WHERE</span> first_name <span class="hljs-keyword">LIKE</span> <span class="hljs-string">'C%'</span> <span class="hljs-keyword">OR</span> last_name <span class="hljs-keyword">LIKE</span> <span class="hljs-string">'C%'</span>;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/d-explain_sample_or_query_rerun.png" alt="EXPLAIN Re-running Sample OR Query">
+        </p>
+        <p>With indexes, the query still scans all the rows.</p>
+      </li>
+      <li>
+        <p>Let's use the <code>UNION ALL</code> clause to improve the performance of this query.</p>
+        <p>We can do this with the following:</p>
+        <pre><code class="hljs language-SQL"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> employees <span class="hljs-keyword">WHERE</span> first_name <span class="hljs-keyword">LIKE</span> <span class="hljs-string">'C%'</span> <span class="hljs-keyword">UNION</span> <span class="hljs-keyword">ALL</span> <span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> employees <span class="hljs-keyword">WHERE</span> last_name <span class="hljs-keyword">LIKE</span> <span class="hljs-string">'C%'</span>;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/d-sample_union_all_query.png" alt="Sample UNION ALL Query">
+        </p>
+        <p>As we can see, this query only takes 0.11 seconds to execute, running faster than when we used the <code>OR</code> operator.</p>
+        <p>Using the <code>EXPLAIN</code> statement, we can see why that might be:</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/d-explain_sample_union_all_query.png" alt="Sample EXPLAIN UNION ALL Query">
+        </p>
+        <p>As the <code>EXPLAIN</code> statement reveals, there were two <code>SELECT</code> operations performed, with the total number of rows scanned sitting at 54,790. This is less than the original query that scanned the entire table and, as a result, the query performs faster.</p>
+      </li>
+    </ol>
+    <p>Please note, if you choose to perform a leading wildcard search with an index, the entire table will still be scanned. You can see this yourself with the following query:</p>
+    <pre><code class="hljs language-SQL"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> employees <span class="hljs-keyword">WHERE</span> first_name <span class="hljs-keyword">LIKE</span> <span class="hljs-string">'%C'</span>;
+</code></pre>
+    <p></p>
+    <p>With this query, we want to find all the employees whose first names end with "C".</p>
+    <p>When checking with the <code>EXPLAIN</code> and <code>SHOW INDEX</code> statements, we can see that although we have an index on <strong>first_name</strong>, the index is not used and results in a search of the entire table.</p>
+    <p>Under the <code>EXPLAIN</code> statement's <strong>possible_keys</strong> column, we can see that this index has not been used as the entry is NULL.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/d-sample_leading_wildcard_query.png" alt="Sample Leading Wildcard Query">
+    </p>
+    <p>On the other hand, indexes do work with trailing wildcards, as seen with the following query that finds all employees whose first names begin with "C":</p>
+    <pre><code class="hljs language-SQL"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> employees <span class="hljs-keyword">WHERE</span> first_name <span class="hljs-keyword">LIKE</span> <span class="hljs-string">'C%'</span>;
+</code></pre>
+    <p></p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/d-sample_trailing_wildcard_query.png" alt="Sample Trailing Wildcard Query">
+    </p>
+    <p>Under the <code>EXPLAIN</code> statement's <strong>possible_keys</strong> and <strong>Extra</strong> columns, we can see that the <strong>first_name_index</strong> is used. With only 20,622 rows scanned, the query performs better.</p>
+    <h1>Exercise 5: Be SELECTive</h1>
+    <p>In general, it's best practice to only select the columns that you need. For example, if you wanted to see the names and hire dates of the various employees, you could show that with the following query:</p>
+    <pre><code class="hljs language-SQL"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> employees;
+</code></pre>
+    <p></p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/e-sample_select_all_query.png" alt="Sample Select All from Employees Table">
+    </p>
+    <p>Notice how the query loads 300,024 rows in about 0.26 seconds. With the <code>EXPLAIN</code> statement, we can see that the entire table is being scanned, which makes sense because we are looking at all the entries.</p>
+    <p>If we, however, only wanted to see the names and hire dates, then we should select those columns:</p>
+    <pre><code class="hljs language-SQL"><span class="hljs-keyword">SELECT</span> first_name, last_name, hire_date <span class="hljs-keyword">FROM</span> employees;
+</code></pre>
+    <p></p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/e-select_specific_columns_query.png" alt="Sample First Name, Last Name and Hire Date from Employees Table">
+    </p>
+    <p>As you can see, this query was executed a little faster despite scanning the entire table as well.</p>
+    <p>Give this a try!</p>
+    <h2>Practice Exercise 1</h2>
+    <p>Let's take a look at the <strong>salaries</strong> table. What if we wanted to see how much each employee earns?</p>
+    <p>When running the query, keep in mind how long it takes the query to run and how many rows are scanned each time.</p>
+    <ol>
+      <li>
+        <p>First, let's select all the rows and columns from this table.</p>
+        <details>
+          <summary>Hint (Click Here)</summary>
+          <p>You'll need two separate queries: one to view the query and output, and another to see how many rows are run through.</p>
+        </details>
+        <details>
+          <summary>Solution (Click Here)</summary>To select all the rows and columns, we'll use the following query:
+          <pre><code class="hljs language-SQL"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> salaries;
+</code></pre>
+          <p></p>
+          <p>Although the exact time may differ, in this instance, it took about 1.71 seconds to load 2,844,047 rows.</p>
+          <p>We can check how many rows were scanned with the following statement:</p>
+          <pre><code class="hljs language-SQL">EXPLAIN <span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> salaries;
+</code></pre>
+          <p></p>
+          <p>We can see that almost the entire table was scanned, as expected, totalling to 2,838,426 rows.</p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/e-practice_exercise1_output.png" alt="Practice Exercise 1 Part 1 Output">
+          </p>
+        </details>
+      </li>
+      <li>
+        <p>Now, let's see if there's a way to optimize this query. Since we only want to see how much each employee earns, then we can just select a few columns instead of all of them. Which ones would you select?</p>
+        <details>
+          <summary>Hint (Click Here)</summary>
+          <p>You'll need two separate queries: one to view the query and output, and another to see how many rows are run through. Consider the columns in this table: <strong>emp_no</strong>, <strong>salary</strong>, <strong>from_date</strong>, and <strong>to_date</strong>.</p>
+        </details>
+        <details>
+          <summary>Solution (Click Here)</summary>To select columns that will give us information about the employee and their corresponding salary, we'll choose the **emp_no** and **salary** columns with the following query:
+          <pre><code class="hljs language-SQL"><span class="hljs-keyword">SELECT</span> emp_no, salary <span class="hljs-keyword">FROM</span> salaries;
+</code></pre>
+          <p></p>
+          <p>Although the exact time may differ, in this instance, it took about 1.19 seconds to load 2,844,047 rows.</p>
+          <p>We can check how many rows were scanned with the following statement:</p>
+          <pre><code class="hljs language-SQL">EXPLAIN  <span class="hljs-keyword">SELECT</span> emp_no, salary <span class="hljs-keyword">FROM</span> salaries;
+</code></pre>
+          <p></p>
+          <p>We can see that almost the entire table was scanned, as expected, totalling to 2,838,426 rows. Yet, it loaded faster than the first instance because we were more selective in the columns that were chosen.</p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/e-practice_exercise1-2_output.png" alt="Practice Exercise 1 Part 2 Output">
+          </p>
+        </details>
+      </li>
+    </ol>
+    <h2>Practice Exercise 2</h2>
+    <p>Let's take a look at the <strong>department</strong> table. What if we wanted to see the employee and their corresponding title?</p>
+    <p>Practice by selecting only the necessary columns and run the query!</p>
+    <details>
+      <summary>Hint (Click Here)</summary>
+      <p>You'll need two separate queries: one to view the query and output, and another to see how many rows are run through. Consider the columns in this table: <strong>emp_no</strong>, <strong>title</strong>, <strong>from_date</strong>, and <strong>to_date</strong>.</p>
+    </details>
+    <details>
+      <summary>Solution (Click Here)</summary>To select columns that will give us information about the employee and their corresponding salary, we'll choose the **emp_no** and **title** columns with the following query:
+      <pre><code class="hljs language-SQL"><span class="hljs-keyword">SELECT</span> emp_no, title <span class="hljs-keyword">FROM</span> titles;
+</code></pre>
+      <p></p>
+      <p>Although the exact time may differ, in this instance, it took about 0.22 seconds to load 443,308 rows.</p>
+      <p>We can check how many rows were scanned with the following statement:</p>
+      <pre><code class="hljs language-SQL">EXPLAIN  <span class="hljs-keyword">SELECT</span> emp_no, salary <span class="hljs-keyword">FROM</span> salaries;
+</code></pre>
+      <p></p>
+      <p>We can see that almost the entire table was scanned, as expected, totalling to 442,545 rows.</p>
+      <p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/e-practice_exercise2_output.png" alt="Practice Exercise 2 Output">
+      </p>
+      <p>In comparison, if you had run this with all columns selected, you may have noticed that it took about 0.47 seconds to load and scan the same amount of rows:</p>
+      <p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/MySQL/Lab%20-%20Improving%20Performance%20of%20Slow%20Queries%20in%20MySQL/images/e-practice_exercise2_output_selectall.png" alt="Practice Exercise 2 Output">
+      </p>
+    </details>
+    <h1>Conclusion</h1>
+    <p>Congratulations! Now, not only can you now identify common causes to slow queries, but you can resolve them by applying the knowledge that you have gained in this lab. Equipped with this problem-solving skill, you will be able to improve your queries performance, even in large databases.</p>
+    <h2>Author(s)</h2>
+    <p>Kathy An</p>
+    <h2>Other Contributor(s)</h2>
+    <p>Rav Ahuja</p>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-10-05</td>
+          <td>1.0</td>
+          <td>Kathy An</td>
+          <td>Created initial version</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2021. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

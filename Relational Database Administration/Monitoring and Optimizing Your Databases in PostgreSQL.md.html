@@ -1,0 +1,704 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/IDSNlogo.png" alt="IDSN logo" width="200" height="200">
+    <h1>Hands-on Lab: Monitoring and Optimizing Your Databases in PostgreSQL</h1>
+    <p><strong>Estimated time needed:</strong> 45 minutes</p>
+    <p>In this lab, you'll learn how to monitor and optimize your database in PostgreSQL with both the command line interface (CLI) and database administration tool, pgAdmin.</p>
+    <h2>Objectives</h2>
+    <p>After completing this lab, you will be able to:</p>
+    <ol>
+      <li>Monitor the performance of your database with the command line interface and pgAdmin.</li>
+      <li>Identify optimal data types for your database.</li>
+      <li>Optimize your database via the command line with best practices.</li>
+    </ol>
+    <h2>Software Used in this Lab</h2>
+    <p>In this lab, you will be using PostgreSQL. It is a popular open source object relational database management system (RDBMS) capable of performing a wealth of database administration tasks, such as storing, manipulating, retrieving, and archiving data.</p>
+    <p>To complete this lab, you will be accessing the PostgreSQL service through the IBM Skills Network (SN) Cloud IDE, which is a virtual development environnement you will use throughout this course.</p>
+    <h2>Database Used in this Lab</h2>
+    <p>In this lab, you will use a database from <a href="https://postgrespro.com/education/demodb?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">https://postgrespro.com/education/demodb</a> distributed under the <a href="https://www.postgresql.org/about/license/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">PostgreSQL licence</a>. It stores a month of data about airline flights in Russia and is organized according to the following schema:</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/DB_schema.png" alt="DB_Schema">
+    </p>
+    <h1>Exercise 1: Create Your Database</h1>
+    <p>To get started with this lab, you'll launch PostgreSQL in Cloud IDE and create our database with the help of a SQL file.</p>
+    <h3>Task A: Start PostgreSQL in Cloud IDE</h3>
+    <ol>
+      <li>
+        <p>To start PostgreSQL, navigate to the <strong>Skills Network Toolbox</strong>, select <strong>Databases</strong>, and select <strong>PostgreSQL</strong>.</p>
+        <p>Select <strong>Start</strong>. This will start a session of PostgreSQL in Skills Network Labs.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/1a-start_postgresql_session.png" alt="Start a session of PostgreSQL">
+        </p>
+        <p>The <strong>Inactive</strong> label will change to <strong>Starting</strong>. This may take a minute or so.</p>
+      </li>
+      <li>
+        <p>When the label changes to <strong>Active</strong>, it means your session has started.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/1a-active_postgresql_session.png" alt="Active PostgreSQL Session">
+        </p>
+      </li>
+    </ol>
+    <h3>Task B: Create Your Database</h3>
+    <ol>
+      <li>
+        <p>Open a new terminal by selecting the <strong>New Terminal</strong> button near the bottom of the PostgreSQL tab.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/1b-open_new_terminal.png" alt="Open a New Terminal">
+        </p>
+      </li>
+      <li>
+        <p>With the terminal, you'll want to download the <strong>demo</strong> database that you're using in this lab. This database contains a month of data about flights in Russia.</p>
+        <p>To download it, you can use the following command:</p>
+        <pre><code class="hljs language-awk">wget https:<span class="hljs-regexp">//</span>cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud<span class="hljs-regexp">/example-guided-project/</span>flights_RUSSIA_small.sql
+</code></pre>
+        <p></p>
+        <p>You should now see the SQL file in your file explorer in Cloud IDE.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/1b-download_sql_file.png" alt="Download SQL File">
+        </p>
+      </li>
+      <li>
+        <p>Let's return to the PostgreSQL tab and select the <strong>PostgreSQL CLI</strong> button near the bottom of the tab. This button will open a new PostgreSQL command line session.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/1b-open_postgresql_cli.png" alt="Open PostgreSQL CLI">
+        </p>
+      </li>
+      <li>
+        <p>Now, you want to import the data from the file that you downloaded.</p>
+        <details>
+          <summary>Hint (Click Here)</summary>
+          <p>Recall the command that you used in previous labs to read from the SQL file. Remember that the file you just downloaded is named <strong>flights_RUSSIA_small.sql</strong>.</p>
+        </details>
+        <details>
+          <summary>Solution (Click Here)</summary>
+          <p>You can use the following command to execute the script file:</p>
+          <pre><code class="hljs language-stylus">\<span class="hljs-selector-tag">i</span> flights_RUSSIA_small<span class="hljs-selector-class">.sql</span>
+</code></pre>
+          <p></p>
+          <p>It may take a few seconds for the database to be created.</p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/1b-run_sql_file.png" alt="Run the SQL File">
+          </p>
+          <p>Notice that you've been switched to the new database, <strong>demo</strong>.</p>
+        </details>
+      </li>
+      <li>
+        <p>With our created database, let's see what tables you have. How many tables are there?</p>
+        <details>
+          <summary>Hint (Click Here)</summary>
+          <p>Recall the command that you used in previous labs to display tables.</p>
+        </details>
+        <details>
+          <summary>Solution (Click Here)</summary>
+          <p>To display the tables in the current database, you can use the following command:</p>
+          <pre><code class="hljs language-css">\<span class="hljs-selector-tag">dt</span>
+</code></pre>
+          <p></p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/1b-tables_in_database.png" alt="Display Tables in Demo Database">
+          </p>
+          <p>From the output, you can see that there are 8 tables that are all located in the <strong>booking</strong> schema.</p>
+        </details>
+      </li>
+    </ol>
+    <p>Great! With your environment and database set up, let's take a look at how you can monitor and optimize this database!</p>
+    <h1>Exercise 2: Monitor Your Database</h1>
+    <p>Database monitoring refers to reviewing the operational status of your database and maintaining its health and performance. With proper and proactive monitoring, databases will be able to maintain a consistent performance. Any problems that emerge, such as sudden outages, can be identified and resolved in a timely manner.</p>
+    <p>Tools such as pgAdmin, an open source graphical user interface (GUI) tool for PostgreSQL, come with several features that can help monitor your database. The main focus in this lab will be using the command line interface to monitor your database, but we'll also take a quick look at how the monitoring process can be replicated in pgAdmin.</p>
+    <p>Monitoring these statistics can be helpful in understanding your server and its databases, detecting any anomalies and problems that may arise.</p>
+    <h3>Task A: Monitor Current Activity</h3>
+    <p>To start, let's take a look at how you can monitor current server and database activity in PostgreSQL.</p>
+    <h3>Server Activity</h3>
+    <p>You can take a look at the server activity by running the following query:</p>
+    <pre><code class="hljs language-SQL"><span class="hljs-keyword">SELECT</span> pid, usename, datname, state, state_change <span class="hljs-keyword">FROM</span> pg_stat_activity;
+</code></pre>
+    <p></p>
+    <p>This query will retrieve the following:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Column</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>pid</td>
+          <td>Process ID</td>
+        </tr>
+        <tr>
+          <td>usename</td>
+          <td>Name of user logged in</td>
+        </tr>
+        <tr>
+          <td>datname</td>
+          <td>Name of database</td>
+        </tr>
+        <tr>
+          <td>state</td>
+          <td>Current state, with two common values being: active (executing a query) and idle (waiting for new command)</td>
+        </tr>
+        <tr>
+          <td>state_change</td>
+          <td>Time when the state was last changed</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>This information comes from the <strong>pg_stat_activity</strong>, one of the built-in statistics provided by PostgreSQL.</p>
+    <ol>
+      <li>
+        <p>Copy the query and paste it into the terminal.</p>
+        <p>You should see the following output:</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/2a-view_pgstatactivity_1.png" alt="View pg_stat_activity with pid, usename, datname, state, and state_change">
+        </p>
+        <p>As you can see, there are currently 7 active connections to the server, with two of them being connected to databases that you're familiar with. After all, you started in the default <strong>postgres</strong> database, which is now idle, and now you're actively querying in the <strong>demo</strong> database.</p>
+      </li>
+      <li>
+        <p>To see what other columns are available for viewing, feel free to take a look at the <a href="https://www.postgresql.org/docs/current/monitoring-stats.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01#MONITORING-PG-STAT-ACTIVITY-VIEW" target="_blank" rel="external">pg_stat_activity documentation</a>!</p>
+        <p>Let's say you wanted to see all the aforementioned columns, in addition to the actual text of the query that was last executed. Which column should you add to review that?</p>
+        <details>
+          <summary>Hint (Click Here)</summary>
+          <p>Take a look at the documentation provided earlier. Which column would would show you what you need?</p>
+        </details>
+        <details>
+          <summary>Solution (Click Here)</summary>
+          <p>If you wanted to see which query was most recently executed, you can add the <strong>query</strong> column.</p>
+          <pre><code class="hljs language-SQL"><span class="hljs-keyword">SELECT</span> pid, usename, datname, state, state_change, query <span class="hljs-keyword">FROM</span> pg_stat_activity;
+</code></pre>
+          <p></p>
+          <p>This column returns the most recent query. If <strong>state</strong> is active, it'll show the currently executed query. If not, it'll show the last query that was executed.</p>
+          <p>Your result should look similar to the following:</p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/2a-view_pgstatactivity_2.png" alt="View pg_stat_activity with pid, usename, datname, state, state_change, and query">
+          </p>
+          <p>Notice how for the <strong>demo</strong> database, with a status of <strong>active</strong>, the current query you are executing is the one listed in the query column.</p>
+        </details>
+        <p>Please note, if your table looks strange or squished, you can resize the terminal window by dragging it out.</p>
+        <p>If your result shows the text <strong>(END)</strong>, then type in <code>q</code> to exit that view. Whenever you encounter this view, you can use <code>q</code> to return to your original view.</p>
+      </li>
+      <li>
+        <p>With queries, you can apply filtering. What if you only wanted to see the states that were <strong>active</strong>? How would you do that?</p>
+        <details>
+          <summary>Hint (Click Here)</summary>
+          <p>Recall that you can filter queries with the <code>WHERE</code> clause.</p>
+        </details>
+        <details>
+          <summary>Solution (Click Here)</summary>
+          <p>To see which processes are <strong>active</strong>, you use the following query:</p>
+          <pre><code class="hljs language-SQL"><span class="hljs-keyword">SELECT</span> pid, usename, datname, state, state_change, query <span class="hljs-keyword">FROM</span> pg_stat_activity <span class="hljs-keyword">WHERE</span> state <span class="hljs-operator">=</span> <span class="hljs-string">'active'</span>;
+</code></pre>
+          <p></p>
+          <p>If you recall, there was only one active process with the <strong>demo</strong> database.</p>
+          <p>You can confirm that with the following result:</p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/2a-view_active_processes.png" alt="View active processes">
+          </p>
+        </details>
+      </li>
+    </ol>
+    <h3>Database Activity</h3>
+    <p>When looking at database activity, you can use the following query:</p>
+    <pre><code class="hljs language-SQL"><span class="hljs-keyword">SELECT</span> datname, tup_inserted, tup_updated, tup_deleted <span class="hljs-keyword">FROM</span> pg_stat_database;
+</code></pre>
+    <p></p>
+    <p>This query will retrieve the following:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Column</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>datname</td>
+          <td>Name of database</td>
+        </tr>
+        <tr>
+          <td>tup_inserted</td>
+          <td>Number of rows inserted by queries in this database</td>
+        </tr>
+        <tr>
+          <td>tup_updated</td>
+          <td>Number of rows updated by queries in this database</td>
+        </tr>
+        <tr>
+          <td>tup_deleted</td>
+          <td>Number of rows deleted by queries in this database</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>This information comes from the <strong>pg_stat_database</strong>, one of the statistics provided by PostgreSQL.</p>
+    <ol>
+      <li>
+        <p>Copy the query and paste it into the terminal.</p>
+        <p>You should see the following output:</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/2a-view_pgstatdatabase_example.png" alt="View datname, tup_inserted, tup_updated and tup_deleted from pg_stat_database">
+        </p>
+        <p>As you can see, the two databases that are returned are the <strong>postgres</strong> and <strong>demo</strong>. These are databases that you are familiar with.</p>
+        <p>The other two, <strong>template1</strong> and <strong>template0</strong> are default templates for databases, and can be overlooked in this analysis.</p>
+        <p>Based on this output, you now know that <strong>demo</strong> had about 2,290,162 rows inserted and 22 rows updated.</p>
+      </li>
+      <li>
+        <p>To see what other columns are available for viewing, you can read through the <a href="https://www.postgresql.org/docs/current/monitoring-stats.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01#MONITORING-PG-STAT-DATABASE-VIEW" target="_blank" rel="external">pg_stat_database documentation</a>.</p>
+        <p>Let's say you wanted to see the number or rows fetched and returned by this database.</p>
+        <p>Note: The number of rows fetched is the number of rows that were returned. The number of rows returned is the number of rows that were read and scanned by the query.</p>
+        <p>What query should you use to do that?</p>
+        <details>
+          <summary>Hint (Click Here)</summary>
+          <p>Take a look at the documentation provided earlier. Which column(s) would would show you what you need?</p>
+        </details>
+        <details>
+          <summary>Solution (Click Here)</summary>
+          <p>To see the number of rows fetched and returned, you use the following query:</p>
+          <pre><code class="hljs language-SQL"><span class="hljs-keyword">SELECT</span> datname, tup_fetched, tup_returned <span class="hljs-keyword">FROM</span> pg_stat_database;
+</code></pre>
+          <p></p>
+          <p>Your result should look similar to the following:</p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/2a-view_pgstatdatabase_example2.png" alt="View pg_stat_activity with pid, usename, datname, state, state_change, and query">
+          </p>
+          <p>Notice how the rows returned tend to be greater than the rows fetched. If you consider how tables are read, this makes sense because not all the rows scanned may be the ones that are returned.</p>
+        </details>
+      </li>
+      <li>
+        <p>With queries, you can apply filtering. What if you only wanted to see the database details (rows inserted, updated, deleted, returned and fetched) for <strong>demo</strong>?</p>
+        <details>
+          <summary>Hint (Click Here)</summary>
+          <p>Recall that you can filter queries with the <code>WHERE</code> clause.</p>
+        </details>
+        <details>
+          <summary>Solution (Click Here)</summary>
+          <p>To filter the results so that only those from the <strong>demo</strong> database are shown, you use the following query:</p>
+          <pre><code class="hljs language-SQL"><span class="hljs-keyword">SELECT</span> datname, tup_inserted, tup_updated, tup_deleted, tup_fetched, tup_returned <span class="hljs-keyword">FROM</span> pg_stat_database <span class="hljs-keyword">WHERE</span> datname <span class="hljs-operator">=</span> <span class="hljs-string">'demo'</span>;
+</code></pre>
+          <p></p>
+          <p>Your result should look similar to the following:</p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/2a-view_pgstatdatabase_example3.png" alt="View active processes">
+          </p>
+        </details>
+      </li>
+    </ol>
+    <p>Later, we'll take a look at how you can monitor these activities in pgAdmin.</p>
+    <h2>Task B: Monitor Performance Over Time</h2>
+    <p>Extensions, which can enhance your PostgreSQL experience, can be helpful in monitoring your database. One such extension is <strong>pg_stat_statements</strong>, which gives you an aggregated view of query statistics.</p>
+    <ol>
+      <li>
+        <p>To enable the extension, enter the following command:</p>
+        <pre><code class="hljs language-SQL"><span class="hljs-keyword">CREATE</span> EXTENSION pg_stat_statements;
+</code></pre>
+        <p></p>
+        <p>This will enable the <strong>pg_stat_statements</strong> extension, which will start to track the statistics for your database.</p>
+      </li>
+      <li>
+        <p>Now, let's edit the PostgreSQL configuration file to include the extension you just added:</p>
+        <pre><code class="hljs language-SQL"><span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">SYSTEM</span> <span class="hljs-keyword">SET</span> shared_preload_libraries <span class="hljs-operator">=</span> <span class="hljs-string">'pg_stat_statements'</span>;
+</code></pre>
+        <p></p>
+        <p>For the changes to take effect, you will have to restart your database. You can do that by typing <code>exit</code> in the terminal to stop your current session. Close the terminal and return to the PostgreSQL tab. Select <strong>Stop</strong>.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/2b-stop_session.png" alt="Stop current PostgreSQL session">
+        </p>
+        <p>When the session has become <strong>Inactive</strong> once more, select <strong>Start</strong> to restart your session.</p>
+      </li>
+      <li>
+        <p>Once your session has started, open the <strong>PostgreSQL CLI</strong>.</p>
+        <p>You'll need to reconnect to the <strong>demo</strong> database, which you can do by using the following command:</p>
+        <pre><code class="hljs language-arduino">\connect demo
+</code></pre>
+        <p></p>
+      </li>
+      <li>
+        <p>You can see if this extension has been loaded by checking both the installed extensions and the <strong>shared_preload_libraries</strong>.</p>
+        <p>First let's check the installed extensions:</p>
+        <pre><code class="hljs language-livescript"><span class="hljs-string">\dx</span>
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/2b-installed_extensions.png" alt="View installed extensions">
+        </p>
+        <p>Notice how <strong>pg_stat_statements</strong> has been installed.</p>
+        <p>You can also check the <strong>shared_preload_libraries</strong> with:</p>
+        <pre><code class="hljs language-mipsasm"><span class="hljs-keyword">show </span><span class="hljs-keyword">shared_preload_libraries;
+</span></code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/2b-shared_preload_libraries.png" alt="View shared_preload_libraries">
+        </p>
+        <p><strong>pg_stat_statements</strong> is also shown under <strong>shared_preload_libraries</strong>.</p>
+      </li>
+      <li>
+        <p>Since the results returned by <strong>pg_stat_statements</strong> can be quite long, let's turn on expanded table formatting with the following command:</p>
+        <pre><code class="hljs language-livescript"><span class="hljs-string">\x</span>
+</code></pre>
+        <p></p>
+        <p>This will display the output tables in an expanded table format.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/2b-turn_on_expanded_display.png" alt="Turn on Expanded display">
+        </p>
+        <p>You can turn it off by repeating the <code>\x</code> command.</p>
+      </li>
+      <li>
+        <p>From the <a href="https://www.postgresql.org/docs/current/pgstatstatements.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">pg_stat_statements documentation</a>, you'll see the various columns available to be retrieved.</p>
+        <p>Let's say you wanted to retrieve the database ID, the query, and total time that it took to execute the statement (in milliseconds).</p>
+        <details>
+          <summary>Hint (Click Here)</summary>
+          <p>Recall how you selected columns previously to display statistics.</p>
+        </details>
+        <details>
+          <summary>Solution (Click Here)</summary>
+          <p>Use the following query to extract the details you'd like to retrieve:</p>
+          <pre><code class="hljs language-SQL"><span class="hljs-keyword">SELECT</span> dbid, query, total_exec_time <span class="hljs-keyword">FROM</span> pg_stat_statements;
+</code></pre>
+          <p></p>
+          <p>You'll notice that you can scroll through the results, which may look similar to the following:</p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/2b-view_pgstatstatements_results.png" alt="View pg_stat_statements results">
+          </p>
+          <p>Unlike <strong>pg_stat_activity</strong>, which showed the latest query that was run, <strong>pg_stat_statements</strong> shows an aggregated view of the queries that were run since the extension was installed.</p>
+        </details>
+      </li>
+      <li>
+        <p>What if you wanted to check which datbase name matches the database ID?</p>
+        <details>
+          <summary>Hint (Click Here)</summary>
+          <p>Consider how you previously retrieved information about the database.</p>
+        </details>
+        <details>
+          <summary>Solution (Click Here)</summary>
+          <p>Use the following query to extract the database ID and database name:</p>
+          <pre><code class="hljs language-SQL"><span class="hljs-keyword">SELECT</span> oid, datname <span class="hljs-keyword">FROM</span> pg_database;
+</code></pre>
+          <p></p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/2b-view_databaseid_databasename.png" alt="View database ID and database name">
+          </p>
+          <p>Based on this, you can now see that database ID <strong>16384</strong> is the <strong>demo</strong> database. This makes sense because you performed the query <code>show shared_preload libraries</code> on the <strong>demo</strong> database, which appeared in <strong>pg_stat_statements</strong>.</p>
+        </details>
+      </li>
+    </ol>
+    <p>It's important to note that adding these extensions can increase your server load, which may affect performance. If you need to drop the extension, you can achieve that with the following command:</p>
+    <pre><code class="hljs language-SQL"><span class="hljs-keyword">DROP</span> EXTENSION pg_stat_statements;
+</code></pre>
+    <p></p>
+    <p>If you check the current extensions with <code>\dx</code>, you'll also see that <strong>pg_stat_statements</strong> no longer appears.</p>
+    <p>You should also reset the <code>shared_preload_libraries</code> in the configuration file:</p>
+    <pre><code class="hljs language-SQL"><span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">SYSTEM</span> RESET shared_preload_libraries;
+</code></pre>
+    <p></p>
+    <p>After this, you'll need to exit the terminal and restart the PostgreSQL CLI to see the changes reflected in <code>show shared_preload_libraries;</code>.</p>
+    <h2>Task C: Monitor with pgAdmin</h2>
+    <p>Another method of monitoring your database comes in the form of pgAdmin. In order to use this tool, you'll need to first launch it.</p>
+    <ol>
+      <li>
+        <p>Open the PostgreSQL tab from the Skills Network Toolbox and select the pop-out button next to the <strong>pgAdmin</strong> button. This will open pgAdmin in a new tab.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/2c-open_pgAdmin.png" alt="Open pgAdmin">
+        </p>
+      </li>
+      <li>
+        <p>In the left panel, select the dropdown next to <strong>Servers</strong>. You'll be prompted to enter a password.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/2c-password_prompt.png" alt="pgAdmin password prompt">
+        </p>
+      </li>
+      <li>
+        <p>Return to your Cloud IDE session. In the PostgreSQL tab, select the copy button next to the <strong>Password</strong> field. This is the password that you can enter into pgAdmin.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/2c-password_cloudide.png" alt="Retrieve password from Cloud IDE">
+        </p>
+        <p>Paste that password into pgAdmin. Then, click <strong>OK</strong>.</p>
+        <p>Your server will now load.</p>
+      </li>
+      <li>
+        <p>On the home page, under <strong>Dashboard</strong>, you will have access to server or database statistics, depending on which you are looking at.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/2c-server_statistics.png" alt="Dashboard for server statistics">
+        </p>
+        <p>The table below lists the displayed statistics on the Dashboard that correspond with the statistics that you accessed with the CLI:</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Chart</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Server/Database sessions</td>
+              <td>Displays the total sessions that are running. For servers, this is similar to the <strong>pg_stat_activity</strong>, and for databases, this is similar to the <strong>pg_stat_database</strong>.</td>
+            </tr>
+            <tr>
+              <td>Transactions per second</td>
+              <td>Displays the commits, rollbacks, and transactions taking place.</td>
+            </tr>
+            <tr>
+              <td>Tuples in</td>
+              <td>Displays the number of tuples (rows) that have been inserted, updated, and deleted, similar to the <strong>tup_inserted</strong>, <strong>tup_updated</strong>, and <strong>tup_deleted</strong> columns from <strong>pg_stat_database</strong>.</td>
+            </tr>
+            <tr>
+              <td>Tuples out</td>
+              <td>Displays the number of tuples (rows) that have been fetched (returned as output) or returned (read or scanned). This is similar to <strong>tup_fetched</strong> and <strong>tup_returned</strong> from <strong>pg_stat_database</strong>.</td>
+            </tr>
+            <tr>
+              <td>Server activity</td>
+              <td>Displays the sessions, locks, prepared transactions, and configuration for the server. In the Sessions tab, it offers a look at the breakdown of the sessions that are currently active on the server, similar to the view provided by <strong>pg_stat_activity</strong>. To check for any new processes, you can select the refresh button at the top-right corner.</td>
+            </tr>
+          </tbody>
+        </table>
+      </li>
+      <li>
+        <p>You can test these charts out by starting another session.</p>
+        <p>Return to the tab with the Cloud IDE environment. On the PostgreSQL tab, select <strong>PostgreSQL CLI</strong>. This will start a new session of PostgreSQL with the CLI.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/1b-open_postgresql_cli.png" alt="Open PostgreSQL CLI">
+        </p>
+      </li>
+      <li>
+        <p>Once you have started that instance, switch back to the tab with pgAdmin.</p>
+        <p>What do you notice?</p>
+        <details>
+          <summary>Hint (Click Here)</summary>
+          <p>Consider this: Which chart(s) monitors active sessions? Remember that one of the charts may need to be refreshed before updates are shown.</p>
+        </details>
+        <details>
+          <summary>Solution (Click Here)</summary>
+          <p>You may have noticed that the <strong>Server sessions</strong> saw an increase of sessions. It increased from 7 to 8 sessions. This makes sense since you started a new session with PostgreSQL CLI.</p>
+          <p>To see that change reflected in <strong>Server Activity</strong>, you'll have to click the refresh button to see that an additional <strong>postgres</strong> database session appeared.</p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/2c-view_dashboard_changes.png" alt="View dashboard changes">
+          </p>
+        </details>
+      </li>
+      <li>
+        <p>To see the dashboard for the <strong>demos</strong> database, navigate to the left panel and select the <strong>Databases</strong> dropdown and then select the <strong>demo</strong> database to connect to it.</p>
+        <p>As you can see, similar statistics are displayed for the database.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/2c-database_statistics.png" alt="Dashboard for database statistics">
+        </p>
+      </li>
+      <li>
+        <p>Let's run a query on the database! To do that, navigate to the menu bar and select <code>Tools > Query Tool</code>.</p>
+        <p>You can run any query. To keep things simple, let's run the following to select all the data from the <strong>bookings</strong> table:</p>
+        <pre><code class="hljs language-SQL"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> bookings;
+</code></pre>
+        <p></p>
+        <p>Select the run button. You will see that the query has successfully loaded.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/2c-select_all_bookings.png" alt="Select all from bookings table">
+        </p>
+      </li>
+      <li>
+        <p>In pgAdmin, switch back to the database's <strong>Dashboard</strong> tab. You can refresh the <strong>Server activity</strong> and check to see if any of the charts have shown a spike since the data was retrieved.</p>
+        <p>What do you notice?</p>
+        <details>
+          <summary>Hint (Click Here)</summary>
+          <p>Recall what you queried. Which chart would reflect those changes?</p>
+        </details>
+        <details>
+          <summary>Solution (Click Here)</summary>
+          <p>You may have noticed that the number of tuples (rows) returned (read/scanned) was greater than 250,000.</p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/2c-database_dashboard_query.png" alt="Query Effect on Database Dashboard">
+          </p>
+          <p>You can check the number of rows scanned with <code>EXPLAIN</code>:</p>
+          <pre><code class="hljs language-SQL">EXPLAIN <span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> bookings;
+</code></pre>
+          <p></p>
+          <p>If you can't see the full text, simply drag the <strong>QUERY PLAN</strong> column out.</p>
+          <p>This statement reveals that 262,788 rows were scanned, which is similar to the amount that was read/scanned based on the spike in the <strong>Tuples out</strong> chart.</p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/2c-explain_select_query.png" alt="EXPLAIN SELECT on Query">
+          </p>
+        </details>
+      </li>
+    </ol>
+    <p>While you can monitor your database through the command line alone, tools like pgAdmin can be helpful in providing a visual representation of how your server and its databases are performing.</p>
+    <p>PostgreSQL also offers logging capabilities to monitor and troubleshoot your lab, which will be further discussed in the Troubleshooting lab.</p>
+    <h1></h1>
+    <h2>Exercise 3: Optimize Your Database</h2>
+    <p>Data optimization is the maximization of the speed and efficiency of retrieving data from your database. Optimizing your database will improve its performance, whether that's inserting or retrieving data from your database. Doing this will improve the experience of anyone interacting with the database.</p>
+    <p>Similar to MySQL, there are optimal data types and maintenance (otherwise known as "vacuuming") that can be applied to optimize databases.</p>
+    <h3>Task A: Optimize Data Types</h3>
+    <p>When it comes to optimizing data types, understanding the data values will help in selecting the proper data type for the column.</p>
+    <p>Let's take a look at an example in the <strong>demo</strong> database.</p>
+    <ol>
+      <li>
+        <p>Return to the CLI session that you opened previously (or open a new session if it has been closed).</p>
+        <p>If you're no longer conected to the <strong>demo</strong> database, you can reconnect to it!</p>
+        <details>
+          <summary>Hint (Click Here)</summary>
+          <p>Remember how you connected to the database earlier in this lab.</p>
+        </details>
+        <details>
+          <summary>Solution (Click Here)</summary>
+          <p>You can use the following command to connect to the <strong>demo</strong> database:</p>
+          <pre><code class="hljs language-arduino">\connect demo
+</code></pre>
+          <p></p>
+        </details>
+      </li>
+      <li>
+        <p>Let's list out the tables in the database with the following command:</p>
+        <pre><code class="hljs language-css">\<span class="hljs-selector-tag">dt</span>
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/1b-tables_in_database.png" alt="Display Tables in Demo Database">
+        </p>
+      </li>
+      <li>
+        <p>Now that you know which tables are in the database, select the first one, <strong>aircrafts_data</strong> and see what data you can pull from it. How can you select all of its data?</p>
+        <details>
+          <summary>Hint (Click Here)</summary>
+          <p>Which statement can you use to select all the data in this table?</p>
+        </details>
+        <details>
+          <summary>Solution (Click Here)</summary>
+          <p>You can use the following query to select all the data from <strong>aircrafts_data</strong>:</p>
+          <pre><code class="hljs language-SQL"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> aircrafts_data;
+</code></pre>
+          <p></p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/3a-display_aircrafts_data.png" alt="Display aircrafts_data in table">
+          </p>
+        </details>
+        <p>You can see that there are 9 entries in total with three columns: <strong>aircraft_code</strong>, <strong>model</strong>, and <strong>range</strong>.</p>
+      </li>
+      <li>
+        <p>For the purposes of this lab, we'll create a hypothetical situation that will potentially require changing the data types of columns to optimize them.</p>
+        <p>Let's say that <strong>aircraft_code</strong> is always set to three characters, <strong>model</strong> will always be in a JSON format and <strong>range</strong> has a maximum value of 12,000 and minimum value of 1,000.</p>
+        <p>In this case, what would be the best data types for each column?</p>
+        <details>
+          <summary>Hint (Click Here)</summary>
+          <p>Take a look at the <a href="https://www.postgresql.org/docs/current/datatype.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">Data Types Documentation</a> by PostgreSQL to see which data types would fit the columns!</p>
+        </details>
+        <details>
+          <summary>Solution (Click Here)</summary>
+          <p>Based on the documentation, the following data types would be suitable for the following columns:</p>
+          <ol>
+            <li><strong>aircraft_code</strong>: char(3), since you know that the aircraft code will always be fixed to three characters.</li>
+            <li><strong>model</strong>: json, which is a special data type that PostgreSQL supports.</li>
+            <li><strong>range</strong>: smallint, since the range of its numbers falls between -32,768 to 32,767.</li>
+          </ol>
+        </details>
+      </li>
+      <li>
+        <p>You can check the current data types (and additional details such as the indexes and constraints) of the <strong>aircrafts_data</strong> table with the following:</p>
+        <pre><code class="hljs language-livescript"><span class="hljs-string">\d</span> aircrafts_data
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/3a-detailed_output_aircraft_data.png" alt="Detailed output of aircrafts table">
+        </p>
+      </li>
+      <li>
+        <p>Notice that most of the columns in this table have been optimized for our sample scenario, except for the <strong>range</strong>. This may be because the range was unknown in the original database.</p>
+        <p>For this lab, let's take the opportunity to optimize that column for your hypothetical situation. You can do this by changing the data type of the column.</p>
+        <p>Please note that in this lab you'll first need to drop a view, which is another way our data can be presented, in order to change the column's data type. Otherwise, you will encounter an error. This is a special case for this database because you loaded a SQL file that included commands to create views. In your own database, you may not need to drop a view.</p>
+        <p>To drop the <strong>aircrafts</strong> view, use the following command:</p>
+        <pre><code class="hljs language-SQL"><span class="hljs-keyword">DROP</span> <span class="hljs-keyword">VIEW</span> aircrafts;
+</code></pre>
+        <p></p>
+      </li>
+      <li>
+        <p>To change the column's data type, you'll use the following command:</p>
+        <pre><code class="hljs language-SQL"><span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">TABLE</span> aircrafts_data <span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">COLUMN</span> <span class="hljs-keyword">range</span> TYPE <span class="hljs-type">smallint</span>;
+</code></pre>
+        <p></p>
+        <p><strong>aircrafts_data</strong> is the table you want to change and <strong>range</strong> is the column you want to change to data type <strong>smallint</strong>.</p>
+      </li>
+      <li>
+        <p>Now, let's check the table's columns and data types again!</p>
+        <details>
+          <summary>Hint (Click Here)</summary>
+          <p>Consider how you previously checked <strong>aircrafts_data</strong>'s columns and data types.</p>
+        </details>
+        <details>
+          <summary>Solution (Click Here)</summary>
+          <p>With the following command, you can check the columns and data types of the <strong>aircrafts_data</strong> table:</p>
+          <pre><code class="hljs language-livescript"><span class="hljs-string">\d</span> aircrafts_data
+</code></pre>
+          <p></p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/3a-modified_datatype_aircraftdata.png" alt="Modified data type in aircraft data table">
+          </p>
+          <p>You can see that the data type has successfully been changed, optimizing your table in this hypothetical situation.</p>
+        </details>
+      </li>
+    </ol>
+    <h2>Task B: Vacuum Your Databases</h2>
+    <p>In your day-to-day life, you can vacuum our rooms to keep them neat and tidy. You can do the same with databases by maintaining and optimizing them with some vacuuming.</p>
+    <p>In PostgreSQL, vacuuming means to clean out your databases by reclaiming any storage from "dead tuples", otherwise known as rows that have been deleted but have not been cleaned out.</p>
+    <p>Generally, the <strong>autovacuum</strong> feature is automatically enabled, meaning that PostgreSQL will automate the vacuum maintenance process for you.</p>
+    <p>You can check if this is enabled with the following command:</p>
+    <pre><code class="hljs language-abnf">show autovacuum<span class="hljs-comment">;</span>
+</code></pre>
+    <p></p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/3b-enabled_autovacuum.png" alt="Checking to see if autovacuum is enabled">
+    </p>
+    <p>As you can see, <strong>autovacuum</strong> is enabled.</p>
+    <p>Since <strong>autovacuum</strong> is enabled, let's check to see when your database was last vacuumed.</p>
+    <p>To do that, you can use the <strong>pg_stat_user_tables</strong>, which displays statistics about each table that is a user table (instead of a system table) in the database. The columns that are returned are the same ones listed in <a href="https://www.postgresql.org/docs/current/monitoring-stats.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01#MONITORING-PG-STAT-ALL-TABLES-VIEW" target="_blank" rel="external">pg_stat_all_tables documentation</a>.</p>
+    <p>What if you wanted to check the table (by name), the estimated number of dead rows that it has, the last time it was autovacuumed, and how many times it has been autovacuumed?</p>
+    <details>
+      <summary>Hint (Click Here)</summary>
+      <p>Recall how you can select specific columns from statistics.</p>
+    </details>
+    <details>
+      <summary>Solution (Click Here)</summary>
+      <p>To select the table name, number of dead rows, the last time it was autovacuumed, and the number of times this table has been autovacuumed, you can use the following query:</p>
+      <pre><code class="hljs language-SQL"><span class="hljs-keyword">SELECT</span> relname, n_dead_tup, last_autoanalyze, autovacuum_count <span class="hljs-keyword">FROM</span> pg_stat_user_tables;
+</code></pre>
+      <p></p>
+      <p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20Monitoring%20and%20Optimizing%20your%20Databases%20in%20PostgreSQL/images/3b-check_pgstatusertables_statistics.png" alt="Checking pg_stat_user_tables statistics">
+      </p>
+      <p>Notice that you currently don't have any "dead tuples" (deleted rows that haven't yet been cleaned out) and so far, these tables have been autovacuumed once. This makes sense given that the database was just created and based on the logs, autovacuumed then.</p>
+    </details>
+    <h1>Conclusion</h1>
+    <p>Congratulations! Now, not only do you know how to monitor and optimize your database with the CLI, but you can also do so with pgAdmin. You will now be able to apply this knowledge to any PostgreSQL databases you create and modify in the future.</p>
+    <h2>Author(s)</h2>
+    <p>Kathy An</p>
+    <h3>Other Contributor(s)</h3>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-10-14</td>
+          <td>1.0</td>
+          <td>Kathy An</td>
+          <td>Created initial version</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2021. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

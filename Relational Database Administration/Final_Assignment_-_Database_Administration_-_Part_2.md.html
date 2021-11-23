@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <h1>Final Assignment - Database Administration - Part 2</h1>
+    <center>
+      <img src="https://gitlab.com/ibm/skills-network/courses/placeholder101/-/raw/master/labs/module%201/images/IDSNlogo.png" width="300" alt="cognitiveclass.ai logo">
+    </center>
+    <p>Estimated time needed: <strong>45</strong> minutes.</p>
+    <h1>About This SN Labs Cloud IDE</h1>
+    <p>This Skills Network Labs Cloud IDE provides a hands-on environment for course and project related labs. It utilizes Theia, an open-source IDE (Integrated Development Environment) platform, that can be run on desktop or on the cloud. To complete this lab, we will be using the Cloud IDE based on Theia and MySQL database running in a Docker container.</p>
+    <h2>Important Notice about this lab environment</h2>
+    <p>Please be aware that sessions for this lab environment are not persisted. Every time you connect to this lab, a new environment is created for you. Any data you may have saved in the earlier session would get lost. Plan to complete these labs in a single session, to avoid losing your data.</p>
+    <h1>Scenario</h1>
+    <p>You have assumed the role of database administrator for the MySQL server and will perform the tasks like configuration check, recovery of data. You will use indexing to improve the database performance. You will identify which storage engines are supported by the server and which table uses which storage engine. Optionally You will also automate backup tasks.</p>
+    <h2>Objectives</h2>
+    <p>In part 2 of this assignment you will be working on the following aspects of Database Administration.</p>
+    <ul>
+      <li>Installing/Provisioning</li>
+      <li>Configuration</li>
+      <li>Recovery</li>
+      <li>Indexing</li>
+      <li>Storage Engines</li>
+      <li>Automation of routine tasks</li>
+    </ul>
+    <h1>Note - Screenshots</h1>
+    <p>Throughout this lab you will be prompted to take screenshots and save them on your own device. These screenshots will be needed to be uploaded for peer review in the next section of the course. You can use various free screengrabbing tools to do this or use your operating system's shortcut keys to do this (for example Alt+PrintScreen in Windows).</p>
+    <h1>Exercise 2.1 - Set up the lab environment</h1>
+    <p>Before you proceed with the assignment, start the MySQL Server.</p>
+    <h1>Exercise 2.2 - Recovery</h1>
+    <h3>Task 2.1 - Restore MySQL server using a previous backup</h3>
+    <p>Download the backup file <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Final%20Assignment/billingdata.sql" target="_blank" rel="external">https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Final%20Assignment/billingdata.sql</a></p>
+    <p>Restore this file onto MySQL server.</p>
+    <p>List the tables in the <code>billing</code> database.</p>
+    <p>
+      Take a screenshot of the list of tables.
+      Name the screenshot as database-restore.jpg. (images can be saved with either .jpg or .png extension)
+    </p>
+    <h3>Task 2.2 - Find the table data size</h3>
+    <p>Find the data size of the table billdata.</p>
+    <p>Take a screenshot of the command you used and the output.</p>
+    <p>Name the screenshot as table-data-size.jpg. (images can be saved with either .jpg or .png extension)</p>
+    <h1>Exercise 2.3 - Indexing</h1>
+    <h3>Task 2.3 - Baseline query performance</h3>
+    <p>Write a query to select all rows with a billedamount > 19999 in table billdata.</p>
+    <p>
+      Take a screenshot of the command you used and the output along with the query time.
+      Name the screenshot as query-base-line.jpg. (images can be saved with either .jpg or .png extension)
+    </p>
+    <h3>Task 2.4 - Create an index.</h3>
+    <p>Your customer wants to improve the execution time of the query you wrote in Task 2.3.</p>
+    <p>Create an appropriate index to make it run faster.</p>
+    <p>
+      Take a screenshot of the command you used and the output.
+      Name the screenshot as index-creation.jpg. (images can be saved with either .jpg or .png extension)
+    </p>
+    <h3>Task 2.5 - Document the improvement in query performance.</h3>
+    <p>Find out if the index has any impact on query performance.</p>
+    <p>Re-run the query to find out the count of trucks in the table <code>toll_log</code>.</p>
+    <p>
+      Take a screenshot of the command you used and the output along with the query time.
+      Name the screenshot as query-indexed.jpg. (images can be saved with either .jpg or .png extension)
+    </p>
+    <h1>Exercise 2.4 - Storage Engines</h1>
+    <h3>Task 2.6 - Find supported storage engines.</h3>
+    <p>Run a command to find out if your MySQL server supports the <code>MyISAM</code> storage engine.</p>
+    <p>
+      Take a screenshot of the command you used and the output.
+      Name the screenshot as storage-engines.jpg. (images can be saved with either .jpg or .png extension)
+    </p>
+    <h3>Task 2.7 - Find the storage engine of a table.</h3>
+    <p>Find the storage engine of the table <code>billdata</code>.</p>
+    <p>
+      Take a screenshot of the command you used and the output.
+      Name the screenshot as storage-engine-type.jpg. (images can be saved with either .jpg or .png extension)
+    </p>
+    <h1>Exercise 2.5 - OPTIONAL Exercise (Non-graded) Automation of routine tasks</h1>
+    <h3>Bonus Task 2.8 - Write a bash script that performs a backup of all the databases.</h3>
+    <p><code>mysqldump</code> is a command line tool that performs logical backups of a database.</p>
+    <p>Its generic syntax is <code>mysqldump db_name > backup-file.sql</code></p>
+    <p>Its extended syntax is <code>mysqldump --all-databases --user=root --password=NzA4Ny1y > backup-file.sql</code></p>
+    <p>Write a bash script named <code>mybackup.sh</code>that performs the below tasks.</p>
+    <ul>
+      <li>Perform the backup of all databases using the mysqldump</li>
+      <li>Store the output in the file all-databases-backup.sql</li>
+      <li>In the /tmp directory, create a directory named after current date like YYYYMMDD. Example 20210830</li>
+      <li>Move the file all-databases-backup.sql to <code>/tmp/mysqldumps/&#x3C;current date>/</code> directory</li>
+    </ul>
+    <p>
+      Take a screenshot of the bash script with the entire code clearly visible.
+      Name the screenshot as bash-script.jpg. (images can be saved with either .jpg or .png extension)
+    </p>
+    <p>End of assignment - Part 2.</p>
+    <h2>Authors</h2>
+    <p>Ramesh Sannareddy</p>
+    <h3>Other Contributors</h3>
+    <p>Rav Ahuja</p>
+    <h2>Change Log</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date (YYYY-MM-DD)</th>
+          <th>Version</th>
+          <th>Changed By</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-08-30</td>
+          <td>0.1</td>
+          <td>Ramesh Sannareddy</td>
+          <td>Created initial version</td>
+        </tr>
+        <tr>
+          <td>2021-10-19</td>
+          <td>0.2</td>
+          <td>Alison Woolford</td>
+          <td>Updates after review</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Copyright (c) 2021 IBM Corporation. All rights reserved.</p>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

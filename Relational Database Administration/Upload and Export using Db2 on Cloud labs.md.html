@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Upload%20and%20Export%20using%20Db2%20on%20Cloud/images/IDSNlogo.png" width="200" height="200">
+    <h1>Hands-on Lab : Upload and Export using Db2 on Cloud</h1>
+    <p><strong>Estimated time needed:</strong> 15 minutes</p>
+    <p>In this lab, you will learn how to upload and export data in a table using Db2 on Cloud.</p><br>
+    <h2>Objectives</h2>
+    <p>After completing this lab, you will be able to use the Db2 on Cloud to:</p>
+    <ul>
+      <li>Upload data onto a table in Db2</li>
+      <li>Export data from Db2</li>
+    </ul>
+    <h1></h1>
+    <h2>Software Used in this Lab</h2>
+    <p>In this lab, you will use <a href="https://www.ibm.com/products/db2-database?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank">IBM Db2 Database</a>. Db2 is a Relational Database Management System (RDBMS) from IBM, designed to store, analyze, and retrieve the data efficiently.</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Upload%20and%20Export%20using%20Db2%20on%20Cloud/images/ibmdb2.png" alt="IBMDb2" width="245" height="100">
+    <p>To complete this lab you will utilize a Db2 database service on IBM Cloud. If you did not complete the lab below earlier, you may not have access to Db2 on Cloud and should complete that lab before starting this lab.</p>
+    <ul>
+      <li><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Sign%20up%20for%20IBM%20Cloud%20-%20Create%20Db2%20service%20instance/instructional-labs.md.html" target="_blank" rel="external">Hands-on Lab : Sign up for IBM Cloud and Create Db2 service instance</a></li>
+    </ul><br>
+    <h2>Database Used in this Lab</h2>
+    <p>The first dataset used in this lab comes from the following source: <a href="https://dataplatform.cloud.ibm.com/exchange/public/entry/view/5562ced564e776edc5f91e13d48d8309?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01&#x26;context=cpdaas" target="_blank" rel="external">https://dataplatform.cloud.ibm.com/exchange/public/entry/view/5562ced564e776edc5f91e13d48d8309?context=cpdaas</a>. This dataset is published by <strong>IBM</strong>, and Contains point data for a sample list of hospitals in US. Note that this is sample data for SQL demo purpose and is not necessarily current or accurate.</p>
+    <h2>Exercise 1: Upload Data into a Table</h2>
+    <p>In this example exercise, you will go through an example on how to create a table structure on the Db2 UI and upload data into it.</p>
+    <p>First, you'll want to go ahead and download the dataset you are going to use in this lab. You can do so by clicking on the following: <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/datasets/hospitals.csv" target="_blank" rel="external">hospitals.csv</a></p>
+    <p>Now that you have the file on your local machine, let's get started with uploading it onto Db2.</p>
+    <ol>
+      <li>Open up and sign into the <a href="https://cloud.ibm.com/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">IBM Cloud</a>.</li>
+    </ol><br>
+    <ol start="2">
+      <li>On the tab on the left side of the webpage, click the <strong>Resource list</strong> button.</li>
+    </ol><br>
+    <ol start="3">
+      <li>Under the <strong>Services and software</strong> subsection, find and select the Db2 database. It will be titled some variation of "Db2-xx" where <em>xx</em> is some combination of letters and numbers.</li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Upload%20and%20Export%20using%20Db2%20on%20Cloud/images/SC_1.png" alt="Screenshot highlighting Resource list button and Db2 database">
+    </p><br>
+    <ol start="4">
+      <li>Click the <strong>Go to UI</strong> button to open the User Interface for Db2.</li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Upload%20and%20Export%20using%20Db2%20on%20Cloud/images/SC_2.png" alt="Screenshot highlighting Go to UI button">
+    </p><br>
+    <ol start="5">
+      <li>On the left tab of the Db2 UI, click the <strong>Data</strong> button.</li>
+    </ol><br>
+    <ol start="6">
+      <li>
+        Either drag and drop the <em>hospitals.csv</em> file you downloaded at the beginning of this lab or click <strong>Browse files</strong> to select in on your machine.
+        
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Upload%20and%20Export%20using%20Db2%20on%20Cloud/images/load_1.png" alt="Screenshot highlighting data button and browse files">
+      </li>
+    </ol><br>
+    <ol start="7">
+      <li>
+        <p>Once loaded, you will see the file displayed on the right and the <strong>Next</strong> button at the bottom right of the page will turn blue. When ready, click the <strong>Next</strong> button to continue.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Upload%20and%20Export%20using%20Db2%20on%20Cloud/images/load_2.png" alt="Screenshot highlighting Next button">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="8">
+      <li>Select the schema corresponding to your Db2 userid. It typically starts with 3 letters (not SQL) followed by 5 numbers (but will be different from the <strong>BNX44073</strong> example below).</li>
+    </ol><br>
+    <ol start="9">
+      <li>Click the <strong>New table</strong> button.</li>
+    </ol><br>
+    <ol start="10">
+      <li>
+        <p>Enter a name for the new table. A good option is "HOSPITALS". Then click the blue "Create" button.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Upload%20and%20Export%20using%20Db2%20on%20Cloud/images/load_3.png" alt="Choose schema and create new table">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="11">
+      <li>After creating the table, you will see the "Next" button at the bottom right of the webpage turn blue. Click this button to move on to the next step.</li>
+    </ol><br>
+    <ol start="12">
+      <li>
+        <p>As you can see, the data from the <em>hospitals.csv</em> file is displayed here and columns were automatically created in the new table with the appropriate data type for that column. To move on, click the blue <strong>Next</strong> button.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Upload%20and%20Export%20using%20Db2%20on%20Cloud/images/load_4.png" alt="Data automatically loaded into new table">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="13">
+      <li>
+        <p>Finally, you will see a summary of the data you are about to upload. To complete the upload process, click the blue "Begin Load" button at the bottom right.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Upload%20and%20Export%20using%20Db2%20on%20Cloud/images/load_5.png" alt="Screenshot highlighting Begin Load button">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="14">
+      <li>
+        <p>The upload will take a few moment to complete, after which you will be redirected to the page shown below. Click the <strong>View table</strong> button near the top right of the webpage to take a look at the data which you have just uploaded.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Upload%20and%20Export%20using%20Db2%20on%20Cloud/images/load_6.png" alt="After completion of upload">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="15">
+      <li>
+        <p>As you can see, the data in the <em>hospitals.csv</em> file was successfully uploaded into a SQL table on the Db2 database.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Upload%20and%20Export%20using%20Db2%20on%20Cloud/images/load_7.png" alt="Hospitals data in SQL table">
+        </p>
+      </li>
+    </ol>
+    <h2>Exercise 2: Export a Table from Db2</h2>
+    <p>In Exercise 1, you learned how to upload data from a file into a Db2 database. Now in this exercise, you will gain hands-on experience in the inverse of this. Using the Db2 UI, you will export a table from the database into a <em>csv</em> file. In particular, you will export a Db2 System Table called <strong>SYSTABLES</strong>, which stores metadata about all other database objects. We won't get into much detail about System Tables in this lab as it will be covered in more depth in a later lab. For now, we can treat it as just a table we wish to export. Let's get started.</p>
+    <ol>
+      <li>First, click the <strong>SQL</strong> button on the left tab of the webpage.</li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Click the blue <strong>Create new</strong> button to enter a custom SQL script.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Upload%20and%20Export%20using%20Db2%20on%20Cloud/images/export_1.png" alt="Open new SQL Script">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Enter the following SQL command in the script editor to query the entire <strong>SYSTABLES</strong> table.</p>
+        <pre><code class="hljs language-n1ql"><span class="hljs-keyword">SELECT</span> * <span class="hljs-keyword">FROM</span> SYSIBM.SYSTABLES;
+</code></pre>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>Click the blue <strong>Run all</strong> button to execute the command.</li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        <p>You will see the result of the query displayed on a window on the right half of the webpage. Above the result preview, click the indicated download button to export the table as a <em>csv</em> file.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Upload%20and%20Export%20using%20Db2%20on%20Cloud/images/export_2.png" alt="Query SYSTABLES and Export as CSV">
+        </p>
+      </li>
+    </ol>
+    <h1></h1>
+    <h2>Exercise 3: Try it Yourself!</h2>
+    <p>In this practice exercise, you will get a chance to put what you learned in the first two exercises to use. Using the Db2 UI and the SQL script editor, attempt the following:</p>
+    <blockquote>
+      <p><em>Export the <strong>name</strong>, <strong>tbname</strong>, and <strong>tbcreator</strong> columns of the <strong>SYSIBM.SYSCOLUMNS</strong> table.</em></p>
+    </blockquote>
+    <details>
+      <summary><strong>Hint</strong> (Click Here)</summary>
+      <p>Recall what you did in Exercise 2. This practice exercise is very similar.</p>
+    </details>
+    <details>
+      <summary><strong>Solution</strong> (Click Here)</summary>
+      <ol>
+        <li>Click the <strong>SQL</strong> button on the left tab of the Db2 UI.</li>
+      </ol><br>
+      <ol start="2">
+        <li>
+          <p>Enter the following SQL command:</p>
+          <pre><code class="hljs language-pgsql"><span class="hljs-keyword">SELECT</span> <span class="hljs-type">name</span>, tbname, tbcreator <span class="hljs-keyword">FROM</span> SYSIBM.SYSCOLUMNS;
+</code></pre>
+        </li>
+      </ol><br>
+      <ol start="3">
+        <li>Click the <strong>Run all</strong> button.</li>
+      </ol><br>
+      <ol start="4">
+        <li>Above the query result, click the highlighted <strong>Export as CSV</strong> button.</li>
+      </ol>
+      <p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/Db2/Lab%20-%20Upload%20and%20Export%20using%20Db2%20on%20Cloud/images/exercise_1.png" alt="Practice exercise solution">
+      </p>
+    </details>
+    <h1></h1>
+    <h3>Congratulations! You have completed this lab, and you are ready for the next topic.</h3>
+    <h3><br></h3>
+    <h2>Author(s)</h2>
+    <ul>
+      <li><a href="https://www.linkedin.com/in/sandipsahajoy/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">Sandip Saha Joy</a></li>
+    </ul>
+    <h3>Other Contributor(s)</h3>
+    <ul>
+      <li><a href="https://www.linkedin.com/in/david-pasternak-6b84a2208/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">David Pasternak</a></li>
+    </ul>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-07-08</td>
+          <td>1.0</td>
+          <td>Sandip Saha Joy</td>
+          <td>Created initial version</td>
+        </tr>
+        <tr>
+          <td>2021-10-04</td>
+          <td>2.0</td>
+          <td>David Pasternak</td>
+          <td>Rewrote with updated instructions</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2021. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

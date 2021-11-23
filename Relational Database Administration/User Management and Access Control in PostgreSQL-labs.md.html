@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20User%20Management%20and%20Access%20Control/images/IDSNlogo.png" width="200" height="200">
+    <h1>User Management and Access Control in PostgreSQL</h1>
+    <p><strong>Estimated time needed:</strong> 15 minutes</p>
+    <p>For much of the routine tasks involved with interacting with a database, such as reading the content of a table or adding new entries, the postgres superuser may not be appropriate as it bypasses all permission checks, which carries inherent risk. Furthermore, as a database administrator, you will almost certainly not be the only one who will need to access the database in some capacity. For this reason, you will need a way to add new users to the database and give them the proper privileges that is appropriate for their use cases.</p>
+    <h2>Objectives</h2>
+    <p>After completing this lab, you will be able to:</p>
+    <ul>
+      <li>Create roles in a database and grant them select permissions</li>
+      <li>Create new users in the database and assign them the appropriate role</li>
+      <li>Revoke and deny access to the database from a user</li>
+    </ul>
+    <h2>Software used in this Lab</h2>
+    <p>In this lab, you will be using PostgreSQL. It is a popular open-source object Relational Database Management System (RDBMS) capable of performing a wealth of database administration tasks, such as storing, manipulating, retrieving, and archiving data.</p>
+    <p>To complete this lab, you will be accessing the PostgreSQL service through the IBM Skills Network (SN) Cloud IDE, which is a virtual development environnement you will utilize throughout this course.</p>
+    <h2>Database used in this Lab</h2>
+    <p>In this lab, you will use a database from <a href="https://postgrespro.com/education/demodb?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">https://postgrespro.com/education/demodb</a> distributed under the <a href="https://www.postgresql.org/about/licence/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">PostgreSQL licence</a>. It stores a month of data about airline flights in Russia and is organized according to the following schema:</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20User%20Management%20and%20Access%20Control/images/DB_schema.png" alt="Schema fn demo database for PostgreSQL">
+    </p>
+    <h2>Launching PostgreSQL in Cloud IDE</h2>
+    <p>To get started with this lab, launch PostgreSQL using the Cloud IDE. You can do this by following these steps:</p>
+    <ol>
+      <li>
+        <p>Click on the <strong>Skills Network extension</strong> button on the left side of the window.</p>
+      </li>
+      <li>
+        <p>Open the <strong>DATABASES</strong> drop-down menu and click on <strong>PostgreSQL</strong>.</p>
+      </li>
+      <li>
+        <p>Click on the <strong>Start</strong> button. PostgreSQL may take a few moments to start.</p>
+      </li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20User%20Management%20and%20Access%20Control/images/SC_1.png" alt="Screenshot for launching PostgreSQL">
+    </p><br>
+    <h2>Downloading and Creating the Database</h2>
+    <p><strong>First, we will need to download the database.</strong></p>
+    <ol>
+      <li>Open a new terminal by clicking on the <strong>New Terminal</strong> button near the bottom of the interface.</li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20User%20Management%20and%20Access%20Control/images/SC_A.png" alt="Clicking New Terminal">
+    </p><br>
+    <ol start="2">
+      <li>
+        <p>Run the following command in the terminal.</p>
+        <pre><code class="hljs language-awk">wget https:<span class="hljs-regexp">//</span>cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud<span class="hljs-regexp">/example-guided-project/</span>flights_RUSSIA_small.sql
+</code></pre>
+        <p></p>
+      </li>
+    </ol>
+    <p>The file which you downloaded is a full database backup of a month of flight data in Russia. Now, you can perform a full restoration of the dataset by first opening the PostgreSQL CLI.</p><br>
+    <ol start="3">
+      <li>Near the bottom of the window, click on the <strong>PostgreSQL CLI</strong> button to launch the Command Line Interface.</li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20User%20Management%20and%20Access%20Control/images/SC_2.png" alt="Launching a command line interface">
+    </p><br>
+    <ol start="4">
+      <li>
+        <p>In the PostgreSQL CLI, type in the command <code>\i &#x3C;file_name>.</code> In your case, the filename will be the name of the file you downloaded, <code>flights_RUSSIA_small.sql</code>. This will restore the data into a new database called <code>demo</code>.</p>
+        <pre><code class="hljs language-stylus">\<span class="hljs-selector-tag">i</span> flights_RUSSIA_small<span class="hljs-selector-class">.sql</span>
+</code></pre>
+        <p></p>
+        <p>The restorations may take a few moments to complete.</p>
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        <p>Verify that the database was properly created by entering the following command:</p>
+        <pre><code class="hljs language-css">\<span class="hljs-selector-tag">dt</span>
+</code></pre>
+        <p></p>
+        <p>You should see the following output showing all the tables that are part of the <code>bookings</code> schema in the <code>demo</code> database.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20User%20Management%20and%20Access%20Control/images/SC_3.png" alt="Command line shows all tables that belong to bookings schema in demo database">
+        </p>
+      </li>
+    </ol>
+    <h1>Exercise 1: Create New Roles and Grant them Relevant Privileges</h1>
+    <p>In PostgreSQL, users, groups, and roles are all the same entity, with the difference being that users can log in by default.</p>
+    <p>In this exercise, you will create two new roles: <code>read_only</code> and <code>read_write</code>, then grant them the relevant privileges.</p>
+    <p>To begin, ensure that you have the PostgreSQL Command Line Interface open and connected to the <code>demo</code> database, as such:</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20User%20Management%20and%20Access%20Control/images/pg_CLI.png" alt="PostgreSQL CLI">
+    </p><br>
+    <h2>Task A: Create a <code>read_only</code> role and grant it privileges</h2>
+    <ol>
+      <li>
+        <p>To create a new role named <code>read_only</code>, enter the following command into the CLI:</p>
+        <pre><code class="hljs language-crmsh">CREATE <span class="hljs-keyword">ROLE</span> <span class="hljs-title">read_only</span>;
+</code></pre>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>First, this role needs the privilege to connect to the <code>demo</code> database itself. To grant this privilege, enter the following command into the CLI:</p>
+        <pre><code class="hljs language-pgsql"><span class="hljs-keyword">GRANT</span> <span class="hljs-keyword">CONNECT</span> <span class="hljs-keyword">ON</span> <span class="hljs-keyword">DATABASE</span> demo <span class="hljs-keyword">TO</span> read_only;
+</code></pre>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Next, the role needs to be able to use the schema in use in this database. In our example, this is the <code>bookings</code> schema. Grant the privilege for the <code>read_only</code> role to use the schema by entering the following:</p>
+        <pre><code class="hljs language-pgsql"><span class="hljs-keyword">GRANT</span> <span class="hljs-keyword">USAGE</span> <span class="hljs-keyword">ON</span> <span class="hljs-keyword">SCHEMA</span> bookings <span class="hljs-keyword">TO</span> read_only;
+</code></pre>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>To access the information in tables in a database, the <code>SELECT</code> command is used. For the <code>read_only</code> role, we want it to be able to access the contents of the database but not to edit or alter it. So for this role, only the <code>SELECT</code> privilege is needed. To grant this privilege, enter the following command:</p>
+        <pre><code class="hljs language-pgsql"><span class="hljs-keyword">GRANT</span> <span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">ON</span> <span class="hljs-keyword">ALL</span> <span class="hljs-keyword">TABLES</span> <span class="hljs-keyword">IN</span> <span class="hljs-keyword">SCHEMA</span> bookings <span class="hljs-keyword">TO</span> read_only;
+</code></pre>
+        <p></p>
+        <p>This allows the <code>read_only</code> role to execute the <code>SELECT</code> command on <strong>all</strong> tables in the bookings schema.</p>
+      </li>
+    </ol><br>
+    <h2>Task B: Create a <code>read_write</code> role and grant it privileges</h2>
+    <ol>
+      <li>
+        <p>Similarly, create a new role called <code>read_write</code> with the following command in the PostgreSQL CLI:</p>
+        <pre><code class="hljs language-crmsh">CREATE <span class="hljs-keyword">ROLE</span> <span class="hljs-title">read_write</span>;
+</code></pre>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>As in Task A, this role should first be given the privileges to connect to the <code>demo</code> database. Grant this privilege by entering the following command:</p>
+        <pre><code class="hljs language-pgsql"><span class="hljs-keyword">GRANT</span> <span class="hljs-keyword">CONNECT</span> <span class="hljs-keyword">ON</span> <span class="hljs-keyword">DATABASE</span> demo <span class="hljs-keyword">TO</span> read_write;
+</code></pre>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Give the role the privileges to use the <code>bookings</code> schema that is used in the <code>demo</code> database with the following:</p>
+        <pre><code class="hljs language-pgsql"><span class="hljs-keyword">GRANT</span> <span class="hljs-keyword">USAGE</span> <span class="hljs-keyword">ON</span> <span class="hljs-keyword">SCHEMA</span> bookings <span class="hljs-keyword">TO</span> read_write;
+</code></pre>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>So far the commands for the <code>read_write</code> role have been essentially the same as for the <code>read_only</code> role. However, the <code>read_write</code> role should have the privileges to not only access the contents of the database, but also to create, delete, and modify entries. The corresponding commands for these actions are <code>SELECT</code>, <code>INSERT</code>, <code>DELETE</code>, and <code>UPDATE</code>, respectively. Grant this role these privileges by entering the following command into the CLI:</p>
+        <pre><code class="hljs language-pgsql"><span class="hljs-keyword">GRANT</span> <span class="hljs-keyword">SELECT</span>, <span class="hljs-keyword">INSERT</span>, <span class="hljs-keyword">DELETE</span>, <span class="hljs-keyword">UPDATE</span> <span class="hljs-keyword">ON</span> <span class="hljs-keyword">ALL</span> <span class="hljs-keyword">TABLES</span> <span class="hljs-keyword">IN</span> <span class="hljs-keyword">SCHEMA</span> bookings <span class="hljs-keyword">TO</span> read_write;
+</code></pre>
+        <p></p>
+      </li>
+    </ol>
+    <h1>Exercise 2: Add a New User and Assign them a Relevant Role</h1>
+    <p>In this exercise, you will create a new user for the database and assign them the one of the roles you created in Exercise 1. This method streamlines the process of adding new users to the database since you don't have to go through the process of granting custom privileges to each one. Instead, you can assign them a role and the user inherits the privileges of that role.</p><br>
+    <p>Suppose you wish to add a new user, <code>user_a</code>, for use by an information and help desk at an airport. In this case, assume that there is no need for this user to modify the contents of the database. As you may have guessed, the appropriate role to assign is the <code>read_only</code> role.</p>
+    <ol>
+      <li>
+        <p>To create a new user named <code>user_a</code>, enter the following command into the PostgreSQL CLI:</p>
+        <pre><code class="hljs language-n1ql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">USER</span> user_a <span class="hljs-keyword">WITH</span> <span class="hljs-keyword">PASSWORD</span> <span class="hljs-string">'user_a_password'</span>;
+</code></pre>
+        <p></p>
+        <p>In practice, you would enter a secure password in place of 'user_a_password', which will be used to access the database through this user.</p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Next, assign <code>user_a</code> the <code>read_only</code> role by executing the following command in the CLI:</p>
+        <pre><code class="hljs language-pgsql"><span class="hljs-keyword">GRANT</span> read_only <span class="hljs-keyword">TO</span> user_a;
+</code></pre>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>You can list all the roles and users by typing the following command:</p>
+        <pre><code class="hljs language-livescript"><span class="hljs-string">\du</span>
+</code></pre>
+        <p></p>
+        <p>
+          You will see the following output:
+          
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20User%20Management%20and%20Access%20Control/images/UAM_1.png" alt="PostgreSQL CLI output">
+          Notice that <code>user_a</code> was successfully created and that it is a member of <code>read_only</code>.
+        </p>
+      </li>
+    </ol><br>
+    <h1>Exercise 3: Revoke and Deny Access</h1>
+    <p>In this exercise, you will learn how to revoke a user's privilege to access specific tables in a database.</p>
+    <p>Suppose there is no need for the information and help desk at the airport to access information stored in the <code>aircrafts_data</code> table. In this exercise, you will revoke the <code>SELECT</code> privilege on the <code>aircrafts_data</code> table in the <code>demo</code> database from <code>user_a</code>.</p><br>
+    <ol>
+      <li>
+        <p>You can use the <code>REVOKE</code> command in the Command Line Interface to remove specific privileges from a role or user in PostgreSQL. Enter the following command into the PostgreSQL CLI to remove the privileges to access the <code>aircrafts_data</code> table from <code>user_a</code>:</p>
+        <pre><code class="hljs language-pgsql"><span class="hljs-keyword">REVOKE</span> <span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">ON</span> aircrafts_data <span class="hljs-keyword">FROM</span> user_a;
+</code></pre>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Now suppose <code>user_a</code> is transferred departments within the airport and no longer needs to be able to access the <code>demo</code> database at all. You can remove all their <code>SELECT</code> privileges by simply revoking the <code>read_only</code> role you assigned to them earlier. You can do this by entering the following command in the CLI:</p>
+        <pre><code class="hljs language-pgsql"><span class="hljs-keyword">REVOKE</span> read_only <span class="hljs-keyword">FROM</span> user_a;
+</code></pre>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Now you can check all the users and their roles again to see that the <code>read_only</code> role was successfully revoked from <code>user_a</code> by entering the following command again:</p>
+        <pre><code class="hljs language-livescript"><span class="hljs-string">\du</span>
+</code></pre>
+        <p></p>
+        <p>You will see the following output:</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/labs/PostgreSQL/Lab%20-%20User%20Management%20and%20Access%20Control/images/UAM_2.png" alt="PostgreSQL CLI shows results of revoking read only privileges">
+        </p>
+        <p>Notice that <code>user_a</code> is still present but it is no longer a member of the <code>read_only</code> role.</p>
+      </li>
+    </ol><br>
+    <h1>Practice Exercise</h1>
+    <p>Now it's time to implement some of what you learned! In this practice exercise, you will use what you learned in the previous exercises to create a new user and assign them a relevant role.</p>
+    <p><strong>Scenario</strong>: <em>Suppose there is a new employee at the airline in which you are the database administrator for. They interact directly with clients to create new bookings for flights. As such, they will need to not only access the information in the database, but also to create new bookings.</em></p>
+    <p>To complete this exercise, create a new user called <code>user_b</code> and grant it the privileges to both read and write to the <code>demo</code> database.</p>
+    <details>
+      <summary>Hint (Click Here)</summary>
+      <ul>
+        <li>For a refresher on how to create a user, feel free to take a look back at Exercise 2.</li>
+        <li>Recall that in this lab, you created a <code>read_write</code> role. This could be an appropriate role to assign to <code>user_b</code>.</li>
+      </ul>
+    </details>
+    <details>
+      <summary>Solution (Click Here)</summary>
+      <ol>
+        <li>
+          <p>First, you can create a new user using the following command:</p>
+          <pre><code class="hljs language-n1ql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">USER</span> user_b <span class="hljs-keyword">WITH</span> <span class="hljs-keyword">PASSWORD</span> <span class="hljs-string">'user_b_password'</span>;
+</code></pre>
+          <p></p>
+        </li>
+      </ol><br>
+      <ol start="2">
+        <li>
+          <p>Next, you can grant the user you just created the <code>read_write</code> role by entering the following command into the CLI:</p>
+          <pre><code class="hljs language-pgsql"><span class="hljs-keyword">GRANT</span> read_write <span class="hljs-keyword">TO</span> user_b;
+</code></pre>
+          <p></p>
+        </li>
+      </ol><br>
+    </details>
+    <h1>Conclusion</h1>
+    <p>Congratulations on completing this lab on user management and access control in PostgreSQL. You now have some foundational knowledge on how to create new roles for your database, add new users, and assign those users relevant roles. In addition, you also have the capability to revoke privileges from users in the database.</p>
+    <h1>Author(s)</h1>
+    <p><a href="https://www.linkedin.com/in/david-pasternak-6b84a2208/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0231ENSkillsNetwork26763093-2021-01-01" target="_blank" rel="external">David Pasternak</a></p>
+    <h2>Other Contributor(s)</h2>
+    <p>Sandip Saha Joy, Rav Ahuja</p>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-07-14</td>
+          <td>0.1</td>
+          <td>David Pasternak</td>
+          <td>Initial version created</td>
+        </tr>
+        <tr>
+          <td>2021-10-8</td>
+          <td>0.2</td>
+          <td>Steve Hord</td>
+          <td>Copy Edit</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2021. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>
