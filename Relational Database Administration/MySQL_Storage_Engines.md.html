@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <h1>Storage engines in MySQL</h1>
+    <p>A storage engine is a software component that handles the operations that store and manage information in a database. MySQL is unusual among relational databases because it supports multiple storage engines.</p>
+    <p>Each storage engine has a particular set of operational characteristics, including the types of locks to manage query contention and whether the storage engine supports transactions. These properties have implications for database performance, so choose your storage engine based on the type of data you want to store and the operations you want to perform.</p>
+    <p>Most applications require only one storage engine for the whole database, but you can specify the storage engine on a table-by-table basis if your data has different requirements.</p>
+    <h2>Storage engines available in MySQL</h2>
+    <table>
+      <tbody>
+        <tr>
+          <td>
+            <p><strong>Engines</strong></p>
+          </td>
+          <td>
+            <p><strong>Description</strong></p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p>InnoDB</p>
+          </td>
+          <td>
+            <ul>
+              <li>Default storage engine for MySQL 5.5 and later.</li>
+              <li>Suitable for most data storage scenarios.</li>
+              <li>Provides ACID-compliant tables and FOREIGN KEY referential-integrity constraints.</li>
+              <li>Supports commit, rollback, and crash recovery capabilities to protect data.</li>
+              <li>Supports row-level locking.</li>
+              <li>Stores data in clustered indexes which reduces I/O for queries based on primary keys.</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p>MyISAM</p>
+          </td>
+          <td>
+            <ul>
+              <li>Manages non-transactional tables.</li>
+              <li>Provides high-speed storage and retrieval.</li>
+              <li>Supports full-text searching.</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p>MEMORY</p>
+          </td>
+          <td>
+            <ul>
+              <li>Provides in-memory tables, formerly known as HEAP.</li>
+              <li>Stores all data in RAM for faster access than storing data on disks.</li>
+              <li>Useful for quick lookups of reference and other identical data.</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p>MERGE</p>
+          </td>
+          <td>
+            <ul>
+              <li>Treats groups of similar MyISAM tables as a single table.</li>
+              <li>Handles non-transactional tables.</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p>EXAMPLE</p>
+          </td>
+          <td>
+            <ul>
+              <li>Allows developers to practice creating a new storage engine.</li>
+              <li>Allows developers to create tables.</li>
+              <li>Does not store or fetch data.</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p>ARCHIVE</p>
+          </td>
+          <td>
+            <ul>
+              <li>Stores a large amount of data.</li>
+              <li>Does not support indexes.</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p>CSV</p>
+          </td>
+          <td>
+            <ul>
+              <li>Stores data in Comma Separated Value format in a text file.</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p>BLACKHOLE</p>
+          </td>
+          <td>
+            <ul>
+              <li>Accepts data to store but always returns empty.</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p>FEDERATED</p>
+          </td>
+          <td>
+            <ul>
+              <li>Stores data in a remote database.</li>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <h2>Commands for working with Storage Engines</h2>
+    <p>If you're a DBA working with storage engines in MySQL, you should be familiar with the following common commands.</p>
+    <h3>SHOW ENGINES</h3>
+    <p>Displays status information about the server's storage engines. Useful for checking whether a storage engine is supported, or what the default engine is.</p>
+    <p><code>mysql> SHOW ENGINES;</code></p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0231EN-SkillsNetwork/Readings/images/showengines.png" alt="Screenshot shows status information of server storage engines">
+    </p>
+    <h3>CREATE TABLE</h3>
+    <p>Creates a table using the storage engine specified in the ENGINE clause, as shown in the following examples:</p>
+    <p><code>CREATE TABLE Products (i INT) ENGINE = INNODB;</code></p>
+    <p><code>CREATE TABLE Product_Codes (i INT) ENGINE = CSV;</code></p>
+    <p><code>CREATE TABLE History (i INT) ENGINE = MEMORY;</code></p>
+    <p>If you do not specify the <code>ENGINE</code> clause, the <code>CREATE TABLE</code> statement creates the table with the default storage engine, usually <strong>InnoDB</strong>.</p>
+    <h3>SET</h3>
+    <p>For databases with non-standard storage needs, you can specify a different default storage engine using the set command.</p>
+    <p>Set the default storage engine for the current session by setting the default_storage_engine variable using the SET command. For example, if you are creating a database to store archived data, you can use the following command:</p>
+    <p><code>SET default_storage_engine=ARCHIVE;</code></p>
+    <p>To set the default storage engine for all sessions, set the default-storage-engine option in the my.cnf configuration file.</p>
+    <h3>ALTER TABLE</h3>
+    <p>You can convert a table from one storage engine to another using an <code>ALTER TABLE</code> statement. For example, the following statement set the storage enigne for the Products table to Memory:</p>
+    <p><code>ALTER TABLE Products ENGINE = MEMORY;</code></p>
+    <p><strong>InnoDB</strong> is suitable for most data storage needs but setting and working with different storage engines in <strong>MYSQL</strong> gives you more control over how your data is stored and accessed. Using the most appropriate storage engine for your data brings operational benefits like faster response times or efficient use of available storage.</p>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>
