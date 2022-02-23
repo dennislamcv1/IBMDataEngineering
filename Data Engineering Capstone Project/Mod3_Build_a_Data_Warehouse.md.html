@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <h1>Data Warehousing and Data Warehousing Reporting</h1>
+    <h2>Assignment Overview</h2>
+    <p>The Assignment is split into two parts - Data Warehousing and Data Warehousing Reporting</p>
+    <h3>Data Warehousing</h3>
+    <p>In this first part of the assignment, you will perform a couple of exercises. But before proceeding with the assignment, you will create an instance of IBM DB2 on the cloud by following the instructions given in the link provided. If you have already created an instance in previous labs, you can continue using that to perform the exercises. The first exercise requires you to design a data warehouse. The e-commerce company has provided you with sample data. You will start your project by designing a Star Schema for the warehouse by identifying the columns for the various dimension and fact tables in the schema. You will name your database as <strong>softcart</strong> and then use the ERD design tool to design the table <strong>softcartDimDate</strong> using fields such as DateID, Month, Monthname, and so on. The company would like to have the ability to generate the report on a yearly, monthly, daily, and weekday basis.</p>
+    <p>The following tasks require you to design the dimension tables <strong>softcartDimCategory</strong>, <strong>softcartDimCountry</strong>, and <strong>softcartFactSales</strong> using the ERD design tool. Finally, you will use the ERD design tool to design the required relationships (one-to-one, one-to-many, and so on) amongst the tables. After performing each task, you will take a screenshot of the entire ERD clearly showing all the field names, data types, and relationships amongst the tables.</p>
+    <p>In the second exercise, you will load the data into the data warehouse. Your senior Data Engineer has reviewed your design and made a few improvements to your schema design. The data as per the improved schema is available at a link. You will download the data and restore it into a database named staging using the pgAdmin tool. After performing this task, you will take a screenshot showing the success of data restoration.</p>
+    <h3>Data Warehousing Reporting</h3>
+    <p>In this second part of the assignment, you will perform a couple of exercises. But before proceeding with the assignment, you will create an instance of IBM DB2 on the cloud by following the instructions given in the link provided. If you have already created an instance in previous labs, you can continue using that to perform the exercises. The first exercise requires you to load the data provided by the company into the tables in CSV format by performing a series of tasks. You will start by downloading the data from the links provided and then load that data into the DimDate table, DimCategory table, DimCountry table, and fact table FactSales. After loading the data, you will take a screenshot of the first five rows in each table and name the screenshot.</p>
+    <p>In the second exercise, you will query the loaded data by creating a grouping sets query, rollup query, and cube query using the columns <strong>Orderid</strong>*, <strong>Category</strong>, and <strong>Price collected</strong>. Finally, you will create an MQT named <strong>Total_sales_per_country</strong> using the country and total sales columns. After performing each task, you will take a screenshot of the SQL and the output rows and then name the screenshot.</p>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>
