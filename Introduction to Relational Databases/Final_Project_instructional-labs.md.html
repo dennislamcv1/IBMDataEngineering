@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Final%20Project/images/IDSNlogo.png" width="200" height="200">
+    <h1>Project : Database Design and Implementation</h1>
+    <p><strong>Estimated time needed:</strong> 90 minutes</p>
+    <p>Congratulations!! You have finished the modules. Now is the time to put your skills to test. Read through the scenario below.</p>
+    <h2>Scenario</h2>
+    <p>In this scenario, you have recently been hired as a Data Engineer by a New York based coffee shop chain that is looking to expand nationally by opening a number of franchise locations. As part of their expansion process, they want to streamline operations and revamp their data infrastructure.</p>
+    <p>Your job is to design their relational database systems for improved operational efficiencies and to make it easier for their executives to make data driven decisions.</p>
+    <p>Currently their data resides in several different systems: accounting software, suppliers’ databases, point of sales (POS) systems, and even spreadsheets. You will review the data in all of these systems and design a central database to house all of the data. You will then create the database objects and load them with source data. Finally, you will create subsets of data that your business partners require, export them, and then load them into staging databases that use different RDBMS.</p>
+    <h1></h1>
+    <h2>Software used in this project</h2>
+    <p>In this project, you will use <a href="https://www.postgresql.org/">PostgreSQL Database</a>, <a href="https://www.ibm.com/products/db2-database">IBM Db2 Database</a>, and <a href="https://www.mysql.com/">MySQL</a>. These are all relational database management systems (RDBMS) designed to efficiently store, manipulate, and retrieve the data.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Final%20Project/images/postgresql.png" width="130" height="100">
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Final%20Project/images/ibmdb2.png" width="245" height="100">
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Final%20Project/images/mysql.png" width="100" height="100">
+    </p>
+    <p></p>
+    <h1></h1>
+    <h2>Data used in this project</h2>
+    <p>In this project, you will be working with a subset of data from the <a href="https://community.ibm.com/community/user/businessanalytics/blogs/steven-macko/2019/07/12/beanie-coffee-1113">Coffee shop sample data</a>.</p>
+    <p>You will use a modified version of the data for the project, so to succeed in the project, download the linked files when prompted in the instructions. You do not need to use any data from the original source.</p>
+    <p>In your scenario, you will be working with data from the following sources:</p>
+    <ul>
+      <li>Staff information held in a spreadsheet at HQ</li>
+      <li>Sales outlet information held in a spreadsheet at HQ</li>
+      <li>Sales data output as a CSV file from the POS system in the sales outlets</li>
+      <li>Customer data output as a CSV file from a bespoke customer relationship management system</li>
+      <li>Product information maintained in a spreadsheet exported from your supplier's database</li>
+    </ul>
+    <h1></h1>
+    <h2>Objectives</h2>
+    <p>After completing this lab, you will be able to:</p>
+    <ul>
+      <li>Identify entities.</li>
+      <li>Identity attributes.</li>
+      <li>Create an entity relationship diagram (ERD) using the pgAdmin ERD Tool.</li>
+      <li>Normalize tables.</li>
+      <li>Define keys and relationships.</li>
+      <li>Create database objects by generating and running the SQL script from the ERD Tool.</li>
+      <li>Create a view and export the data.</li>
+      <li>Create a materialized view and export the data.</li>
+      <li>Import data into a Db2 database.</li>
+      <li>Import data into a MySQL database.</li>
+    </ul>
+    <h1></h1>
+    <h2>Task 1: Identify entities</h2>
+    <p>The first step when designing a new database is to review any existing data and identify the entities for your new system.</p>
+    <ol>
+      <li>
+        <p>The following image shows sample data from each of the data sources that you will be working with to design your new central database. Review the image and identify the entities you plan to create.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Final%20Project/images/existing_data.png" alt="image">
+        </p>
+        <p></p>
+        <ul>
+          <li>Note: You might find it useful to download a copy of this image or open it in another browser tab for reference later in the lab.
+            <p></p>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <p>Make a list of the entities you have identified.</p>
+      </li>
+    </ol>
+    <h1></h1>
+    <h2>Task 2: Identify attributes</h2>
+    <p>In this task, you will identify the attributes for one of the entities that you plan to create.</p>
+    <ol>
+      <li>
+        <p>Using the information from the sample data in the image from Task 1, identify the attributes for the entity that will store the sales transaction data.</p>
+      </li>
+      <li>
+        <p>Make a list of the sales transaction attributes that you identified.</p>
+      </li>
+    </ol>
+    <h1></h1>
+    <h2>Task 3: Create an ERD</h2>
+    <p>Now that you have defined some of your attributes and entities, you can determine the tables and columns for them and create an ERD.</p>
+    <ol>
+      <li>
+        <p>Open a new terminal from the side-by-side Cloud IDE.</p>
+      </li>
+      <li>
+        <p>Use the <code>start_postgres</code> command to start a PostgreSQL service session in the Cloud IDE.</p>
+      </li>
+      <li>
+        <p>Use the pgAdmin weblink to open pgAdmin in a new tab in your browser.</p>
+      </li>
+      <li>
+        <p>Create a new database named <code>COFFEE</code>, view the schemas in the new <code>COFFEE</code> database, and then start a new ERD project.</p>
+      </li>
+      <li>
+        <p>Add a table to the ERD for the sale transactions entity using the information in the following table. Consider what naming convention to use so that your colleagues will be able to understand your data and to ensure that the names are valid in other RDBMS. And use the sample data shown in the image in Task 1 to determine appropriate data types for each column.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Final%20Project/images/Task3A.png" alt="image">
+        </p>
+      </li>
+      <li>
+        <p>Take a screenshot of your ERD and save it as Task3A.png or Task3A.jpg.</p>
+      </li>
+      <li>
+        <p>Add a table to the ERD for the product entity using the information in the following table. Consider what naming convention to use so that your colleagues will be able to understand your data and to ensure that the names are valid in other RDBMS. And use the sample data shown in the image in Task 1 to determine appropriate data types for each column.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Final%20Project/images/Task3B.png" alt="image">
+        </p>
+      </li>
+      <li>
+        <p>Take a screenshot of your ERD and save it as Task3B.png or Task3B.jpg.</p>
+      </li>
+    </ol>
+    <h1></h1>
+    <h2>Task 4: Normalize tables</h2>
+    <p>When reviewing your ERD you notice that it does not conform to second normal form. In this task, you will normalize some of the tables within the database.</p>
+    <ol>
+      <li>
+        <p>Review the data in the sales transaction table. Note that the transaction id column does not contain unique values because some transactions include multiple products.</p>
+      </li>
+      <li>
+        <p>Determine which columns should be stored in a separate table to remove the repeating rows and to put this table into second normal form.</p>
+      </li>
+      <li>
+        <p>Add a new table named <code>sales_detail</code> to the ERD, define the columns in the new table, and delete the moved columns from the sales transaction table, leaving a matching column in each of two tables to later create a relationship between them.</p>
+      </li>
+      <li>
+        <p>Take a screenshot of your ERD and save it as Task4A.png or Task4A.jpg.</p>
+      </li>
+      <li>
+        <p>Review the data in the product table. Note that the product category and product type columns contain redundant data.</p>
+      </li>
+      <li>
+        <p>Determine which columns should be stored in a separate table to reduce redundant data and to put this table into second normal form.</p>
+      </li>
+      <li>
+        <p>Add a new table named <code>product_type</code> to the ERD, define the columns in the new table, and delete the moved columns from the product table, , leaving a matching column in each of two tables to later create a relationship between them.</p>
+      </li>
+      <li>
+        <p>Take a screenshot of your ERD and save it as Task4B.png or Task4B.jpg.</p>
+      </li>
+    </ol>
+    <h1></h1>
+    <h2>Task 5: Define keys and relationships</h2>
+    <p>After normalizing your tables, you can define their primary keys and define relationships between the tables in your ERD.</p>
+    <ol>
+      <li>
+        <p>Identify an appropriate column in each table to be a primary key and create the primary keys in the tables in your ERD.</p>
+      </li>
+      <li>
+        <p>Take a screenshot of your ERD and save it as Task5A.png or Task5A.jpg.</p>
+      </li>
+      <li>
+        <p>Identify the relationships between the following pairs of tables and then create the relationships in your ERD:</p>
+        <ul>
+          <li><code>sales_detail</code> to <code>sales_transaction</code></li>
+          <li><code>sales_detail</code> to <code>product</code></li>
+          <li><code>product</code> to <code>product_type</code>
+            <p></p>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <p>Take a screenshot of your ERD and save it as Task5B.png or Task5B.jpg.</p>
+      </li>
+    </ol>
+    <h1></h1>
+    <h2>Task 6: Create database objects by generating and running the SQL script from the ERD Tool</h2>
+    <p>Now that your design is complete, you will generate an SQL script from your ERD which you could use to create your database schema. For the purposes of this project, you will then use a provided SQL script to ensure that you will be able to successfully load the sample data into the schema. Finally, you will load the existing data from the various data sources into your new database schema.</p>
+    <ol>
+      <li>
+        <p>Use the Generate SQL functionality in the ERD Tool to create an SQL script from your ERD.</p>
+      </li>
+      <li>
+        <p>Download the <code>GeneratedScript.sql</code> file below to your local computer storage.</p>
+        <ul>
+          <li><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/datasets/CoffeeData/GeneratedScript.sql" target="_blank" rel="external">GeneratedScript.sql</a>
+            <p></p>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <p>In pgAdmin, open the Query Tool, upload and open the <code>GeneratedScript.sql</code> file from your local computer storage, and then execute the script to create the tables defined in the ERD. Verify that the tables now exist in the <code>public</code> schema of the <code>COFFEE</code> database.</p>
+      </li>
+      <li>
+        <p>Take a screenshot of the tables shown in the tree-view pane on the left-hand side of the page and save it as Task6A.png or Task6A.jpg.</p>
+      </li>
+      <li>
+        <p>Download the <code>CoffeeData.sql</code> file below to your local computer storage.</p>
+        <ul>
+          <li><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/datasets/CoffeeData/CoffeeData.sql" target="_blank" rel="external">CoffeeData.sql</a>
+            <p></p>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <p>In pgAdmin, open another instance of the Query Tool, upload and open the <code>CoffeeData.sql</code> file from your local computer storage, and then execute the script to populate the tables you just created.</p>
+      </li>
+      <li>
+        <p>In pgAdmin, view the first 100 rows of the <code>sales_detail</code> table.</p>
+      </li>
+      <li>
+        <p>Take a screenshot of the Data Output pane and save it as Task6B.png or Task6B.jpg.</p>
+      </li>
+    </ol>
+    <h1></h1>
+    <h2>Task 7: Create a view and export the data</h2>
+    <p>The external payroll company have requested a list of employees and the locations at which they work. This should not include the CEO or CFO who own the company. In this task, you will create a view in your PostgreSQL database that returns this information and export the results to a CSV file.</p>
+    <ol>
+      <li>
+        <p>In your <code>COFFEE</code> database, create a new view named <code>staff_locations_view</code> using the following SQL:</p>
+        <pre><code class="hljs language-pgsql"><span class="hljs-keyword">SELECT</span> staff.staff_id,
+staff.first_name,
+staff.last_name,
+staff.<span class="hljs-keyword">location</span>
+<span class="hljs-keyword">FROM</span> staff
+<span class="hljs-keyword">WHERE</span> "position" <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">IN</span> (<span class="hljs-string">'CEO'</span>, <span class="hljs-string">'CFO'</span>);
+</code></pre>
+      </li>
+      <li>
+        <p>View all the rows returned from the view.</p>
+      </li>
+      <li>
+        <p>Save the results of the query to a file named <code>staff_locations_view.csv</code> on your local computer storage.</p>
+      </li>
+      <li>
+        <p>Take a screenshot of the view shown in the tree-view pane on the left-hand side of the page alongside the results in the Data Output pane, and save it as Task7.png or Task7.jpg.</p>
+      </li>
+    </ol>
+    <h1></h1>
+    <h2>Task 8: Create a materialized view and export the data</h2>
+    <p>A marketing consultant requires access to your product data in their MySQL database for a marketing campaign. You will create a materialized view in your PostgreSQL database that returns this information and export the results to a CSV file.</p>
+    <ol>
+      <li>
+        <p>In your <code>COFFEE</code> database, create a new materialized view named <code>product_info_m-view</code> using the following SQL:</p>
+        <pre><code class="hljs language-elm"><span class="hljs-type">SELECT</span> product.product_name, product.description, product_<span class="hljs-keyword">type</span>.product_category
+<span class="hljs-type">FROM</span> product
+<span class="hljs-type">JOIN</span> product_<span class="hljs-keyword">type</span>
+<span class="hljs-type">ON</span> product.product_type_id = product_type.product_type_id;
+</code></pre>
+      </li>
+      <li>
+        <p>Refresh the materialized view with data.</p>
+      </li>
+      <li>
+        <p>View all the rows returned from the view.</p>
+      </li>
+      <li>
+        <p>Save the results of the query to a file named <code>product_info_m-view.csv</code> on your local computer storage.</p>
+      </li>
+      <li>
+        <p>Take a screenshot of the view shown in the tree-view pane on the left-hand side of the page alongside the results in the Data Output pane, and save it as Task8.png or Task8.jpg.</p>
+      </li>
+    </ol>
+    <h1></h1>
+    <h2>Task 9: Import data into a Db2 database</h2>
+    <p>The external payroll company have asked you to upload the staff location information to their Db2 database.</p>
+    <ol>
+      <li>
+        <p>In a new browser tab, go to <a href="https://cloud.ibm.com/login?utm_email=Email&#x26;utm_source=Nurture&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_campaign=PLACEHOLDER&#x26;utm_id=SkillsNetwork-Courses-IBM-DB0110EN-SkillsNetwork-24601058" target="_blank" rel="external">https://cloud.ibm.com/login</a>, log in using your credentials, and then open a console for your Db2 on Cloud instance that you created earlier in this course.</p>
+      </li>
+      <li>
+        <p>Use the Load Data feature to load a new table named <code>STAFF_LOCATIONS</code> with the staff location information saved in the <code>staff_locations_view.csv</code> file that you exported from the view you created in Task 7.</p>
+      </li>
+      <li>
+        <p>Explore the new table and then view the data in it.</p>
+      </li>
+      <li>
+        <p>Take a screenshot of the contents of the new table and save it as Task9.png or Task9.jpg.</p>
+      </li>
+    </ol>
+    <h1></h1>
+    <h2>Task 10: Import data into a MySQL database</h2>
+    <p>The marketing consultant has asked you to upload the product information to their MySQL database.</p>
+    <ol>
+      <li>
+        <p>In the terminal from the side-by-side Cloud IDE, use the <code>start_mysql</code> command to start a My SQL service session in the Cloud IDE.</p>
+      </li>
+      <li>
+        <p>Use the browser weblink to open phpMyAdmin in a new tab in your browser.</p>
+      </li>
+      <li>
+        <p>In phpMyAdmin, create a new database named <code>coffee_shop_products</code>, and then import the product information saved in the <code>product_info_m-view.csv</code> file from your materialized view into a new table in the <code>coffee_shop_products</code> database.</p>
+      </li>
+      <li>
+        <p>Browse the contents of the new table.</p>
+      </li>
+      <li>
+        <p>Take a screenshot of the contents of the new table and save it as Task10.png or Task10.jpg.</p>
+      </li>
+    </ol>
+    <h1></h1>
+    <h2>Author(s)</h2>
+    <ul>
+      <li>Lin Joyner</li>
+    </ul>
+    <h2>Other Contributor(s)</h2>
+    <ul>
+      <li></li>
+    </ul>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-04-01</td>
+          <td>1.0</td>
+          <td>Lin Joyner</td>
+          <td>Created initial version</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2021. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.11b2a82f.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

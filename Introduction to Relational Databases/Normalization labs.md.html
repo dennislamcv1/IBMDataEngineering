@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Normalization%20-%20Keys%20-%20Constraints%20in%20Relational%20Database/images/IDSNlogo.png" width="200" height="200">
+    <h1>Hands-on Lab: Normalization, Keys and Constraints in Relational Database</h1>
+    <p><strong>Estimated time needed:</strong> 25 minutes</p>
+    <p>In this lab, you will learn about normalization, keys, and constraints in IBM Db2 on Cloud using SQL. First, you will learn how to minimize data redundancy and inconsistency in a database by normalizing tables. Next, you will learn how to use keys to uniquely identify a record in a table, to establish a relationship between tables, and to identify the relation between them. Lastly, you will learn about different kinds of relational model constraints that help to maintain data integrity in a relational data model.</p><br>
+    <h2>Software Used in this Lab</h2>
+    <p>In this lab, you will use an <a href="https://www.ibm.com/products/db2-database" target="_blank">IBM Db2 Database</a>. Db2 is a relational database management system (RDBMS) from IBM, designed to efficiently store, analyze, and retrieve data.</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Normalization%20-%20Keys%20-%20Constraints%20in%20Relational%20Database/images/ibmdb2.png" width="245" height="100"><br>
+    <h2>Dataset Used in this Lab</h2>
+    <p>In this lab, you will use a <strong>BookShop</strong> dataset.</p><br>
+    <h2>Objectives</h2>
+    <p>After completing this lab, you will be able to:</p>
+    <ul>
+      <li>Minimize data redundancy and inconsistency in a database by using normalization.</li>
+      <li>Use keys to uniquely identify a record in a table, establish a relationship between tables, and identify the relation between them.</li>
+      <li>Maintain data integrity in a relational data model using constraints.<br></li>
+    </ul>
+    <h2>Instructions</h2>
+    <p>When you approach the exercises (specially from Exercise 1 Task B) in this lab, follow the instructions to run the queries on Db2:</p>
+    <ul>
+      <li>Go to the <a href="https://cloud.ibm.com/resources?utm_email=Email&#x26;utm_source=Nurture&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_campaign=PLACEHOLDER&#x26;utm_id=SkillsNetwork-Courses-IBM-DB0110EN-SkillsNetwork-24601058" target="_blank" rel="external">Resource List</a> of IBM Cloud by logging in where you can find the Db2 service instance that you created in a previous lab under <strong>Services</strong> section. Click on the <strong>Db2-xx service</strong>. Next, open the Db2 Console by clicking on <strong>Open Console</strong> button. Click on the 3-bar menu icon in the top left corner and go to the <strong>Run SQL</strong> page. The Run SQL tool enables you to run SQL statements.</li>
+    </ul><br>
+    <h1>Exercise 1: Normalization</h1>
+    <p>In this exercise, you will learn about first normal form (1NF) and implement second normal form (2NF).</p>
+    <h2>Task A: First normal form (1NF)</h2>
+    <p>In this task of normalization, you will be working with the <strong>BookShop</strong> table. The following image shows the <strong>BookShop</strong> table:</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Normalization%20-%20Keys%20-%20Constraints%20in%20Relational%20Database/images/BookShop_table_Not_1NF.png" alt="image">
+    </p>
+    <p></p>
+    <p>You will answer some questions to determine if the table above is in 1NF.</p>
+    <ol>
+      <li>
+        <blockquote>
+          <p>Does the above table have unique rows?</p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Check if you can uniquely identify each row.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Answer</summary>
+          <blockquote>
+            <p>Yes. Each row can be uniquely identified.</p>
+          </blockquote>
+        </details>
+      </li>
+    </ol>
+    <ol start="2">
+      <li>
+        <blockquote>
+          <p>Does each cell of the above table have single/atomic value?</p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>A single/atomic value cannot be divided and does not include any delimiter character.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Answer</summary>
+          <blockquote>
+            <p>No. The columns AUTHOR_NAME and AUTHOR_ID contain multi valued cell.</p>
+          </blockquote>
+        </details>
+      </li>
+    </ol>
+    <ol start="3">
+      <li>
+        <blockquote>
+          <p>By definition, a table is in 1NF if every attribute in that relation contains single valued data and every tuple in that relation is unique. Does the above table fall in first normal form?</p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Follow the stated definition of 1NF above. Your answer for this question should be based on the answers of the previous two questions.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Answer</summary>
+          <blockquote>
+            <p>No, the table is not in 1NF since it has unique rows but not all single valued cell.</p>
+          </blockquote>
+        </details>
+      </li>
+    </ol>
+    <ol start="4">
+      <li>
+        <blockquote>
+          <p>If your answer to question 3 is No, how can you normalize the table to ensure first normal form?</p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Watch the video on Normalization.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Answer</summary>
+          <blockquote>
+            <p>To normalize this table, add an extra row, and split the multiple author names as well as multiple author IDs of the row containing multi-valued data into their own row.</p>
+          </blockquote>
+        </details>
+      </li>
+    </ol><br>
+    <h2>Task B: Second normal form (2NF)</h2>
+    <ol>
+      <li>
+        <p>Starting from this task of normalization, this lab requires you to have a version of <strong>BookShop</strong> table (shown below) different from the one shown in Exercise 1 Task A, at Db2 on cloud. Download the <code>BookShop-CREATE-INSERT.sql</code> script below, upload it to the Db2 console, and run it. The script will drop any previous BookShop table that exists, create the new BookShop table, and populate it with the sample data required for this lab.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Normalization%20-%20Keys%20-%20Constraints%20in%20Relational%20Database/images/BookShop_table.png" alt="image">
+        </p>
+        <p></p>
+        <ul>
+          <li><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/datasets/BookShop/BookShop-CREATE-INSERT.sql" target="_blank" rel="external">BookShop-CREATE-INSERT.sql</a></li>
+        </ul>
+        <p></p>
+        <details>
+          <summary>Click here to view the queries inside the script</summary>
+          <pre><code class="hljs language-sql"><span class="hljs-comment">-- Drop the tables in case they exist</span>
+
+<span class="hljs-keyword">DROP</span> <span class="hljs-keyword">TABLE</span> BookShop;
+<span class="hljs-keyword">DROP</span> <span class="hljs-keyword">TABLE</span> BookShop_AuthorDetails;
+
+<span class="hljs-comment">-- Create the table</span>
+
+<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> BookShop (
+    BOOK_ID <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">4</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>, 
+    TITLE <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">100</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>, 
+    AUTHOR_NAME <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">30</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>, 
+    AUTHOR_BIO <span class="hljs-type">VARCHAR</span>(<span class="hljs-number">250</span>),
+    AUTHOR_ID <span class="hljs-type">INTEGER</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>, 
+    PUBLICATION_DATE <span class="hljs-type">DATE</span> <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>, 
+    PRICE_USD <span class="hljs-type">DECIMAL</span>(<span class="hljs-number">6</span>,<span class="hljs-number">2</span>) <span class="hljs-keyword">CHECK</span>(Price_USD<span class="hljs-operator">></span><span class="hljs-number">0</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-keyword">NULL</span>
+    );
+
+<span class="hljs-comment">-- Insert sample data into the table</span>
+
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> BookShop <span class="hljs-keyword">VALUES</span>
+(<span class="hljs-string">'B101'</span>, <span class="hljs-string">'Introduction to Algorithms'</span>, <span class="hljs-string">'Thomas H. Cormen'</span>, <span class="hljs-string">'Thomas H. Cormen is the co-author of Introduction to Algorithms, along with Charles Leiserson, Ron Rivest, and Cliff Stein. He is a Full Professor of computer science at Dartmouth College and currently Chair of the Dartmouth College Writing Program.'</span>, <span class="hljs-number">123</span> , <span class="hljs-string">'2001-09-01'</span>, <span class="hljs-number">125</span>),
+(<span class="hljs-string">'B201'</span>, <span class="hljs-string">'Structure and Interpretation of Computer Programs'</span>, <span class="hljs-string">'Harold Abelson'</span>, <span class="hljs-string">' Harold Abelson, Ph.D., is Class of 1922 Professor of Computer Science and Engineering in the Department of Electrical Engineering and Computer Science at MIT and a fellow of the IEEE.'</span>, <span class="hljs-number">456</span>, <span class="hljs-string">'1996-07-25'</span>, <span class="hljs-number">65.5</span>),
+(<span class="hljs-string">'B301'</span>, <span class="hljs-string">'Deep Learning'</span>, <span class="hljs-string">'Ian Goodfellow'</span>, <span class="hljs-string">'Ian J. Goodfellow is a researcher working in machine learning, currently employed at Apple Inc. as its director of machine learning in the Special Projects Group. He was previously employed as a research scientist at Google Brain.'</span>, <span class="hljs-number">369</span>, <span class="hljs-string">'2016-11-01'</span>, <span class="hljs-number">82.7</span>),
+(<span class="hljs-string">'B401'</span>, <span class="hljs-string">'Algorithms Unlocked'</span>, <span class="hljs-string">'Thomas H. Cormen'</span>, <span class="hljs-string">'Thomas H. Cormen is the co-author of Introduction to Algorithms, along with Charles Leiserson, Ron Rivest, and Cliff Stein. He is a Full Professor of computer science at Dartmouth College and currently Chair of the Dartmouth College Writing Program.'</span>, <span class="hljs-number">123</span>, <span class="hljs-string">'2013-05-15'</span>, <span class="hljs-number">36.5</span>),
+(<span class="hljs-string">'B501'</span>, <span class="hljs-string">'Machine Learning: A Probabilistic Perspective'</span>, <span class="hljs-string">'Kevin P. Murphy'</span>, <span class="hljs-string">''</span>, <span class="hljs-number">157</span>, <span class="hljs-string">'2012-08-24'</span>, <span class="hljs-number">46</span>);
+
+<span class="hljs-comment">-- Retrieve all records from the table</span>
+
+<span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> BookShop;
+</code></pre>
+        </details>
+        <p></p>
+        <p><strong>Tip</strong>: If you are unsure how to upload and run the script, review the following lab to learn how to perform the tasks:</p>
+        <ul>
+          <li><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Create%20Tables%20and%20Load%20Data%20in%20Db2/instructional-labs.md.html" target="_blank" rel="external">Hands-on Lab : Create Tables and Load Data in Db2</a></li>
+        </ul>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>By definition, a relation is in second normal form if it is already in 1NF and does not contain any partial dependencies. If you look at the BookShop table, you will find every column in the table is single or atomic valued, but it has multiple books by the same author. This means that the AUTHOR_ID, AUTHOR_NAME and AUTHOR_BIO details for BOOK_ID B101 and B401 are the same. As the number of rows in the table increase, you will be needlessly storing more and more occurrences of these same pieces of information. And if an author updates their bio, you must update all of these occurrences.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Normalization%20-%20Keys%20-%20Constraints%20in%20Relational%20Database/images/1.B.1.png" alt="image">
+        </p>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>In this scenario, to enforce 2NF you can take the author information such as AUTHOR_ID, AUTHOR_NAME and AUTHOR_BIO out of the BookShop table into another table, for example a table named <strong>BookShop_AuthorDetails</strong>. You then link each book in the BookShop table to the relevant row in the BookShop_AuthorDetails table, using a unique common column such as AUTHOR_ID to link the tables. To create the new <strong>BookShop_AuthorDetails</strong> table, copy the code below and paste it to the textbox of the <strong>Run SQL</strong> page after adding a new blank script. Click <strong>Run all</strong>.</p>
+        <pre><code class="hljs language-sql_more"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> BookShop_AuthorDetails 
+<span class="hljs-keyword">AS</span> 
+(<span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">DISTINCT</span> AUTHOR_ID, AUTHOR_NAME, AUTHOR_BIO <span class="hljs-keyword">FROM</span> BookShop) 
+<span class="hljs-keyword">WITH</span> <span class="hljs-keyword">DATA</span>;
+
+<span class="hljs-keyword">SELECT</span> * <span class="hljs-keyword">FROM</span> BookShop_AuthorDetails;
+</code></pre>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Normalization%20-%20Keys%20-%20Constraints%20in%20Relational%20Database/images/1.B.2.png" alt="image">
+        </p>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>Now you can drop the redundant author information related columns from the BookShop table. Do not drop the AUTHOR_ID column though, because that will be used to maintain the relationship between the two tables. To drop the redundant author information related columns from the BookShop table, copy the code below and paste it to the current script textbox of the <strong>Run SQL</strong> page replacing the existing code with this new code. Click <strong>Run all</strong>.</p>
+        <pre><code class="hljs language-sql"><span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">TABLE</span> BookShop
+<span class="hljs-keyword">DROP</span> <span class="hljs-keyword">COLUMN</span> AUTHOR_NAME
+<span class="hljs-keyword">DROP</span> <span class="hljs-keyword">COLUMN</span> AUTHOR_BIO;
+
+<span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> BookShop;
+</code></pre>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Normalization%20-%20Keys%20-%20Constraints%20in%20Relational%20Database/images/1.B.3.png" alt="image">
+        </p>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        <p>Now you are only storing the author information once per author and only have to update it in one place; reducing redundancy and increasing consistency of data. Thus 2NF is ensured.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Normalization%20-%20Keys%20-%20Constraints%20in%20Relational%20Database/images/1.B.4.png" alt="image">
+        </p>
+        <p></p>
+      </li>
+    </ol><br>
+    <h1>Exercise 2: Keys</h1>
+    <p>In this exercise, you will see how to use a primary key to uniquely identify a record in a table, how to use a foreign key to establish a relationship between tables, and how to identify the relation between them.</p>
+    <h2>Task A: Primary Key</h2>
+    <ol>
+      <li>
+        <p>By definition, a primary key is a column or group of columns that uniquely identify every row in a table. A table cannot have more than one primary key. The rules for defining a primary key are:</p>
+        <ul>
+          <li>No two rows can have a duplicate primary key value.</li>
+          <li>Every row must have a primary key value.</li>
+          <li>No primary key field can be null.</li>
+        </ul>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>You will create a primary key for the BookShop and BookShop_AuthorDetails tables to uniquely identify every row in each of the tables. You will set the BOOK_ID column of the BookShop table and AUTHOR_ID column of the BookShop_AuthorDetails table as a primary key for each of the tables. Both of the columns were declared as NOT NULL when the tables were created (Check the the sql script or table definition of the tables to verify the NOT NULL constraint. Because the BookShop_AuthorDetails table was created from the BookShop table, it inherits all the data types and column constraints like NOT NULL from the BookShop parent table).</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Normalization%20-%20Keys%20-%20Constraints%20in%20Relational%20Database/images/2.A.2.png" alt="image">
+        </p>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>The ALTER TABLE statement you ran in the previous task puts the table into what's called a 'reorg pending' state. This occurs after any ALTER TABLE statement that contains a REORG-recommended operation is run. Therefore to put the table back into an 'organized' state, you need to call a sysproc admin command that reorganizes the table before you can continue. Copy the code below and paste it to the current script textbox of the <strong>RUN SQL</strong> page replacing the existing code with this new code. Then click <strong>Run all</strong>.</p>
+        <pre><code class="hljs language-scheme">Call Sysproc.admin_cmd (<span class="hljs-symbol">'reorg</span> Table BookShop')<span class="hljs-comment">;</span>
+</code></pre>
+      </li>
+      <li>
+        <p>To set the BOOK_ID column of the BookShop table and AUTHOR_ID column of the BookShop_AuthorDetails table as a primary key for each of the tables, copy the code below and paste it to the current script textbox of the <strong>RUN SQL</strong> page replacing the existing code with this new code. Click <strong>Run all</strong>.</p>
+        <pre><code class="hljs language-sql"><span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">TABLE</span> BookShop
+<span class="hljs-keyword">ADD</span> <span class="hljs-keyword">PRIMARY</span> KEY (BOOK_ID);
+
+<span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">TABLE</span> BookShop_AuthorDetails
+<span class="hljs-keyword">ADD</span> <span class="hljs-keyword">PRIMARY</span> KEY (AUTHOR_ID);
+</code></pre>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Normalization%20-%20Keys%20-%20Constraints%20in%20Relational%20Database/images/2.A.3.png" alt="image">
+        </p>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>Now you can use the BOOK_ID column to uniquely identify every row in the BookShop table and the AUTHOR_ID column to uniquely identify every row in the BookShop_AuthorDetails table.</li>
+    </ol><br>
+    <h2>Task B: Foreign Key</h2>
+    <ol>
+      <li>
+        <p>By definition, a foreign key is a column that establishes a relationship between two tables. It acts as a cross-reference between two tables because it points to the primary key of another table. A table can have multiple foreign keys referencing primary keys of other tables. Rules for defining a foreign key:</p>
+        <ul>
+          <li>A foreign key in the referencing table must match the structure and data type of the existing primary key in the referenced table.</li>
+          <li>A foreign key can only have values present in the referenced primary key</li>
+          <li>Foreign keys do not need to be unique. Most often they aren't.</li>
+          <li>Foreign keys can be null.</li>
+        </ul>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>You will create a foreign key for the BookShop table by setting its AUTHOR_ID column as a foreign key, to establish a relationship between the BookShop and BookShop_AuthorDetails tables. Copy the code below and paste it to the current script textbox of the <strong>RUN SQL</strong> page replacing the existing code with this new code. Click <strong>Run all</strong>.</p>
+        <pre><code class="hljs language-sql_more"><span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">TABLE</span> BookShop
+<span class="hljs-keyword">ADD</span> <span class="hljs-keyword">CONSTRAINT</span> fk_BookShop <span class="hljs-keyword">FOREIGN</span> <span class="hljs-keyword">KEY</span> (AUTHOR_ID)
+    <span class="hljs-keyword">REFERENCES</span> BookShop_AuthorDetails(AUTHOR_ID)
+    <span class="hljs-keyword">ON</span> <span class="hljs-keyword">UPDATE</span> <span class="hljs-keyword">NO</span> <span class="hljs-keyword">ACTION</span>
+    <span class="hljs-keyword">ON</span> <span class="hljs-keyword">DELETE</span> <span class="hljs-keyword">NO</span> <span class="hljs-keyword">ACTION</span>;
+</code></pre>
+        <blockquote>
+          <p>Note: ON UPDATE NO ACTION means if any existing row is updated in the foreign key column of the referencing table (the table containing the foreign key), the update will only be allowed if the new value of the foreign key column exists in the referenced primary key column of the referenced table (the table containing the primary key). However, any update on a row of the referenced primary key column of the referenced table is always rejected if there is the existence of a corresponding row in the referencing foreign key column of the referencing table.</p>
+        </blockquote>
+        <blockquote>
+          <p>ON DELETE NO ACTION means if any row in the referenced table (the table containing the primary key) is deleted, that row in the referenced table and the corresponding row in the referencing table (the table containing the foreign key) are not deleted.</p>
+        </blockquote>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Normalization%20-%20Keys%20-%20Constraints%20in%20Relational%20Database/images/2.B.2.png" alt="image">
+        </p>
+        <p></p>
+      </li>
+      <li>
+        <p>Now that you have created the relationship, each book in the BookShop table is linked to the relevant row in the BookShop_AuthorDetails table through AUTHOR_ID.</p>
+      </li>
+    </ol>
+    <h1>Exercise 3: Constraints</h1>
+    <p>In this exercise, you will review different kinds of relational model constraints that help to maintain data integrity in a relational data model.</p>
+    <ol>
+      <li>
+        <p><strong>Entity Integrity Constraint</strong>: Entity integrity ensures that no duplicate records exist within a table and that the column identifing each record within the table is not a duplicate and not null. The existence of a primary key in both the BookShop and BookShop_AuthorDetails tables satisfies this integrity constraint because a primary key mandates NOT NULL constraint as well as ensuring that every row in the table has a value that uniquely denotes the row.</p>
+      </li>
+      <li>
+        <p><strong>Referential Integrity Constraint</strong>: Referential integrity ensures the existence of a referenced value if a value of one column of a table references a value of another column. The existence of the foreign Key (AUTHOR_ID) in the BookShop table satisfies this integrity constraint because a cross-reference relationship between the BookShop and BookShop_AuthorDetails tables exists. As a result of this relationship, each book in the BookShop table will be linked to the relevant row in the BookShop_AuthorDetails table through the AUTHOR_ID columns.</p>
+      </li>
+      <li>
+        <p><strong>Domain Integrity Constraint</strong>: Domain integrity ensures that the purpose of a column is clear and the values of a column are consistent as well as valid. The existence of data types, length, date format, check, and null constraints in the CREATE statement of the BookShop table makes sure this integrity constraint is satisfied.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Normalization%20-%20Keys%20-%20Constraints%20in%20Relational%20Database/images/3.3.png" alt="image">
+        </p>
+        <p></p>
+      </li>
+    </ol><br>
+    <h3>Congratulations! You have completed this lab, and you are ready for the next topic.</h3>
+    <h3><br></h3>
+    <h2>Author(s)</h2>
+    <ul>
+      <li><a href="https://www.linkedin.com/in/sandipsahajoy/?utm_email=Email&#x26;utm_source=Nurture&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_campaign=PLACEHOLDER&#x26;utm_id=SkillsNetwork-Courses-IBM-DB0110EN-SkillsNetwork-24601058" target="_blank" rel="external">Sandip Saha Joy</a></li>
+    </ul>
+    <h2>Other Contributor(s)</h2>
+    <ul>
+      <li></li>
+    </ul>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-04-06</td>
+          <td>1.0</td>
+          <td>Sandip Saha Joy</td>
+          <td>Created initial version</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2021. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.11b2a82f.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

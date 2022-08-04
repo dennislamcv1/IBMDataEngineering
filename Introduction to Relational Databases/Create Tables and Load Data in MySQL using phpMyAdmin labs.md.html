@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Create%20Tables%20and%20Load%20Data%20in%20MySQL%20using%20phpMyAdmin/images/IDSNlogo.png" width="200" height="200">
+    <h1>Hands-on Lab : Create Tables and Load Data in MySQL using phpMyAdmin</h1>
+    <p><strong>Estimated time needed:</strong> 20 minutes</p>
+    <p>In this lab, you will learn how to create tables and load data in the MySQL database service using the phpMyAdmin graphical user interface (GUI) tool.</p>
+    <h1></h1>
+    <h2>Software Used in this Lab</h2>
+    <p>In this lab, you will use <a href="https://www.mysql.com/">MySQL</a>. MySQL is a Relational Database Management System (RDBMS) designed to efficiently store, manipulate, and retrieve data.</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Create%20Tables%20and%20Load%20Data%20in%20MySQL%20using%20phpMyAdmin/images/mysql.png" width="100" height="100">
+    <p></p>
+    <p>To complete this lab you will utilize MySQL relational database service available as part of IBM Skills Network Labs (SN Labs) Cloud IDE. SN Labs is a virtual lab environment used in this course.</p>
+    <h1></h1>
+    <h2>Database Used in this Lab</h2>
+    <p>Books database has been used in this lab.</p>
+    <p>The following diagram shows the structure of the myauthors table from the Books database:</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/datasets/Books/Books_schema.png" width="245" height="100">
+    <h1></h1>
+    <h2>Objectives</h2>
+    <p>After completing this lab, you will be able to use phpMyAdmin with MySQL to:</p>
+    <ul>
+      <li>Create a database.</li>
+      <li>Create tables.</li>
+      <li>Load data into tables manually using the phpMyAdmin GUI.</li>
+      <li>Load data into tables using a text/script file.</li>
+    </ul>
+    <h1></h1>
+    <h2>Exercise</h2>
+    <p>In this exercise through different tasks, you will learn how to create tables and load data in the MySQL database service using the phpMyAdmin graphical user interface (GUI) tool.</p>
+    <h1></h1>
+    <h3>Task A: Create a database</h3>
+    <ol>
+      <li>
+        <p>Go to <strong>Terminal > New Terminal</strong> to open a terminal from the side by side launched Cloud IDE.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Create%20Tables%20and%20Load%20Data%20in%20MySQL%20using%20phpMyAdmin/images/2.1.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Start MySQL service session in the Cloud IDE using the command below in the terminal. Find your MySQL service session password from the highlighted location of the terminal shown in the image below. Note down your MySQL service session password because you may need to use it later in the lab.</p>
+        <pre><code class="hljs language-ebnf"><span class="hljs-attribute">start_mysql</span>
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Create%20Tables%20and%20Load%20Data%20in%20MySQL%20using%20phpMyAdmin/images/2.2.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Copy your phpMyAdmin weblink from the highlighted location of the terminal shown in the image below and paste it into the address bar in a new tab of your web browser.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Create%20Tables%20and%20Load%20Data%20in%20MySQL%20using%20phpMyAdmin/images/2.3.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>You will see the phpMyAdmin GUI tool.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Create%20Tables%20and%20Load%20Data%20in%20MySQL%20using%20phpMyAdmin/images/2.4.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        <p>In the tree-view, click <strong>New</strong> to create a new empty database. Then enter <strong>Books</strong> as the name of the database and click <strong>Create</strong>. Proceed to Task B.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Create%20Tables%20and%20Load%20Data%20in%20MySQL%20using%20phpMyAdmin/images/2.5.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <h1></h1>
+    <h3>Task B: Create tables</h3>
+    <ol>
+      <li>
+        <p>In the Create table interface for the empty database <strong>Books</strong>, enter <strong>myauthors</strong> as the table name and <strong>4</strong> for the Number of columns. Then click <strong>Go</strong>.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Create%20Tables%20and%20Load%20Data%20in%20MySQL%20using%20phpMyAdmin/images/2.6.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Enter the table definition for the <strong>myauthors</strong> table as shown in the image below with highlighted boxes. Then click <strong>Save</strong>.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Create%20Tables%20and%20Load%20Data%20in%20MySQL%20using%20phpMyAdmin/images/2.7.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>The Table structure for the <strong>myauthors</strong> table will appear. Proceed to Task C.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Create%20Tables%20and%20Load%20Data%20in%20MySQL%20using%20phpMyAdmin/images/2.8.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <h1></h1>
+    <h3>Task C: Load data into tables manually using the phpMyAdmin GUI</h3>
+    <ol>
+      <li>
+        <p>Now go to the <strong>Insert</strong> tab for the <strong>myauthors</strong> table. Enter data for 2 rows of the <strong>myauthors</strong> table as shown in the image below with highlighted boxes. Then click <strong>Go</strong> at the bottom.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Create%20Tables%20and%20Load%20Data%20in%20MySQL%20using%20phpMyAdmin/images/2.9.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Notification of the successful insertion of 2 rows to the <strong>myauthors</strong> table will appear.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Create%20Tables%20and%20Load%20Data%20in%20MySQL%20using%20phpMyAdmin/images/2.10.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Go to the <strong>Browse</strong> tab for the <strong>myauthors</strong> table to check the newly inserted rows. Proceed to Task D.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Create%20Tables%20and%20Load%20Data%20in%20MySQL%20using%20phpMyAdmin/images/2.11.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <h1></h1>
+    <h3>Task D: Load data into tables using a text/script file.</h3>
+    <ol>
+      <li>
+        <p>Now you will use a sql script to import the remainder of the <strong>myauthors</strong> table data. Download the sql script below to your local computer:</p>
+        <ul>
+          <li><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/datasets/Books/mysql_table-myauthors_insert-data.sql" target="_blank" rel="external">mysql_table-myauthors_insert-data.sql</a></li>
+        </ul>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Go to <strong>Import</strong> tab for the <strong>myauthors</strong> table. Click <strong>Choose File</strong> and load the <strong>mysql_table-myauthors_insert-data.sql</strong> file from your local computer storage. Then click <strong>Go</strong>. Notification of import success will appear.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Create%20Tables%20and%20Load%20Data%20in%20MySQL%20using%20phpMyAdmin/images/2.13.1.png" alt="image">
+        </p>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Create%20Tables%20and%20Load%20Data%20in%20MySQL%20using%20phpMyAdmin/images/2.13.2.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Go to the <strong>Browse</strong> tab for the <strong>myauthors</strong> table again to check the newly inserted rows appear along with previously inserted 2 rows.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Create%20Tables%20and%20Load%20Data%20in%20MySQL%20using%20phpMyAdmin/images/2.14.png" alt="image">
+        </p>
+      </li>
+    </ol>
+    <h1></h1>
+    <h3>Congratulations! You have completed this lab, and you are ready for the next topic.</h3>
+    <h3><br></h3>
+    <h2>Author(s)</h2>
+    <ul>
+      <li><a href="https://www.linkedin.com/in/sandipsahajoy/?utm_email=Email&#x26;utm_source=Nurture&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_campaign=PLACEHOLDER&#x26;utm_id=SkillsNetwork-Courses-IBM-DB0110EN-SkillsNetwork-24601058" target="_blank" rel="external">Sandip Saha Joy</a></li>
+    </ul>
+    <h2>Other Contributor(s)</h2>
+    <ul>
+      <li></li>
+    </ul>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-03-15</td>
+          <td>1.0</td>
+          <td>Sandip Saha Joy</td>
+          <td>Created initial version</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2021. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.11b2a82f.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

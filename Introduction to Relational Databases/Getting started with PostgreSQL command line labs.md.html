@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20PostgreSQL%20command%20line/images/IDSNlogo.png" width="200" height="200">
+    <h1>Hands-on Lab : Getting started with PostgreSQL command line</h1>
+    <p><strong>Estimated time needed:</strong> 20 minutes</p>
+    <p>In this lab, you will use the PostgreSQL command line interface (CLI) to a create database and to restore the structure and contents of tables. Then you will learn how to explore and query tables. Finally, you will learn how to dump/backup tables from a database.</p>
+    <h1></h1>
+    <h2>Software Used in this Lab</h2>
+    <p>In this lab, you will use <a href="https://www.postgresql.org/">PostgreSQL Database</a>. PostgreSQL is a Relational Database Management System (RDBMS) designed to efficiently store, manipulate, and retrieve the data.</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20PostgreSQL%20command%20line/images/postgresql.png" width="130" height="100">
+    <p></p>
+    <p>To complete this lab you will utilize the PostgreSQL relational database service available as part of IBM Skills Network Labs (SN Labs) Cloud IDE. SN Labs is a virtual lab environment used in this course.</p>
+    <h1></h1>
+    <h2>Database Used in this Lab</h2>
+    <p>The Sakila database used in this lab comes from the following source: <a href="https://dev.mysql.com/doc/sakila/en/?utm_email=Email&#x26;utm_source=Nurture&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_campaign=PLACEHOLDER&#x26;utm_id=SkillsNetwork-Courses-IBM-DB0110EN-SkillsNetwork-24601058" target="_blank" rel="external">https://dev.mysql.com/doc/sakila/en/</a> under <a href="https://opensource.org/licenses/bsd-license.php?utm_email=Email&#x26;utm_source=Nurture&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_campaign=PLACEHOLDER&#x26;utm_id=SkillsNetwork-Courses-IBM-DB0110EN-SkillsNetwork-24601058" target="_blank" rel="external">New BSD license</a> [Copyright 2021 - Oracle Corporation].</p>
+    <p>You will use a modified version of the database for the lab, so to follow the lab instructions successfully please use the database provided with the lab, rather than the database from the original source.</p>
+    <p>The following ERD diagram shows the schema of the Sakila database:</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/datasets/sakila/sakila_ERD.jpg" width="500" height="592">
+    <h1></h1>
+    <h2>Objectives</h2>
+    <p>After completing this lab, you will be able to use the PostgreSQL command line to:</p>
+    <ul>
+      <li>Create a database.</li>
+      <li>Restore the structure and data of a table.</li>
+      <li>Explore and query tables.</li>
+      <li>Dump/backup tables from a database.</li>
+    </ul>
+    <h1></h1>
+    <h2>Exercise</h2>
+    <p>In this exercise through different tasks, you will use the PostgreSQL command line interface (CLI) to a create database and to restore the structure and contents of tables. Then you will learn how to explore and query tables. Finally, you will learn how to dump/backup tables from a database.</p>
+    <h1></h1>
+    <h3>Task A: Create a database</h3>
+    <ol>
+      <li>
+        <p>Go to <strong>Terminal > New Terminal</strong> to open a terminal from the side by side launched Cloud IDE.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20PostgreSQL%20command%20line/images/1.1.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Copy the command below by clicking on the little copy button on the bottom right of the codeblock and then paste it into the terminal using <strong>Ctrl + V</strong> (Mac: ⌘ + V) to fetch the <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/datasets/sakila/sakila_pgsql_dump.sql" target="_blank" rel="external">sakila_pgsql_dump.sql</a> file to the Cloud IDE.</p>
+        <pre><code class="hljs language-awk">wget https:<span class="hljs-regexp">//</span>cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud<span class="hljs-regexp">/IBM-DB0110EN-SkillsNetwork/</span>datasets<span class="hljs-regexp">/sakila/</span>sakila_pgsql_dump.sql
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20PostgreSQL%20command%20line/images/1.2.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Start the PostgreSQL service session in the Cloud IDE using the command below in the terminal:</p>
+        <pre><code class="hljs language-ebnf"><span class="hljs-attribute">start_postgres</span>
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20PostgreSQL%20command%20line/images/1.3.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>Initiate the psql command prompt session within the PostgreSQL service session using the command below in the terminal:</p>
+        <pre><code class="hljs language-routeros">psql <span class="hljs-attribute">--username</span>=postgres <span class="hljs-attribute">--host</span>=localhost --password
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20PostgreSQL%20command%20line/images/1.4.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>Enter your PostgreSQL service session password from the highlighted location of the terminal shown in the image above. Note down your PostgreSQL service session password because you may need to use it later in the lab.</li>
+    </ol><br>
+    <ol start="6">
+      <li>
+        <p>Create a new database <strong>sakila</strong> using the command below in the terminal and proceed to Task B:</p>
+        <pre><code class="hljs language-n1ql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">database</span> sakila;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20PostgreSQL%20command%20line/images/1.6.png" alt="image">
+        </p>
+        <blockquote>
+          <p><strong>Note:</strong> You are using <strong>create database</strong> command to create a new database within the psql command prompt. To create a new database named sakila outside psql command prompt directly, you can use command <code>createdb --username=postgres --host=localhost --password sakila</code> after quitting the psql command prompt session with command <code>\q</code>.</p>
+        </blockquote>
+      </li>
+    </ol><br>
+    <h1></h1>
+    <h3>Task B: Restore the structure and data of a table</h3>
+    <ol>
+      <li>
+        <p>To connect to the newly created empty sakila database, use the command below in the terminal and enter your PostgreSQL service session password:</p>
+        <pre><code class="hljs language-abnf">\connect sakila<span class="hljs-comment">;</span>
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20PostgreSQL%20command%20line/images/1.7.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Restore the sakila PostgreSQL dump file (containing the sakila database table definitions and data) to the newly created empty sakila database using the command below in the terminal:</p>
+        <pre><code class="hljs language-pgsql">\<span class="hljs-keyword">include</span> sakila_pgsql_dump.<span class="hljs-keyword">sql</span>;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20PostgreSQL%20command%20line/images/1.8.png" alt="image">
+        </p>
+        <blockquote>
+          <p><strong>Note:</strong> You are using the <strong>\include</strong> command to restore the database dump file within the psql command prompt. To restore the database dump file outside of the psql command prompt, you can use the command <code>pg_restore --username=postgres --host=localhost --password --dbname=sakila &#x3C; sakila_pgsql_dump.tar</code> after quitting the psql command prompt session with command <code>\q</code>. Non-text format <strong>.tar</strong> dumps are restored using the <strong>pg_restore</strong> command. So, before the using mentioned <strong>pg_restore</strong> command, first fetch the .tar version of this dump file using the command <code>wget https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/datasets/sakila/sakila_pgsql_dump.tar</code></p>
+        </blockquote>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>Repeat Step 1 to reconnect to the sakila database after restoring the dump file. Proceed to Task C.</li>
+    </ol>
+    <h1></h1>
+    <h3>Task C: Explore and query tables</h3>
+    <ol>
+      <li>
+        <p>To list all the tables names from the sakila database, use the command below in the terminal:</p>
+        <pre><code class="hljs language-abnf">\dt<span class="hljs-comment">;</span>
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20PostgreSQL%20command%20line/images/1.10.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Explore the structure of the <strong>store</strong> table using the command below in the terminal:</p>
+        <pre><code class="hljs language-abnf">\d store<span class="hljs-comment">;</span>
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20PostgreSQL%20command%20line/images/1.11.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Retrieve all the records from the <strong>store</strong> table using the command below in the terminal:</p>
+        <pre><code class="hljs language-sql_more"><span class="hljs-keyword">SELECT</span> * <span class="hljs-keyword">FROM</span> <span class="hljs-keyword">store</span>;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20PostgreSQL%20command%20line/images/1.12.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>Quit the PostgreSQL command prompt session using the command below in the terminal and proceed to Task D:</p>
+        <pre><code class="hljs language-css">\<span class="hljs-selector-tag">q</span>
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20PostgreSQL%20command%20line/images/1.13.png" alt="image">
+        </p>
+      </li>
+    </ol>
+    <h1></h1>
+    <h3>Task D: Dump/backup tables from a database</h3>
+    <ol>
+      <li>
+        <p>Finally, to dump/backup the <strong>store</strong> table from the database, use the command below in the terminal and enter your PostgreSQL service session password:</p>
+        <pre><code class="hljs language-pgsql">pg_dump <span class="hljs-comment">--username=postgres --host=localhost --password --dbname=sakila --table=store --format=plain > sakila_store_pgsql_dump.sql</span>
+</code></pre>
+        <p></p>
+        <blockquote>
+          <p><strong>Note:</strong> To only dump/backup the table <strong>store</strong> from the database in non-text format <strong>.tar</strong>, you can use command <code>pg_dump --username=postgres --host=localhost --password --dbname=sakila --table=store --format=tar > sakila_store_pgsql_dump.tar</code></p>
+        </blockquote>
+      </li>
+      <li>
+        <p>To view the dump file within the terminal, use the command below in the terminal:</p>
+        <pre><code class="hljs language-autohotkey">cat sakil<span class="hljs-built_in">a_store</span>_pgsql_dump.sql
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20PostgreSQL%20command%20line/images/1.15.png" alt="image">
+        </p>
+      </li>
+    </ol>
+    <h1></h1>
+    <h3>Congratulations! You have completed this lab, and you are ready for the next topic.</h3>
+    <h3><br></h3>
+    <h2>Author(s)</h2>
+    <ul>
+      <li><a href="https://www.linkedin.com/in/sandipsahajoy/?utm_email=Email&#x26;utm_source=Nurture&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_campaign=PLACEHOLDER&#x26;utm_id=SkillsNetwork-Courses-IBM-DB0110EN-SkillsNetwork-24601058" target="_blank" rel="external">Sandip Saha Joy</a></li>
+    </ul>
+    <h2>Other Contributor(s)</h2>
+    <ul>
+      <li></li>
+    </ul>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-03-15</td>
+          <td>1.0</td>
+          <td>Sandip Saha Joy</td>
+          <td>Created initial version</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2021. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.11b2a82f.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

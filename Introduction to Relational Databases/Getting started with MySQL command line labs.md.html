@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20MySQL%20command%20line/images/IDSNlogo.png" width="200" height="200">
+    <h1>Hands-on Lab : Getting started with MySQL command line</h1>
+    <p><strong>Estimated time needed:</strong> 20 minutes</p>
+    <p>In this lab, you will use the MySQL command line interface (CLI) to create a database and to restore the structure and contents of tables. Then you will learn how to explore and query tables. Finally, you will learn how to dump/backup tables from database.</p>
+    <h1></h1>
+    <h2>Software Used in this Lab</h2>
+    <p>In this lab, you will use <a href="https://www.mysql.com/">MySQL</a>. MySQL is a Relational Database Management System (RDBMS) designed to efficiently store, manipulate, and retrieve data.</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20MySQL%20command%20line/images/mysql.png" width="100" height="100">
+    <p></p>
+    <p>To complete this lab you will utilize the MySQL relational database service available as part of the IBM Skills Network Labs (SN Labs) Cloud IDE. SN Labs is a virtual lab environment used in this course.</p>
+    <h1></h1>
+    <h2>Database Used in this Lab</h2>
+    <p>The Sakila database used in this lab comes from the following source: <a href="https://dev.mysql.com/doc/sakila/en/?utm_email=Email&#x26;utm_source=Nurture&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_campaign=PLACEHOLDER&#x26;utm_id=SkillsNetwork-Courses-IBM-DB0110EN-SkillsNetwork-24601058" target="_blank" rel="external">https://dev.mysql.com/doc/sakila/en/</a> under <a href="https://opensource.org/licenses/bsd-license.php?utm_email=Email&#x26;utm_source=Nurture&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_campaign=PLACEHOLDER&#x26;utm_id=SkillsNetwork-Courses-IBM-DB0110EN-SkillsNetwork-24601058" target="_blank" rel="external">New BSD license</a> [Copyright 2021 - Oracle Corporation].</p>
+    <p>You will use a modified version of the database for the lab, so to follow the lab instructions successfully please use the database provided with the lab, rather than the database from the original source.</p>
+    <p>The following ERD diagram shows the schema of the Sakila database:</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/datasets/sakila/sakila_ERD.jpg" width="500" height="592">
+    <h1></h1>
+    <h2>Objectives</h2>
+    <p>After completing this lab, you will be able to use the MySQL command line to:</p>
+    <ul>
+      <li>Create a database.</li>
+      <li>Restore the structure and data of a table.</li>
+      <li>Explore and query tables.</li>
+      <li>Dump/backup tables from a database.</li>
+    </ul>
+    <h1></h1>
+    <h2>Exercise</h2>
+    <p>In this exercise through different tasks, you will use the MySQL command line interface (CLI) to create a database and to restore the structure and contents of tables. Then you will learn how to explore and query tables. Finally, you will learn how to dump/backup tables from database.</p>
+    <h1></h1>
+    <h3>Task A: Create a database</h3>
+    <ol>
+      <li>
+        <p>Go to <strong>Terminal > New Terminal</strong> to open a terminal from the side by side launched Cloud IDE.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20MySQL%20command%20line/images/A.1.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Copy the command below by clicking on the little copy button on the bottom right of the codeblock and then paste it into the terminal using <strong>Ctrl + V</strong> (Mac: ⌘ + V) to fetch the <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/datasets/sakila/sakila_mysql_dump.sql" target="_blank" rel="external">sakila_mysql_dump.sql</a> file to the Cloud IDE.</p>
+        <pre><code class="hljs language-awk">wget https:<span class="hljs-regexp">//</span>cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud<span class="hljs-regexp">/IBM-DB0110EN-SkillsNetwork/</span>datasets<span class="hljs-regexp">/sakila/</span>sakila_mysql_dump.sql
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20MySQL%20command%20line/images/A.2.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Start the MySQL service session in the Cloud IDE using the command below in the terminal:</p>
+        <pre><code class="hljs language-ebnf"><span class="hljs-attribute">start_mysql</span>
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20MySQL%20command%20line/images/A.3.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>Initiate the mysql command prompt session within MySQL service session using the command below in the terminal:</p>
+        <pre><code class="hljs language-routeros">mysql <span class="hljs-attribute">--host</span>=127.0.0.1 <span class="hljs-attribute">--port</span>=3306 <span class="hljs-attribute">--user</span>=root --password
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20MySQL%20command%20line/images/A.4.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>Enter your MySQL service session password from the highlighted location of the terminal shown in the image above. Note down your MySQL service session password because you may need to use it later in the lab.</li>
+    </ol><br>
+    <ol start="6">
+      <li>
+        <p>Create a new database <strong>sakila</strong> using the command below in the terminal and proceed to Task B:</p>
+        <pre><code class="hljs language-n1ql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">database</span> sakila;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20MySQL%20command%20line/images/A.6.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <h1></h1>
+    <h3>Task B: Restore the structure and data of a table</h3>
+    <ol>
+      <li>
+        <p>To use the newly created empty sakila database, use the command below in the terminal:</p>
+        <pre><code class="hljs language-abnf">use sakila<span class="hljs-comment">;</span>
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20MySQL%20command%20line/images/B.1.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Restore the sakila mysql dump file (containing the sakila database table definitions and data) to the newly created empty sakila database using the command below in the terminal and proceed to Task C:</p>
+        <pre><code class="hljs language-abnf">source sakila_mysql_dump.sql<span class="hljs-comment">;</span>
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20MySQL%20command%20line/images/B.2.png" alt="image">
+        </p>
+        <blockquote>
+          <p><strong>Note:</strong> You can use the <strong>source</strong> command to restore the database dump file within the mysql command prompt. To restore the database dump file outside of the mysql command prompt, you can use the <code>mysqldump --host=127.0.0.1 --port=3306 --user=root --password sakila &#x3C; sakila_mysql_dump.sql</code> command after quitting the mysql command prompt session with command <code>\q</code>.</p>
+        </blockquote>
+      </li>
+    </ol><br>
+    <h1></h1>
+    <h3>Task C: Explore and query tables</h3>
+    <ol>
+      <li>
+        <p>To list all the tables names from the sakila database, use the command below in the terminal:</p>
+        <pre><code class="hljs language-pgsql"><span class="hljs-keyword">SHOW</span> <span class="hljs-keyword">FULL</span> <span class="hljs-keyword">TABLES</span> <span class="hljs-keyword">WHERE</span> table_type = <span class="hljs-string">'BASE TABLE'</span>;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20MySQL%20command%20line/images/C.1.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Explore the structure of the <strong>staff</strong> table using the command below in the terminal:</p>
+        <pre><code class="hljs language-abnf">DESCRIBE staff<span class="hljs-comment">;</span>
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20MySQL%20command%20line/images/C.2.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Now retrieve all the records from the <strong>staff</strong> table using the command below in the terminal:</p>
+        <pre><code class="hljs language-n1ql"><span class="hljs-keyword">SELECT</span> * <span class="hljs-keyword">FROM</span> staff;
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20MySQL%20command%20line/images/C.3.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>Quit the MySQL command prompt session using the command below in the terminal and proceed to Task D:</p>
+        <pre><code class="hljs language-css">\<span class="hljs-selector-tag">q</span>
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20MySQL%20command%20line/images/C.4.png" alt="image">
+        </p>
+      </li>
+    </ol>
+    <h1></h1>
+    <h3>Task D: Dump/backup tables from a database</h3>
+    <ol>
+      <li>
+        <p>Finally, dump/backup the <strong>staff</strong> table from the database using the command below in the terminal:</p>
+        <pre><code class="hljs language-routeros">mysqldump <span class="hljs-attribute">--host</span>=127.0.0.1 <span class="hljs-attribute">--port</span>=3306 <span class="hljs-attribute">--user</span>=root --password sakila staff > sakila_staff_mysql_dump.sql
+</code></pre>
+        <p></p>
+      </li>
+      <li>
+        <p>Enter your MySQL service session password.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20MySQL%20command%20line/images/D.2.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>To view the contents of the dump file within the terminal, use the command below:</p>
+        <pre><code class="hljs language-autohotkey">cat sakil<span class="hljs-built_in">a_staff</span>_mysql_dump.sql
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Getting%20started%20with%20MySQL%20command%20line/images/D.3.png" alt="image">
+        </p>
+      </li>
+    </ol>
+    <h1></h1>
+    <h3>Congratulations! You have completed this lab, and you are ready for the next topic.</h3>
+    <h3><br></h3>
+    <h2>Author(s)</h2>
+    <ul>
+      <li><a href="https://www.linkedin.com/in/sandipsahajoy/?utm_email=Email&#x26;utm_source=Nurture&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_campaign=PLACEHOLDER&#x26;utm_id=SkillsNetwork-Courses-IBM-DB0110EN-SkillsNetwork-24601058" target="_blank" rel="external">Sandip Saha Joy</a></li>
+    </ul>
+    <h2>Other Contributor(s)</h2>
+    <ul>
+      <li></li>
+    </ul>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-03-15</td>
+          <td>1.0</td>
+          <td>Sandip Saha Joy</td>
+          <td>Created initial version</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2021. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.11b2a82f.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

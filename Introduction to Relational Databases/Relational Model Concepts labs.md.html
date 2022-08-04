@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Relational%20Model%20Concepts/images/IDSNlogo.png" width="200" height="200">
+    <h1>Hands-on Lab : Relational Model Concepts</h1>
+    <p><strong>Estimated time needed:</strong> 10 minutes</p>
+    <p>In this module, you have learned that the Entity-Relationship Diagram (ERD) is a tool to design relational databases, and the concepts of a relational model including the terms entity, attribute, relation, degree, and cardinality.</p>
+    <p>Now in this lab, let us try and apply the concepts we have learned in this module to a real-world example of a database.</p>
+    <h1>Objectives</h1>
+    <p>After completing this lab, you will be able to evaluate your knowledge of relational model concepts.</p>
+    <h1>Exercise</h1>
+    <p>In this exercise, we will be working on a relational database schema called Car Dealership. A database has to be designed to keep track of automobile sales in a car dealership.</p>
+    <h5>Schema diagram for the Car Dealership relational database:</h5>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Relational%20Model%20Concepts/images/Module1_Car_Schema.png" width="500" height="500"><br>
+    <h5>Relational instance of SALE:</h5>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Relational%20Model%20Concepts/images/sale_table.png">
+    </p><br>
+    <p>Now let us go through some questions based on the above database schema of Car Dealership and relational instance of SALE:</p>
+    <ol>
+      <li>
+        <blockquote>
+          <p>How many relations does the Car Dealership database schema contain?</p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>A relation is also the mathematical term for a table.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Answer</summary>
+          <blockquote>
+            <p>Three. The Car Dealership database schema contains the following 3 relations or tables: CAR, SALE, SALESPERSON.</p>
+          </blockquote>
+        </details>
+      </li>
+    </ol>
+    <ol start="2">
+      <li>
+        <blockquote>
+          <p>How many columns does the relation Car contain?</p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>A relation is also the mathematical term for a table. A table is a combination of rows and columns. The columns are the attributes, or fields.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Answer</summary>
+          <blockquote>
+            <p>Four. The relation Car contains the following 4 columns: Serial No, Model, Manufacturer, Price.</p>
+          </blockquote>
+        </details>
+      </li>
+    </ol>
+    <ol start="3">
+      <li>
+        <blockquote>
+          <p>How many rows does the relation Sale contain?</p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>A relation is also the mathematical term for a table. A table is a combination of rows and columns. The rows are the tuples.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Answer</summary>
+          <blockquote>
+            <p>Five</p>
+          </blockquote>
+        </details>
+      </li>
+    </ol>
+    <ol start="4">
+      <li>
+        <blockquote>
+          <p>What is the degree of the relation Salesperson?</p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Degree refers to the number of attributes, or columns, in a relation.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Answer</summary>
+          <blockquote>
+            <p>Three</p>
+          </blockquote>
+        </details>
+      </li>
+    </ol>
+    <ol start="5">
+      <li>
+        <blockquote>
+          <p>Identify the cardinality of the relation Sale.</p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Cardinality refers to the number of tuples, or rows, in a relation.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Answer</summary>
+          <blockquote>
+            <p>Five</p>
+          </blockquote>
+        </details>
+      </li>
+    </ol>
+    <ol start="6">
+      <li>
+        <blockquote>
+          <p>Identify the attributes of the relation Salesperson.</p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>A relational schema specifies the relation name and type of each of the columns, which are the attributes.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Answer</summary>
+          <blockquote>
+            <p>Salesperson_id, Name, Phone</p>
+          </blockquote>
+        </details>
+      </li>
+    </ol>
+    <h3>Congratulations! You have completed this lab, and you are ready for the next topic.</h3>
+    <h3></h3>
+    <h2>Author(s)</h2>
+    <ul>
+      <li><a href="https://www.linkedin.com/in/ravahuja/?utm_email=Email&#x26;utm_source=Nurture&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_campaign=PLACEHOLDER&#x26;utm_id=SkillsNetwork-Courses-IBM-DB0110EN-SkillsNetwork-24601058" target="_blank" rel="external">Rav Ahuja</a></li>
+      <li><a href="https://www.linkedin.com/in/sandipsahajoy/?utm_email=Email&#x26;utm_source=Nurture&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_campaign=PLACEHOLDER&#x26;utm_id=SkillsNetwork-Courses-IBM-DB0110EN-SkillsNetwork-24601058" target="_blank" rel="external">Sandip Saha Joy</a></li>
+    </ul>
+    <h2>Other Contributor(s)</h2>
+    <ul>
+      <li></li>
+    </ul>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2020-12-23</td>
+          <td>2.1</td>
+          <td>Steve Ryan</td>
+          <td>ID Review</td>
+        </tr>
+        <tr>
+          <td>2020-12-03</td>
+          <td>2.0</td>
+          <td>Sandip Saha Joy</td>
+          <td>Created revised md version</td>
+        </tr>
+        <tr>
+          <td>2018</td>
+          <td>1.0</td>
+          <td>Rav Ahuja</td>
+          <td>Created initial version</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2020. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.11b2a82f.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

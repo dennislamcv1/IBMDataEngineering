@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/IDSNlogo.png" width="200" height="200">
+    <h1>Hands-on Lab : Database Design using ERDs</h1>
+    <p><strong>Estimated time needed:</strong> 45 minutes</p>
+    <p>In this lab, you will learn how to design a database by creating an entity relationship diagram (ERD) in the PostgreSQL database service using the pgAdmin graphical user interface (GUI) tool. First, you will create an ERD of a database. Next, you will generate and execute an SQL script to create the database schema from its ERD. Finally, you will load the created database schema with data.</p>
+    <h1></h1>
+    <h2>Software Used in this Lab</h2>
+    <p>In this lab, you will use <a href="https://www.postgresql.org/">PostgreSQL Database</a>. PostgreSQL is a Relational Database Management System (RDBMS) designed to efficiently store, manipulate, and retrieve data.</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/postgresql.png" width="130" height="100">
+    <p></p>
+    <p>To complete this lab you will utilize the PostgreSQL relational database service available as part of IBM Skills Network Labs (SN Labs) Cloud IDE. SN Labs is a virtual lab environment used in this course.</p>
+    <h1></h1>
+    <h2>Database Used in this Lab</h2>
+    <p>The HR database used in this lab comes from the following source: <a href="https://docs.oracle.com/en/database/oracle/oracle-database/19/comsc/introduction-to-sample-schemas.html?utm_email=Email&#x26;utm_source=Nurture&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_campaign=PLACEHOLDER&#x26;utm_id=SkillsNetwork-Courses-IBM-DB0110EN-SkillsNetwork-24601058#GUID-4DE9844F-0B28-4713-9AFC-CCD8D6249D76" target="_blank" rel="external">HR Sample Database</a> [Copyright 2021 - Oracle Corporation].</p>
+    <p>You will use a modified version of the database for the lab, so to follow the lab instructions successfully please use the database provided with the lab, rather than the database from the original source.</p>
+    <p>The following ERD shows the tables of the HR database:</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/datasets/HR_Database/HR_Proper/HR_tables.png" width="700" height="700">
+    <h1></h1>
+    <h2>Objectives</h2>
+    <p>After completing this lab, you will be able to use pgAdmin with PostgreSQL to:</p>
+    <ul>
+      <li>Create an ERD of a database.</li>
+      <li>Generate and execute an SQL script from an ERD to create a schema.</li>
+      <li>Load the database schema with data.</li>
+    </ul>
+    <p>This lab is divided into two exercises, <em>Example Exercise</em> and <em>Practice Exercise</em>.</p>
+    <h1></h1>
+    <h2>Example Exercise</h2>
+    <p>In this example exercise through different tasks, first you will create a partial ERD of the HR database. Next, you will generate and execute an SQL script to create the partial schema of the HR database from its ERD. Finally, you will load the created database schema with data by using restore feature.</p>
+    <h1></h1>
+    <h3>Task A: Create an Entity Relationship Diagram (ERD) of a database</h3>
+    <p>In this task of the Example Exercise, you will create a partial ERD of the HR database.</p>
+    <ol>
+      <li>
+        <p>Go to <strong>Terminal > New Terminal</strong> to open a terminal from the side-by-side launched Cloud IDE.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.A.1.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Start a PostgreSQL service session in the Cloud IDE using the command below in the terminal. Find your PostgreSQL service session password from the highlighted location of the terminal shown in the image below. Note down your PostgreSQL service session password because you may need to use it later in the lab.</p>
+        <pre><code class="hljs language-ebnf"><span class="hljs-attribute">start_postgres</span>
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.A.2.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Copy your pgAdmin weblink from the highlighted location of the terminal shown in the image below and paste it to a new tab of your web browser.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.A.3.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>You will see the pgAdmin GUI tool.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.A.4.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        <p>In the tree-view, expand <strong>Servers</strong> > <strong>postgres</strong> > <strong>Databases</strong>. Enter your PostgreSQL service session password if prompted during the process. Right-click on <strong>Databases</strong> and go to <strong>Create > Database</strong>. Type <strong>HR</strong> as name of the database and click <strong>Save</strong>.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.A.5.1.png" alt="image">
+        </p>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.A.5.2.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="6">
+      <li>
+        <p>In the tree-view, expand <strong>HR</strong>. Right-click on <strong>HR</strong> and select <strong>Generate ERD (Beta)</strong>.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.A.6.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="7">
+      <li>
+        <p>Click the <strong>Add table</strong> button. On the <strong>General</strong> tab, in the <strong>Name</strong> box, type <strong>employees</strong> as name of the table. Don't click <strong>OK</strong>, proceed to the next step.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.A.7.1.png" alt="image">
+        </p>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.A.7.2.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="8">
+      <li>
+        <p>Switch to the <strong>Columns</strong> tab and click the <strong>Add new row</strong> button to add the necessary column placeholders. Now enter the <strong>employees</strong> table definition information as shown in the image below to create its entity diagram. Then click <strong>OK</strong>.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.A.8.1.png" alt="image">
+        </p>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.A.8.2.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="9">
+      <li>
+        <p>Similarly, create entity diagrams for the other three tables following steps 7 and 8:</p>
+        <details>
+          <summary>[Click here] Create an entity diagram for the jobs table</summary>
+          <blockquote>
+            <p>Click <strong>Add table</strong> icon. On the <strong>General</strong> tab, in the <strong>Name</strong> box, type <strong>jobs</strong> as name of the table. Don't click <strong>OK</strong>. Switch to tab <strong>Columns</strong> and click the <strong>Add new row</strong> button to add the necessary column placeholders. Now enter the <strong>jobs</strong> table definition information as shown in the image below to create its entity diagram. Then click <strong>OK</strong>.</p>
+          </blockquote>
+          <p></p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.A.9.A.1.png" alt="image">
+          </p>
+          <p></p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.A.9.A.2.png" alt="image">
+          </p>
+        </details>
+        <details>
+          <summary>[Click here] Create an entity diagram for the departments table</summary>
+          <blockquote>
+            <p>Click <strong>Add table</strong> icon. On the <strong>General</strong> tab, in the <strong>Name</strong> box, type <strong>departments</strong> as name of the table. Don't click <strong>OK</strong>. Switch to tab <strong>Columns</strong> and click the <strong>Add new row</strong> button to add the necessary column placeholders. Now enter the <strong>departments</strong> table definition information as shown in the image below to create its entity diagram. Then click <strong>OK</strong>.</p>
+          </blockquote>
+          <p></p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.A.9.B.1.png" alt="image">
+          </p>
+          <p></p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.A.9.B.2.png" alt="image">
+          </p>
+        </details>
+        <details>
+          <summary>[Click here] Create an entity diagram for the locations table</summary>
+          <blockquote>
+            <p>Click <strong>Add table</strong> icon. On the <strong>General</strong> tab, in the <strong>Name</strong> box, type <strong>locations</strong> as name of the table. Don't click <strong>OK</strong>. Switch to tab <strong>Columns</strong> and click the <strong>Add new row</strong> button to add the necessary column placeholders. Now enter the <strong>locations</strong> table definition information as shown in the image below to create its entity diagram. Then click <strong>OK</strong>.</p>
+          </blockquote>
+          <p></p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.A.9.C.1.png" alt="image">
+          </p>
+          <p></p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.A.9.C.2.png" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol><br>
+    <ol start="10">
+      <li>
+        <p>After creating all four entity diagrams, the entities of the ERD are complete.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.A.10.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="11">
+      <li>
+        <p>Next you will create relationships between the entities by adding foreign keys to the tables. Select the entity diagram <strong>employees</strong> and click the <strong>One-to-Many link</strong> button. Now enter the definition information for a foreign key on the <strong>employees</strong> table as shown in the image below to create the relationship. Then click <strong>OK</strong>.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.A.11.1.png" alt="image">
+        </p>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.A.11.2.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="12">
+      <li>
+        <p>Similarly, create the other relationships between the tables following the instructions in step 11:</p>
+        <details>
+          <summary>[Click here] Create a relationship between employees and jobs</summary>
+          <blockquote>
+            <p>Select the entity diagram <strong>employees</strong> and click the <strong>One-to-Many link</strong> button. Now enter the definition information for a foreign key on the <strong>employees</strong> table as shown in the image below to create the relationship. Then click <strong>OK</strong>.</p>
+          </blockquote>
+          <p></p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.A.12.1.png" alt="image">
+          </p>
+        </details>
+        <details>
+          <summary>[Click here] Create a relationship between departments and locations</summary>
+          <blockquote>
+            <p>Select the entity diagram <strong>departments</strong> and click the <strong>One-to-Many link</strong> button. Now enter the definition information for a foreign key on the <strong>departments</strong> table as shown in the image below to create the relationship. Then click <strong>OK</strong>.</p>
+          </blockquote>
+          <p></p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.A.12.2.png" alt="image">
+          </p>
+        </details>
+        <details>
+          <summary>[Click here] Create a relationship between departments and employees</summary>
+          <blockquote>
+            <p>Select the entity diagram <strong>departments</strong> and click the <strong>One-to-Many link</strong> button. Now enter the definition information for a foreign key on the <strong>departments</strong> table as shown in the image below to create the relationship. Then click <strong>OK</strong>.</p>
+          </blockquote>
+          <p></p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.A.12.3.png" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol><br>
+    <ol start="13">
+      <li>
+        <p>After creating all four relationships, you have completed the ERD for this exercise. Proceed to Task B.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.A.13.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <h1></h1>
+    <h3>Task B: Generate and execute SQL script from ERD to create schema</h3>
+    <p>In this task of the Example Exercise, you will generate and execute an SQL script from the ERD you created in Task A of the Example Exercise.</p>
+    <ol>
+      <li>
+        <p>In the <strong>Generate ERD (Beta)</strong> window, click the <strong>Generate SQL</strong> button.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.B.1.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>A new Query Editor window will open containing a SQL script generated from the ERD. Click the <strong>Execute/Refresh</strong> button to run the script. Proceed to Task C.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.B.2.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <h1></h1>
+    <h3>Task C: Load the database schema with data.</h3>
+    <p>In this task of the Example Exercise, you will load the database schema you created in Task B of the Example Exercise with data using the pgAdmin restore feature.</p>
+    <ol>
+      <li>
+        <p>Download the <strong>HR_pgsql_dump_data_for_example-exercise.tar</strong> PostgreSQL dump file (containing the partial HR database data) using the link below to your local computer storage.</p>
+        <ul>
+          <li><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/datasets/HR_Database/HR_Proper/HR_pgsql_dump_data_for_example-exercise.tar" target="_blank" rel="external">HR_pgsql_dump_data_for_example-exercise.tar</a></li>
+        </ul>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Follow the instructions below to import/restore the data:</p>
+        <ul>
+          <li>
+            <p>In the tree-view, expand <strong>HR</strong>. Right-click <strong>HR</strong> and click <strong>Restore</strong>.</p>
+            <p>
+              <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.C.2.png" alt="image">
+            </p>
+          </li>
+          <li>
+            <p>On the <strong>General</strong> tab, click the <strong>Select file</strong> button by the Filename box.</p>
+            <p>
+              <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.C.3.png" alt="image">
+            </p>
+          </li>
+          <li>
+            <p>Click the <strong>Upload File</strong> button.</p>
+            <p>
+              <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.C.4.png" alt="image">
+            </p>
+          </li>
+          <li>
+            <p>Double-click on the drop files area and load the <strong>HR_pgsql_dump_data_for_example-exercise.tar</strong> you downloaded earlier from your local computer storage.</p>
+            <p>
+              <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.C.5.png" alt="image">
+            </p>
+          </li>
+          <li>
+            <p>When the upload is complete, close the drop files area by clicking the <strong>X</strong> button.</p>
+            <p>
+              <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.C.6.png" alt="image">
+            </p>
+          </li>
+          <li>
+            <p>Make sure Format is set to <strong>All Files</strong>, select the uploaded <strong>HR_pgsql_dump_data_for_example-exercise.tar</strong> file from the list, and then click the <strong>Select</strong> button.</p>
+            <p>
+              <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.C.7.png" alt="image">
+            </p>
+          </li>
+          <li>
+            <p>Now switch to <strong>Restore options</strong> tab.</p>
+            <p>
+              <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.C.8.png" alt="image">
+            </p>
+          </li>
+          <li>
+            <p>Under Disable, set the Trigger option to <strong>Yes</strong>. Then click <strong>Restore</strong> button.</p>
+            <p>
+              <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/1.C.9.png" alt="image">
+            </p>
+          </li>
+        </ul>
+      </li>
+    </ol><br>
+    <h1></h1>
+    <h2>Practice Exercise</h2>
+    <p>In this practice exercise, first you will finish creating a partially complete ERD for the HR database. Next, you will generate and execute an SQL script to build the complete schema of the HR database from its ERD. Finally, you will load the complete database schema with data by using restore feature.</p>
+    <ol>
+      <li>
+        <p>Download the <strong>HR_pgsql_ERD_for_practice-exercise.pgerd</strong> ERD file (containing a partial HR database ERD based on the one that you created in Task A of Example Exercise) below to your local computer storage.</p>
+        <ul>
+          <li><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/datasets/HR_Database/HR_Proper/HR_pgsql_ERD_for_practice-exercise.pgerd" target="_blank" rel="external">HR_pgsql_ERD_for_practice-exercise.pgerd</a></li>
+        </ul>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>In pgAdmin, create a new database named <strong>HR_Complete</strong>.</li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Open the ERD Tool and use the <strong>Load from file</strong> button to load the <strong>HR_pgsql_ERD_for_practice-exercise.pgerd</strong> file.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/2.3.png" alt="image">
+        </p>
+        <p></p>
+        <blockquote>
+          <p><strong>Tip:</strong> Follow Example Exercise Task C for how to load any file in pgAdmin.</p>
+        </blockquote>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>You will see the previous four entity diagrams along with relationships that you created in the Example Exercise. You will also see three new entity diagrams for the <strong>job_history</strong>, <strong>regions</strong>, and <strong>countries</strong> tables as well as one new relationship within the entity diagram of the <strong>employees</strong> table between <em>manager_id</em> as local column and <em>employee_id</em> as referenced column.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/2.4.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        <p>Create the remaining relationships between the tables:</p>
+        <details>
+          <summary>[Click here] Create a relationship between countries and regions</summary>
+          <blockquote>
+            <p>Select the entity diagram <strong>countries</strong> and click the <strong>One-to-Many link</strong> button. Now enter the definition information for a foreign key on the <strong>countries</strong> table as shown in the image below to create the relationship. Then click <strong>OK</strong>.</p>
+          </blockquote>
+          <p></p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/2.5.1.png" alt="image">
+          </p>
+        </details>
+        <details>
+          <summary>[Click here] Create a relationship between job_history and departments</summary>
+          <blockquote>
+            <p>Select the entity diagram <strong>job_history</strong> and click the <strong>One-to-Many link</strong> button. Now enter the definition information for a foreign key on the <strong>job_history</strong> table as shown in the image below to create the relationship. Then click <strong>OK</strong>.</p>
+          </blockquote>
+          <p></p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/2.5.2.png" alt="image">
+          </p>
+        </details>
+        <details>
+          <summary>[Click here] Create a relationship between job_history and employees</summary>
+          <blockquote>
+            <p>Select the entity diagram <strong>job_history</strong> and click the <strong>One-to-Many link</strong> button. Now enter the definition information for a foreign key on the <strong>job_history</strong> table as shown in the image below to create the relationship. Then click <strong>OK</strong>.</p>
+          </blockquote>
+          <p></p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/2.5.3.png" alt="image">
+          </p>
+        </details>
+        <details>
+          <summary>[Click here] Create a relationship between job_history and jobs</summary>
+          <blockquote>
+            <p>Select the entity diagram <strong>job_history</strong> and click the <strong>One-to-Many link</strong> button. Now enter the definition information for a foreign key on the <strong>job_history</strong> table as shown in the image below to create the relationship. Then click <strong>OK</strong>.</p>
+          </blockquote>
+          <p></p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/2.5.4.png" alt="image">
+          </p>
+        </details>
+        <details>
+          <summary>[Click here] Create a relationship between locations and countries</summary>
+          <blockquote>
+            <p>Select the entity diagram <strong>locations</strong> and click the <strong>One-to-Many link</strong> button. Now enter the definition information for a foreign key on the <strong>locations</strong> table as shown in the image below to create the relationship. Then click <strong>OK</strong>.</p>
+          </blockquote>
+          <p></p>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/2.5.5.png" alt="image">
+          </p>
+        </details>
+        <p></p>
+        <blockquote>
+          <p><strong>Tip:</strong> Follow Example Exercise Task A for how to create relationships between the entities by adding foreign keys to the tables.</p>
+        </blockquote>
+      </li>
+    </ol><br>
+    <ol start="6">
+      <li>
+        <p>After creating the remaining relationships, the complete ERD of the HR database will look like the following image:</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Database%20Design%20using%20ERDs%20/images/2.6.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="7">
+      <li>
+        <p>Generate and execute an SQL script from the ERD to create the schema of the <strong>HR_Complete</strong> database.</p>
+        <blockquote>
+          <p><strong>Tip:</strong> Follow Example Exercise Task B.</p>
+        </blockquote>
+      </li>
+    </ol><br>
+    <ol start="8">
+      <li>
+        <p>Download the <strong>HR_pgsql_dump_data.tar</strong> PostgreSQL dump file (containing the complete HR database data) below to your local computer storage. Use the dump file to restore/import the data to the <strong>HR_Complete</strong> database.</p>
+        <ul>
+          <li><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/datasets/HR_Database/HR_Proper/HR_pgsql_dump_data.tar" target="_blank" rel="external">HR_pgsql_dump_data.tar</a></li>
+        </ul>
+        <p></p>
+        <blockquote>
+          <p><strong>Tip:</strong> Follow Example Exercise Task C.</p>
+        </blockquote>
+      </li>
+    </ol><br>
+    <h1></h1>
+    <h3>Congratulations! You have completed this lab, and you are ready for the next topic.</h3>
+    <h3><br></h3>
+    <h2>Author(s)</h2>
+    <ul>
+      <li><a href="https://www.linkedin.com/in/sandipsahajoy/?utm_email=Email&#x26;utm_source=Nurture&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_campaign=PLACEHOLDER&#x26;utm_id=SkillsNetwork-Courses-IBM-DB0110EN-SkillsNetwork-24601058" target="_blank" rel="external">Sandip Saha Joy</a></li>
+    </ul>
+    <h2>Other Contributor(s)</h2>
+    <ul>
+      <li></li>
+    </ul>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-03-31</td>
+          <td>1.0</td>
+          <td>Sandip Saha Joy</td>
+          <td>Created initial version</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2021. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.11b2a82f.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

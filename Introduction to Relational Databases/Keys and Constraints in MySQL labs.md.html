@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Keys%20and%20Constraints%20in%20MySQL/images/IDSNlogo.png" width="200" height="200">
+    <h1>Hands-on Lab : Keys and Constraints in MySQL</h1>
+    <p><strong>Estimated time needed:</strong> 20 minutes</p>
+    <p>In this lab, you will learn how to add keys to create relationships between the tables and how to use constraints to enforce rules on the data entry in the MySQL database service using the phpMyAdmin graphical user interface (GUI) tool.</p>
+    <h1></h1>
+    <h2>Software Used in this Lab</h2>
+    <p>In this lab, you will use <a href="https://www.mysql.com/">MySQL</a>. MySQL is a Relational Database Management System (RDBMS), designed to efficiently store, manipulate, and retrieve data.</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Keys%20and%20Constraints%20in%20MySQL/images/mysql.png" width="100" height="100">
+    <p></p>
+    <p>To complete this lab you will utilize MySQL relational database service available as part of IBM Skills Network Labs (SN Labs) Cloud IDE. SN Labs is a virtual lab environment used in this course.</p>
+    <h1></h1>
+    <h2>Database Used in this Lab</h2>
+    <p>The eBooks database has been used in this lab.</p>
+    <p>The following ERD diagram shows the current status of the schema of the eBooks database used in this lab:</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/datasets/eBooks/eBooks_schema_mysql_incomplete.png" width="630" height="500">
+    <h1></h1>
+    <h2>Objectives</h2>
+    <p>After completing this lab, you will be able to use MySQL phpMyAdmin to:</p>
+    <ul>
+      <li>Create primary and foreign keys.</li>
+      <li>Add constraints to data columns.</li>
+    </ul>
+    <h1></h1>
+    <h2>Exercise</h2>
+    <p>In this exercise, you will learn how to add keys to create relationships between the tables and how to use constraints to enforce rules on the data entry in the MySQL database service using the phpMyAdmin graphical user interface (GUI) tool.</p>
+    <ol>
+      <li>
+        <p>Download the the <strong>eBooks</strong> mysql dump file (containing the eBooks database table definitions and data) below to your local computer storage.</p>
+        <ul>
+          <li><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/datasets/eBooks/eBooks_mysql_dump.sql" target="_blank" rel="external">eBooks_mysql_dump.sql</a></li>
+        </ul>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Go to <strong>Terminal > New Terminal</strong> to open a terminal from the side by side launched Cloud IDE.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Keys%20and%20Constraints%20in%20MySQL/images/2.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Start the MySQL service session in the Cloud IDE using the command below in the terminal. Find your MySQL service session password from the highlighted location of the terminal shown in the image below. Note down your MySQL service session password because you may need to use it later in the lab.</p>
+        <pre><code class="hljs language-ebnf"><span class="hljs-attribute">start_mysql</span>
+</code></pre>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Keys%20and%20Constraints%20in%20MySQL/images/3.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>Copy your phpMyAdmin weblink from the highlighted location of the terminal shown in the image below and paste it to a new tab of your web browser.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Keys%20and%20Constraints%20in%20MySQL/images/4.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        <p>You will see the phpMyAdmin GUI tool.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Keys%20and%20Constraints%20in%20MySQL/images/5.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="6">
+      <li>
+        <p>Go to the <strong>Import</strong> tab. Click <strong>Choose File</strong> and load the <strong>eBooks_mysql_dump.sql</strong> file you downloaded earlier to your local computer storage. Next, uncheck <strong>Enable foreign key checks</strong> and select SQL as <strong>Format</strong>. Then click <strong>Go</strong>.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Keys%20and%20Constraints%20in%20MySQL/images/6.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="7">
+      <li>
+        <p>You will be notified that the import has successfully finished. Click the database <strong>eBooks</strong> as shown below to expand (if necessary click the <strong>+</strong> icon beside <strong>eBooks</strong>). You will see the list of tables from the eBooks database.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Keys%20and%20Constraints%20in%20MySQL/images/7.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="8">
+      <li>
+        <p><strong>Primary Keys</strong>: A primary key is a column or group of columns that uniquely identify every row in a table. You will create a primary key for the <strong>author</strong> table to uniquely identify every row in the table. You will set the <strong>author_id</strong> column of the <strong>author</strong> table as a primary key.</p>
+        <ul>
+          <li>In the tree-view, click the <strong>authors</strong> table. Switch to the <strong>Structure</strong> tab and make sure you are inside <strong>Table structure</strong> subtab.</li>
+          <li>Check the <strong>author_id</strong> column.</li>
+          <li>Click the <strong>Primary</strong> option.</li>
+        </ul>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Keys%20and%20Constraints%20in%20MySQL/images/8.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="9">
+      <li>
+        <p><strong>Auto-increment</strong>: Auto-increment enables a unique number to be generated automatically when a new record is inserted into a table. Often this is used for the primary key field to be created automatically every time a new record is inserted. You will set the auto-increment feature for the primary key of the <strong>author</strong> table.</p>
+        <ul>
+          <li>In the tree-view, click the <strong>authors</strong> table. Switch to the <strong>Structure</strong> tab and make sure you are inside the <strong>Table structure</strong> subtab.</li>
+          <li>Check the <strong>author_id</strong> column.</li>
+          <li>Click the <strong>Change</strong> option.</li>
+          <li>Check <strong>A_I</strong> option (A_I = Auto_Increment).</li>
+          <li>Click <strong>Save</strong>.</li>
+        </ul>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Keys%20and%20Constraints%20in%20MySQL/images/9.1.png" alt="image">
+        </p>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Keys%20and%20Constraints%20in%20MySQL/images/9.2.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="10">
+      <li>
+        <p><strong>Null constraints</strong>: By default, a column can hold NULL values. If you do not want a column to have a NULL value, you can restrict the column from having a NULL value. You will restrict the <strong>first_name</strong> column of the <strong>authors</strong> table from having a NULL value.</p>
+        <ul>
+          <li>In the tree-view, click the <strong>authors</strong> table. Switch to the <strong>Structure</strong> tab and make sure you are inside the <strong>Table structure</strong> subtab.</li>
+          <li>Check the <strong>first_name</strong> column.</li>
+          <li>Click the <strong>Change</strong> option.</li>
+          <li>Uncheck the <strong>Null</strong> option.</li>
+          <li>Click <strong>Save</strong>.</li>
+        </ul>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Keys%20and%20Constraints%20in%20MySQL/images/10.1.png" alt="image">
+        </p>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Keys%20and%20Constraints%20in%20MySQL/images/10.2.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="11">
+      <li>
+        <p><strong>Foreign keys</strong>: A foreign key is a column that establishes a relationship between two tables. It acts as a cross-reference between two tables as it points to the primary key of another table. You will create a foreign key for the <strong>book_authors</strong> table by setting its <strong>author_id</strong> column as a foreign key, to establish a relationship between the <strong>book_authors</strong> and <strong>authors</strong> tables.</p>
+        <ul>
+          <li>In the tree-view, click the <strong>book_authors</strong> table. Switch to the <strong>Structure</strong> tab and make sure you are inside the <strong>Relation view</strong> subtab.</li>
+          <li>If necessary, click <strong>Add constraint</strong> to create a new foreign key constraint placeholder.</li>
+          <li>Fill the placeholders as shown in a image below.</li>
+          <li>Click <strong>Save</strong>.</li>
+        </ul>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Keys%20and%20Constraints%20in%20MySQL/images/11.1.png" alt="image">
+        </p>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Keys%20and%20Constraints%20in%20MySQL/images/11.2.png" alt="image">
+        </p>
+        <p></p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/labs/Lab%20-%20Keys%20and%20Constraints%20in%20MySQL/images/11.3.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="12">
+      <li>
+        <p>After creating/adding all the above necessary primary keys, foreign keys, and constraints, the schema of the complete eBooks database will look like the following ERD diagram:</p>
+        <ul>
+          <li>
+            <p><strong>Note:</strong> You don't need to generate any ERD diagram like below for this lab. By comparing the earlier eBooks schema ERD (shown in the section "Database Used in this Lab") and this complete eBooks schema ERD, just try to understand how all the operations you did above made the eBooks database complete.</p>
+            <p></p>
+          </li>
+        </ul>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0110EN-SkillsNetwork/datasets/eBooks/eBooks_schema_complete.png" width="630" height="500">
+      </li>
+    </ol>
+    <h1></h1>
+    <h3>Congratulations! You have completed this lab, and you are ready for the next topic.</h3>
+    <h3><br></h3>
+    <h2>Author(s)</h2>
+    <ul>
+      <li><a href="https://www.linkedin.com/in/sandipsahajoy/?utm_email=Email&#x26;utm_source=Nurture&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_campaign=PLACEHOLDER&#x26;utm_id=SkillsNetwork-Courses-IBM-DB0110EN-SkillsNetwork-24601058" target="_blank" rel="external">Sandip Saha Joy</a></li>
+    </ul>
+    <h2>Other Contributor(s)</h2>
+    <ul>
+      <li></li>
+    </ul>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-03-22</td>
+          <td>1.0</td>
+          <td>Sandip Saha Joy</td>
+          <td>Created initial version</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2021. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.11b2a82f.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>
