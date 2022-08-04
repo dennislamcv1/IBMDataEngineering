@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <center>
+      <img src="https://gitlab.com/ibm/skills-network/courses/placeholder101/-/raw/master/labs/module%201/images/IDSNlogo.png" width="300" alt="cognitiveclass.ai logo">
+    </center>
+    <h1>Hands-on Lab: Create an instance of IBM Cloudant</h1>
+    <p>Estimated time needed: <strong>10</strong> minutes</p>
+    <h2>Objectives</h2>
+    <p>In this lab you will:</p>
+    <ul>
+      <li>Create an instance of IBM Cloudant.</li>
+      <li>Create IBM Cloudant Service credentials.</li>
+    </ul>
+    <h1>Exercise 1 - Log in to IBM Cloud</h1>
+    <p>You need an IBM Cloud account to work with IBM Cloudant.</p>
+    <p>If you do not have an account, you can sign up for one using the instructions <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20IBM%20Cloud%20Signup/Lab%20-%20IBM%20Cloud%20Signup.md.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0151ENSkillsNetwork24597197-2021-01-01" target="_blank">here.</a></p>
+    <p>Step 1: Navigate to <a href="https://cloud.ibm.com/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0151ENSkillsNetwork24597197-2021-01-01" target="_blank" rel="external">cloud.ibm.com</a>.</p>
+    <p>Step 2: Login using your IBM cloud credentials.</p>
+    <p>You will land on the the Cloud Dashboard page.</p>
+    <h1>Exercise 2 - Create an IBM Cloudant instance</h1>
+    <p>Step 1: Click on <a href="https://cloud.ibm.com/catalog/services/cloudant?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0151ENSkillsNetwork24597197-2021-01-01" target="_blank" rel="external">cloud.ibm.com/catalog/services/cloudant</a> to create a Cloudant instance.</p>
+    <p>Or you can alternatively click on <code>Create Resource</code>, search for Cloudant on the Dashboard page.</p>
+    <p>You will be taken to the Cloudant instance creation page.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Sign%20Up%20for%20an%20IBM%20Cloudant%20Instance/images/cloudant-create-instance.png" alt="">
+    </p>
+    <p>Step 2: Select the region under the "Available regions".</p>
+    <p>It is OK to go with the default option, if you cannot figure out which region to choose.</p>
+    <p>Step 3: Scroll down to configure Cloudant instance.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Sign%20Up%20for%20an%20IBM%20Cloudant%20Instance/images/cloudant-create-instance-steps.png" alt="">
+    </p>
+    <p>Step 4: Set your instance name to <code>mycloudant</code> or anything else that you prefer.</p>
+    <p>Step 5: Authentication Method is a critical setting. Select "IAM and legacy Credentials" as your Authentication Method. If you choose any other Authentication Method, some labs will not work.</p>
+    <p>Step 6: Select the <strong>Lite</strong> plan.</p>
+    <p>Step 7: Click on <code>Create</code></p>
+    <p>You should see a screen like this</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Sign%20Up%20for%20an%20IBM%20Cloudant%20Instance/images/cloudant-instance-create2.png" alt="">
+    </p>
+    <p>Your Cloudant service will be created and you will be redirected to the Resource list page.</p>
+    <p>Step 8: If you are not redirected, you can click on this link <a href="https://cloud.ibm.com/resources?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0151ENSkillsNetwork24597197-2021-01-01&#x26;groups=resource-instance" target="_blank" rel="external">cloud.ibm.com/resources?groups=resource-instance</a></p>
+    <p>You may see a screen like this, indicating the Provision in progress.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Sign%20Up%20for%20an%20IBM%20Cloudant%20Instance/images/cloudant-instance-create3.png" alt="">
+    </p>
+    <p>Step 9: Wait till the status turns 'Active' and click on <code>mycloudant</code> or your custom instance name.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Sign%20Up%20for%20an%20IBM%20Cloudant%20Instance/images/cloudant-instance-create4.png" alt="">
+    </p>
+    <p>You will be taken to the Cloudant instance page.</p>
+    <p>You have successfully created the Cloudant instance.</p>
+    <h1>Exercise 3 - Create Cloudant Service credentials</h1>
+    <p>Step 1: On the Cloudant instance page, click on <code>Service Credentials</code></p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Sign%20Up%20for%20an%20IBM%20Cloudant%20Instance/images/cloudant-instance-page.png" alt="">
+    </p>
+    <p>Step 2: Click on <code>New Credential</code>.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Sign%20Up%20for%20an%20IBM%20Cloudant%20Instance/images/create-credentials1.png" alt="">
+    </p>
+    <p>Step 3: Create credential pop up appears. Accept the default values for Name and Role and click on <code>Add</code></p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Sign%20Up%20for%20an%20IBM%20Cloudant%20Instance/images/create-credentials2.png" alt="">
+    </p>
+    <p>Step 4: Your Cloudant Service credentials will be created. Click on the chevron to view the credentials.</p>
+    <p>DO NOT attempt to use the credentials shown here. These are expired credentials.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Sign%20Up%20for%20an%20IBM%20Cloudant%20Instance/images/create-credentials3.png" alt="">
+    </p>
+    <p>Step 5: You will be using the username, password and url in the next labs.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Sign%20Up%20for%20an%20IBM%20Cloudant%20Instance/images/create-credentials4.png" alt="">
+    </p>
+    <p>You have successfully created a Cloudant instance and Service credentials for your instance.</p>
+    <p>Note: If you do not see the password field in your credentials, it is because in Exercise 2, Step 5 you have not selected "IAM and legacy credentials". You can fix it by deleting your current Cloudant instance and following this lab from the beginning to create a new instance of Cloudant.</p>
+    <h2>Authors</h2>
+    <p>Ramesh Sannareddy</p>
+    <h3>Other Contributors</h3>
+    <p>Rav Ahuja</p>
+    <h2>Change Log</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date (YYYY-MM-DD)</th>
+          <th>Version</th>
+          <th>Changed By</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-04-28</td>
+          <td>0.3</td>
+          <td>Steve Ryan</td>
+          <td>Changed IBM cloud links to markdown format</td>
+        </tr>
+        <tr>
+          <td>2021-04-13</td>
+          <td>0.2</td>
+          <td>Steve Ryan</td>
+          <td>Review pass</td>
+        </tr>
+        <tr>
+          <td>2021-04-8</td>
+          <td>0.1</td>
+          <td>Ramesh Sannareddy</td>
+          <td>Created initial version of the lab</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Copyright (c) 2021 IBM Corporation. All rights reserved.</p>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

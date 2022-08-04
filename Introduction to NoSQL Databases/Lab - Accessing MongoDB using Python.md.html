@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <center>
+      <img src="https://gitlab.com/ibm/skills-network/courses/placeholder101/-/raw/master/labs/module%201/images/IDSNlogo.png" width="300" alt="cognitiveclass.ai logo">
+    </center>
+    <h1>Accessing MongoDB using Python</h1>
+    <p>Estimated time needed: <strong>30</strong> minutes</p>
+    <h2>Objectives</h2>
+    <p>After completing this lab you will be able to:</p>
+    <ul>
+      <li>Install the pymongo driver.</li>
+      <li>Connect to mongodb server.</li>
+      <li>Select a database.</li>
+      <li>Select a collection.</li>
+      <li>Insert documents into a collection.</li>
+      <li>List all documents in a collection.</li>
+      <li>List all databases on a server.</li>
+      <li>Disconnect from mongodb server.</li>
+    </ul>
+    <h1>About Skills Network Cloud IDE</h1>
+    <p>Skills Network Cloud IDE (based on Theia and Docker) provides an environment for hands on labs for course and project related labs. Theia is an open source IDE (Integrated Development Environment), that can be run on desktop or on the cloud. to complete this lab, we will be using the Cloud IDE based on Theia and MongoDB running in a Docker container.</p>
+    <h2>Important Notice about this lab environment</h2>
+    <p>Please be aware that sessions for this lab environment are not persisted. Every time you connect to this lab, a new environment is created for you. Any data you may have saved in the earlier session would get lost. Plan to complete these labs in a single session, to avoid losing your data.</p>
+    <h1>Exercise 1 - Install the pymongo driver</h1>
+    <p>We need the pymongo driver to be installed in order to access the mongodb database from Python.</p>
+    <p>Run the below command on the terminal.</p>
+    <pre><code class="hljs language-cmake">pip <span class="hljs-keyword">install</span> pymongo
+</code></pre>
+    <p></p>
+    <p>This installs the Python mongodb driver as in the image below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/MongoDB/images/pymongo_installation.png" alt="">
+    </p>
+    <h1>Exercise 2 - Start the server</h1>
+    <ol>
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Start the mongodb server.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Refer to the <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/MongoDB/Lab%20-%20MongoDB%20Getting%20Started.md.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0151ENSkillsNetwork24597197-2021-01-01">Mongodb Getting Started</a> lab.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <p>Run the below command on the terminal.</p>
+      <pre><code class="hljs language-ebnf"><span class="hljs-attribute">start_mongo</span>
+</code></pre>
+      <p></p>
+      <p>Note down the user name and password, that are be displayed in the last line of the output of the start_mongo command.</p>
+    </details>
+    <h1>Exercise 3 - Connect to mongodb server using Python</h1>
+    <p>On the menu, use <strong>File</strong>-><strong>New File</strong> to create a new file, as in the image below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/MongoDB/images/open_new_file.png" alt="">
+    </p>
+    <p>Give the name as <strong>mongo_connect.py</strong>, as in the figure below, and click on <strong>OK</strong>.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/MongoDB/images/save_file.png" alt="">
+    </p>
+    <p>Copy and paste the below code into the newly opened file.</p>
+    <pre><code class="hljs language-pgsql"><span class="hljs-keyword">from</span> pymongo <span class="hljs-keyword">import</span> MongoClient
+<span class="hljs-keyword">user</span> = <span class="hljs-string">'root'</span>
+<span class="hljs-keyword">password</span> = <span class="hljs-string">'MjQwOTgtcnNhbm5h'</span> # CHANGE THIS <span class="hljs-keyword">TO</span> THE <span class="hljs-keyword">PASSWORD</span> YOU NOTED <span class="hljs-keyword">IN</span> THE EARLIER EXCERCISE - <span class="hljs-number">2</span>
+host=<span class="hljs-string">'localhost'</span>
+<span class="hljs-meta">#create the connection url</span>
+connecturl = "mongodb://{}:{}@{}:27017/?authSource=admin".format(<span class="hljs-keyword">user</span>,<span class="hljs-keyword">password</span>,host)
+
+
+# <span class="hljs-keyword">connect</span> <span class="hljs-keyword">to</span> mongodb <span class="hljs-keyword">server</span>
+print("Connecting to mongodb server")
+<span class="hljs-keyword">connection</span> = MongoClient(connecturl)
+
+
+# <span class="hljs-keyword">get</span> <span class="hljs-keyword">database</span> list
+print("Getting list of databases")
+dbs = <span class="hljs-keyword">connection</span>.list_database_names()
+
+# print the <span class="hljs-keyword">database</span> names
+
+<span class="hljs-keyword">for</span> db <span class="hljs-keyword">in</span> dbs:
+    print(db)
+print("Closing the connection to the mongodb server")
+
+
+# <span class="hljs-keyword">close</span> the <span class="hljs-keyword">server</span> connecton
+<span class="hljs-keyword">connection</span>.<span class="hljs-keyword">close</span>()
+</code></pre>
+    <p></p>
+    <p>PLEASE ENSURE THAT YOU HAVE REPLACED THE PASSWORD VALUE IN THE FILE ABOVE WITH THE PASSWORD FOR YOUR MONGODB SERVER THAT YOU COPIED AFTER IT WAS STARTED.</p>
+    <p>Save the code file using the <strong>File</strong>-><strong>Save</strong> menu option as in the image below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/MongoDB/images/file_save.png" alt="">
+    </p>
+    <p>Copy and paste the below code on the terminal to execute this file.</p>
+    <pre><code class="hljs language-vim"><span class="hljs-keyword">python</span> mongo_connect.<span class="hljs-keyword">py</span>
+</code></pre>
+    <p></p>
+    <p>You should see an output like the one in the image below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/MongoDB/images/run_python_program.png" alt="">
+    </p>
+    <h1>Exercise 4 - Working with documents</h1>
+    <p>In this exercise we will make the Python program do the following tasks:</p>
+    <ul>
+      <li>connect to the mongodb server.</li>
+      <li>select a database named <strong>training</strong>.</li>
+      <li>select a collection named <strong>python</strong>.</li>
+      <li>insert a sample document.</li>
+      <li>query all the documents in the <strong>training</strong> database and <strong>python</strong> collection.</li>
+      <li>close the connection to the server.</li>
+    </ul>
+    <p>Open a new file named <strong>mongo_query.py</strong>.</p>
+    <p>Copy and paste the below code into <strong>mongo_query.py</strong>.</p>
+    <pre><code class="hljs language-ini">from pymongo import MongoClient
+<span class="hljs-attr">user</span> = <span class="hljs-string">'root'</span>
+<span class="hljs-attr">password</span> = <span class="hljs-string">'MjQwOTgtcnNhbm5h'</span> <span class="hljs-comment"># CHANGE THIS TO THE PASSWORD YOU NOTED IN THE EARLIER EXCERCISE - 2</span>
+<span class="hljs-attr">host</span>=<span class="hljs-string">'localhost'</span>
+<span class="hljs-comment">#create the connection url</span>
+<span class="hljs-attr">connecturl</span> = <span class="hljs-string">"mongodb://{}:{}@{}:27017/?authSource=admin"</span>.format(user,password,host)
+
+
+<span class="hljs-comment"># connect to mongodb server</span>
+print("Connecting to mongodb server")
+<span class="hljs-attr">connection</span> = MongoClient(connecturl)
+
+
+<span class="hljs-comment"># select the 'training' database </span>
+
+<span class="hljs-attr">db</span> = connection.training
+
+<span class="hljs-comment"># select the 'python' collection </span>
+
+<span class="hljs-attr">collection</span> = db.python
+
+
+<span class="hljs-comment"># create a sample document</span>
+
+<span class="hljs-attr">doc</span> = {<span class="hljs-string">"lab"</span>:<span class="hljs-string">"Accessing mongodb using python"</span>, <span class="hljs-string">"Subject"</span>:<span class="hljs-string">"No SQL Databases"</span>}
+
+<span class="hljs-comment"># insert a sample document</span>
+
+print("Inserting a document into collection.")
+db.collection.insert(doc)
+
+<span class="hljs-comment"># query for all documents in 'training' database and 'python' collection</span>
+
+<span class="hljs-attr">docs</span> = db.collection.find()
+
+print("Printing the documents in the collection.")
+
+for document in docs:
+    print(document)
+
+<span class="hljs-comment"># close the server connecton</span>
+print("Closing the connection.")
+connection.close()
+</code></pre>
+    <p></p>
+    <p>PLEASE ENSURE THAT YOU HAVE REPLACED THE PASSWORD VALUE IN THE FILE ABOVE WITH THE PASSWORD FOR YOUR MONGODB SERVER THAT YOU COPIED AFTER IT WAS STARTED.</p>
+    <p>Save the file.</p>
+    <p>Run the file using the below command.</p>
+    <pre><code class="hljs language-vim"><span class="hljs-keyword">python</span> mongo_query.<span class="hljs-keyword">py</span>
+</code></pre>
+    <p></p>
+    <h1>Practice exercise</h1>
+    <p>Write a Python program that can:</p>
+    <ul>
+      <li>connect to the mongodb server.</li>
+      <li>select a database named <strong>training</strong>.</li>
+      <li>select a collection named <strong>mongodb_glossary</strong>.</li>
+      <li>insert the following documents into the collection <strong>mongodb_glossary</strong>.</li>
+    </ul>
+    <p>{"database":"a database contains collections"}</p>
+    <p>{"collection":"a collection stores the documents"}</p>
+    <p>{"document":"a document contains the data in the form or key value pairs."}</p>
+    <ul>
+      <li>query and print all the documents in the <strong>training</strong> database and <strong>mongodb_glossary</strong> collection.</li>
+      <li>close the connection to the server.</li>
+    </ul>
+    <h1>Solution to Practice exercise</h1>
+    <pre><code class="hljs language-ini">from pymongo import MongoClient
+<span class="hljs-attr">user</span> = <span class="hljs-string">'root'</span>
+<span class="hljs-attr">password</span> = <span class="hljs-string">'MjQwOTgtcnNhbm5h'</span> <span class="hljs-comment"># CHANGE THIS TO THE PASSWORD YOU NOTED IN THE EARLIER EXCERCISE - 2</span>
+<span class="hljs-attr">host</span>=<span class="hljs-string">'localhost'</span>
+<span class="hljs-comment">#create the connection url</span>
+<span class="hljs-attr">connecturl</span> = <span class="hljs-string">"mongodb://{}:{}@{}:27017/?authSource=admin"</span>.format(user,password,host)
+
+
+<span class="hljs-comment"># connect to mongodb server</span>
+print("Connecting to mongodb server")
+<span class="hljs-attr">connection</span> = MongoClient(connecturl)
+
+
+<span class="hljs-comment"># select the 'training' database </span>
+
+<span class="hljs-attr">db</span> = connection.training
+
+<span class="hljs-comment"># select the 'python' collection </span>
+
+<span class="hljs-attr">collection</span> = db.mongodb_glossary
+
+
+<span class="hljs-comment"># create documents</span>
+
+<span class="hljs-attr">doc1</span> = {<span class="hljs-string">"database"</span>:<span class="hljs-string">"a database contains collections"</span>}
+<span class="hljs-attr">doc2</span> = {<span class="hljs-string">"collection"</span>:<span class="hljs-string">"a collection stores the documents"</span>},
+<span class="hljs-attr">doc3</span> = {<span class="hljs-string">"document"</span>:<span class="hljs-string">"a document contains the data in the form or key value pairs."</span>}
+
+
+<span class="hljs-comment"># insert documents</span>
+print("Inserting documents into collection.")
+
+db.collection.insert(doc1)
+db.collection.insert(doc2)
+db.collection.insert(doc3)
+
+
+<span class="hljs-comment"># query for all documents in 'training' database and 'python' collection</span>
+
+<span class="hljs-attr">docs</span> = db.collection.find()
+
+print("Printing the documents in the collection.")
+
+for document in docs:
+    print(document)
+
+<span class="hljs-comment"># close the server connecton</span>
+print("Closing the connection.")
+connection.close()
+</code></pre>
+    <p></p>
+    <h2>Authors</h2>
+    <p>Ramesh Sannareddy</p>
+    <h3>Other Contributors</h3>
+    <p>Rav Ahuja</p>
+    <h2>Change Log</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date (YYYY-MM-DD)</th>
+          <th>Version</th>
+          <th>Changed By</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-04-19</td>
+          <td>0.3</td>
+          <td>Steve Ryan</td>
+          <td>Review pass</td>
+        </tr>
+        <tr>
+          <td>2021-03-19</td>
+          <td>0.2</td>
+          <td>Ramesh Sannareddy</td>
+          <td>Added practice exercises.</td>
+        </tr>
+        <tr>
+          <td>2021-02-24</td>
+          <td>0.1</td>
+          <td>Ramesh Sannareddy</td>
+          <td>Created initial version of the lab</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Copyright © 2021 IBM Corporation.</p>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

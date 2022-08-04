@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <center>
+      <img src="https://gitlab.com/ibm/skills-network/courses/placeholder101/-/raw/master/labs/module%201/images/IDSNlogo.png" width="300" alt="cognitiveclass.ai logo">
+    </center>
+    <h1>MongoDB CRUD</h1>
+    <p>Estimated time needed: <strong>30</strong> minutes</p>
+    <h2>Objectives</h2>
+    <p>After completing this lab you will be able to:</p>
+    <ul>
+      <li>Create documents in mongodb.</li>
+      <li>Read documents in mongodb.</li>
+      <li>Update documents in mongodb.</li>
+      <li>Delete documents in mongodb.</li>
+    </ul>
+    <h1>About Skills Network Cloud IDE</h1>
+    <p>Skills Network Cloud IDE (based on Theia and Docker) provides an environment for hands on labs for course and project related labs. Theia is an open source IDE (Integrated Development Environment), that can be run on desktop or on the cloud. to complete this lab, we will be using the Cloud IDE based on Theia and MongoDB running in a Docker container.</p>
+    <h2>Important Notice about this lab environment</h2>
+    <p>Please be aware that sessions for this lab environment are not persisted. Every time you connect to this lab, a new environment is created for you. Any data you may have saved in the earlier session would get lost. Plan to complete these labs in a single session, to avoid losing your data.</p>
+    <h1>Exercise 1 - Getting the environment ready</h1>
+    <ol>
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Start the mongodb server.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Refer to the <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/MongoDB/Lab%20-%20MongoDB%20Getting%20Started.md.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0151ENSkillsNetwork24597197-2021-01-01">Mongodb Getting Started</a> lab.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <p>Run the below command on the terminal.</p>
+      <pre><code class="hljs language-ebnf"><span class="hljs-attribute">start_mongo</span>
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="2">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Connect to the mongodb server.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Refer to the <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/MongoDB/Lab%20-%20MongoDB%20Getting%20Started.md.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0151ENSkillsNetwork24597197-2021-01-01">Mongodb Getting Started</a> lab.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>Use the below command with the user name and password generated on your terminal window, when you started the mongodb server using start_mongo command.
+      <pre><code class="hljs language-apache"><span class="hljs-attribute">mongo</span> -u root -p NTc<span class="hljs-number">0</span>My<span class="hljs-number">1</span>yc<span class="hljs-number">2</span>FubmFy --authenticationDatabase admin local
+
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="3">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Select the <strong>training</strong> database.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Refer to the <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/MongoDB/Lab%20-%20MongoDB%20Getting%20Started.md.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0151ENSkillsNetwork24597197-2021-01-01">Mongodb Getting Started</a> lab.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-actionscript"><span class="hljs-keyword">use</span> training
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="4">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Create a collection named <strong>languages</strong>.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Refer to the <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/MongoDB/Lab%20-%20MongoDB%20Getting%20Started.md.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0151ENSkillsNetwork24597197-2021-01-01">Mongodb Getting Started</a> lab.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-clojure">db.createCollection(<span class="hljs-string">"languages"</span>)
+</code></pre>
+      <p></p>
+    </details>
+    <h1>Exercise 2 - Insert documents</h1>
+    <p>Let us insert five documents into the collection <strong>languages</strong></p>
+    <p>On the mongo client run the below commands.</p>
+    <pre><code class="hljs language-json">db.languages.insert({<span class="hljs-attr">"name"</span>:<span class="hljs-string">"java"</span>,<span class="hljs-attr">"type"</span>:<span class="hljs-string">"object oriented"</span>})
+db.languages.insert({<span class="hljs-attr">"name"</span>:<span class="hljs-string">"python"</span>,<span class="hljs-attr">"type"</span>:<span class="hljs-string">"general purpose"</span>})
+db.languages.insert({<span class="hljs-attr">"name"</span>:<span class="hljs-string">"scala"</span>,<span class="hljs-attr">"type"</span>:<span class="hljs-string">"functional"</span>})
+db.languages.insert({<span class="hljs-attr">"name"</span>:<span class="hljs-string">"c"</span>,<span class="hljs-attr">"type"</span>:<span class="hljs-string">"procedural"</span>})
+db.languages.insert({<span class="hljs-attr">"name"</span>:<span class="hljs-string">"c++"</span>,<span class="hljs-attr">"type"</span>:<span class="hljs-string">"object oriented"</span>})
+</code></pre>
+    <p></p>
+    <h1>Exercise 3 - Read documents</h1>
+    <p>Let us try out different ways of querying documents.</p>
+    <p>Find the count of documents.</p>
+    <pre><code class="hljs language-sql">
+db.languages.<span class="hljs-built_in">count</span>()
+</code></pre>
+    <p></p>
+    <p>List the first document in the collection.</p>
+    <pre><code class="hljs language-stylus">db<span class="hljs-selector-class">.languages</span><span class="hljs-selector-class">.findOne</span>()
+</code></pre>
+    <p></p>
+    <p>List all documents in the collection.</p>
+    <pre><code class="hljs language-routeros">db.languages.<span class="hljs-builtin-name">find</span>()
+</code></pre>
+    <p></p>
+    <p>List first 3 documents in the collection.</p>
+    <pre><code class="hljs language-stylus">db<span class="hljs-selector-class">.languages</span><span class="hljs-selector-class">.find</span>()<span class="hljs-selector-class">.limit</span>(<span class="hljs-number">3</span>)
+</code></pre>
+    <p></p>
+    <p>Query for "python" language.</p>
+    <pre><code class="hljs language-clojure">db.languages.find({<span class="hljs-string">"name"</span>:<span class="hljs-string">"python"</span>})
+</code></pre>
+    <p></p>
+    <p>Query for "object oriented" languages.</p>
+    <pre><code class="hljs language-clojure">db.languages.find({<span class="hljs-string">"type"</span>:<span class="hljs-string">"object oriented"</span>})
+</code></pre>
+    <p></p>
+    <p>List only specific fields.</p>
+    <p>Using a projection document you can specify what fields we wish to see or skip in the output.</p>
+    <p>This command lists all the documents with only name field in the output.</p>
+    <pre><code class="hljs language-clojure">db.languages.find({},{<span class="hljs-string">"name"</span>:<span class="hljs-number">1</span>})
+</code></pre>
+    <p></p>
+    <p>This command lists all the documents without the name field in the output.</p>
+    <pre><code class="hljs language-clojure">db.languages.find({},{<span class="hljs-string">"name"</span>:<span class="hljs-number">0</span>})
+</code></pre>
+    <p></p>
+    <p>This command lists all the "object oriented" languages with only "name" field in the output.</p>
+    <pre><code class="hljs language-json">db.languages.find({<span class="hljs-attr">"type"</span>:<span class="hljs-string">"object oriented"</span>},{<span class="hljs-attr">"name"</span>:<span class="hljs-number">1</span>})
+</code></pre>
+    <p></p>
+    <h1>Exercise 4 - Update documents</h1>
+    <p>Update documents based on a criteria.</p>
+    <p>Add a field to all the documents.</p>
+    <p>The 'updateMany' command is used to update documents in a mongodb collection, and it has the following generic syntax.</p>
+    <pre><code class="hljs language-reasonml">	
+db.collection.update<span class="hljs-constructor">Many({<span class="hljs-params">what</span> <span class="hljs-params">documents</span> <span class="hljs-params">to</span> <span class="hljs-params">find</span>},{$<span class="hljs-params">set</span>:{<span class="hljs-params">what</span> <span class="hljs-params">fields</span> <span class="hljs-params">to</span> <span class="hljs-params">set</span>}})</span>
+</code></pre>
+    <p>Here we are adding a field <strong>description</strong> with value <strong>programming language</strong> to all the documents.</p>
+    <pre><code class="hljs language-json">db.languages.updateMany({},{$set:{<span class="hljs-attr">"description"</span>:<span class="hljs-string">"programming language"</span>}})
+</code></pre>
+    <p></p>
+    <p>Set the creater for python language.</p>
+    <pre><code class="hljs language-json">db.languages.updateMany({<span class="hljs-attr">"name"</span>:<span class="hljs-string">"python"</span>},{$set:{<span class="hljs-attr">"creator"</span>:<span class="hljs-string">"Guido van Rossum"</span>}})
+</code></pre>
+    <p></p>
+    <p>Set a field named <strong>compiled</strong> with a value <strong>true</strong> for all the <strong>object oriented</strong> languages.</p>
+    <pre><code class="hljs language-json">db.languages.updateMany({<span class="hljs-attr">"type"</span>:<span class="hljs-string">"object oriented"</span>},{$set:{<span class="hljs-attr">"compiled"</span>:<span class="hljs-literal">true</span>}})
+</code></pre>
+    <p></p>
+    <h1>Exercise 5 - Delete documents</h1>
+    <p>Delete documents based on a criteria.</p>
+    <p>Delete the <strong>scala</strong> language document.</p>
+    <pre><code class="hljs language-basic">db.languages.<span class="hljs-comment">remove({"name":"scala"})</span>
+</code></pre>
+    <p></p>
+    <p>Delete the <strong>object oriented</strong> languages.</p>
+    <pre><code class="hljs language-basic">db.languages.<span class="hljs-comment">remove({"type":"object oriented"})</span>
+</code></pre>
+    <p></p>
+    <p>Delete all the documents in a collection.</p>
+    <pre><code class="hljs language-basic">db.languages.<span class="hljs-comment">remove({})</span>
+</code></pre>
+    <p></p>
+    <h1>Practice exercises</h1>
+    <p>Run the below code on mongo console. It will insert 5 documents, which will serve as sample data for the next steps.</p>
+    <pre><code class="hljs language-json">use training
+db.languages.insert({<span class="hljs-attr">"name"</span>:<span class="hljs-string">"java"</span>,<span class="hljs-attr">"type"</span>:<span class="hljs-string">"object oriented"</span>})
+db.languages.insert({<span class="hljs-attr">"name"</span>:<span class="hljs-string">"python"</span>,<span class="hljs-attr">"type"</span>:<span class="hljs-string">"general purpose"</span>})
+db.languages.insert({<span class="hljs-attr">"name"</span>:<span class="hljs-string">"scala"</span>,<span class="hljs-attr">"type"</span>:<span class="hljs-string">"functional"</span>})
+db.languages.insert({<span class="hljs-attr">"name"</span>:<span class="hljs-string">"c"</span>,<span class="hljs-attr">"type"</span>:<span class="hljs-string">"procedural"</span>})
+db.languages.insert({<span class="hljs-attr">"name"</span>:<span class="hljs-string">"c++"</span>,<span class="hljs-attr">"type"</span>:<span class="hljs-string">"object oriented"</span>})
+</code></pre>
+    <p></p>
+    <ol>
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Insert an entry for 'Haskell' programming language which is of type 'functional .</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>use the command db.collection.insert()</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>On the mongo client run the below commands.
+      ```
+      db.languages.insert({"name":"Haskell","type":"functional"})
+      ```
+      <p></p>
+    </details>
+    <ol start="2">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Query for all functional languages.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>use the command db.collection.insert() with suitable options</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>On the mongo client run the below commands.
+      ```
+      db.languages.find({"type":"functional"})
+      ```
+      <p></p>
+    </details>
+    <ol start="3">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Add 'Bjarne Stroustrup' as creator for c++.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>use the command db.collection.insert() with suitable options</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>On the mongo client run the below commands.
+      ```
+      db.languages.updateMany({"name":"c++"},{$set:{"creator":"Bjarne Stroustrup"}})
+      ```
+      <p></p>
+    </details>
+    <ol start="4">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Delete all functional programming languages.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>use the command db.collection.remove() with suitable options</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>On the mongo client run the below commands.
+      ```
+      db.languages.remove({"type":"functional"})
+      ```
+      <p></p>
+    </details>
+    <h2>Authors</h2>
+    <p>Ramesh Sannareddy</p>
+    <h3>Other Contributors</h3>
+    <p>Rav Ahuja</p>
+    <h2>Change Log</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date (YYYY-MM-DD)</th>
+          <th>Version</th>
+          <th>Changed By</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-04-19</td>
+          <td>0.3</td>
+          <td>Steve Ryan</td>
+          <td>Review pass</td>
+        </tr>
+        <tr>
+          <td>2021-03-16</td>
+          <td>0.2</td>
+          <td>Ramesh Sannareddy</td>
+          <td>Added Hints/Solutions to Practise exercises</td>
+        </tr>
+        <tr>
+          <td>2021-02-24</td>
+          <td>0.1</td>
+          <td>Ramesh Sannareddy</td>
+          <td>Created initial version of the lab</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Copyright (c) 2021 IBM Corporation. All rights reserved.</p>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

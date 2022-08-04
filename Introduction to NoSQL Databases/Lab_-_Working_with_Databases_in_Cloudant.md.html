@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <center>
+      <img src="https://gitlab.com/ibm/skills-network/courses/placeholder101/-/raw/master/labs/module%201/images/IDSNlogo.png" width="300" alt="cognitiveclass.ai logo">
+    </center>
+    <h1>Hands-on Lab: Working with Databases in Cloudant</h1>
+    <p>Estimated time needed: <strong>30</strong> minutes</p>
+    <h2>Objectives</h2>
+    <p>After completing this lab you will be able to:</p>
+    <ul>
+      <li>Create a database.</li>
+      <li>Insert documents.</li>
+      <li>Query documents.</li>
+      <li>Update documents.</li>
+      <li>Delete documents.</li>
+    </ul>
+    <h1>Exercise 1 - Launch Cloudant Dashboard</h1>
+    <p>Step 1: Click on <a href="https://cloud.ibm.com/resources?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0151ENSkillsNetwork24597197-2021-01-01" target="_blank" rel="external">cloud.ibm.com/resources</a>.</p>
+    <p>Step 2: Click on the Services chevron.</p>
+    <p>Step 3: Click on your instance of Cloudant.</p>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Sign%20Up%20for%20an%20IBM%20Cloudant%20Instance/images/cloudant-instance-create4.png">
+      </blockquote>
+    </details>
+    <p>Step 4: Click on <code>Launch Dashboard</code>.</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Dashboards%20in%20Cloudant/images/launch-dashboard.png">
+    <h1>Exercise 2 - Create Database</h1>
+    <p>Step 1: On the dashboard click on <code>Create Database</code>.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Working%20with%20Databases%20in%20Cloudant/images/create-database1.png" alt="">
+    </p>
+    <p>Step 2: Type <strong>housing</strong> as database name. Select 'Non-partitioned' and click on <code>Create</code>.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Working%20with%20Databases%20in%20Cloudant/images/create-database2.png" alt="">
+    </p>
+    <p>In a few moments the database will be created. and you will be taken to a page that looks like the one below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Working%20with%20Databases%20in%20Cloudant/images/create-database3.png" alt="">
+    </p>
+    <h1>Exercise 3 - Insert documents</h1>
+    <p>Step 1: Click on <code>Create Document</code> to insert a document.</p>
+    <p>You will be presented the below screen, with a simple sample document.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Working%20with%20Databases%20in%20Cloudant/images/create-document1.png" alt="">
+    </p>
+    <p>Cloudant uses <code>_id</code> key to uniquely identify a document. It is equivalent to the primary key in RDBMS. You can use your own custom values for <code>_id</code>.</p>
+    <p>Copy and paste the below json document and click on <code>Create Document</code> button, as show in the image below.</p>
+    <pre><code class="hljs language-json">
+{
+	<span class="hljs-attr">"_id"</span>:<span class="hljs-string">"1"</span>,
+	<span class="hljs-attr">"square_feet"</span>:<span class="hljs-number">1500</span>,
+	<span class="hljs-attr">"bedrooms"</span>:<span class="hljs-number">3</span>,
+	<span class="hljs-attr">"price"</span>:<span class="hljs-number">147890</span>
+}
+
+</code></pre>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Working%20with%20Databases%20in%20Cloudant/images/create-document2.png" alt="">
+    </p>
+    <p>Once the document is created, Cloudant will take you to a page with the list of documents.</p>
+    <p>Click on the <code>Table</code> view button. You should see a screen similar to the one below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Working%20with%20Databases%20in%20Cloudant/images/create-document3.png" alt="">
+    </p>
+    <p>Follow the above mentioned process and insert the below 4 documents. Ensure you only insert one document at a time.</p>
+    <pre><code class="hljs language-json">{
+	<span class="hljs-attr">"_id"</span>:<span class="hljs-string">"2"</span>,
+	<span class="hljs-attr">"square_feet"</span>:<span class="hljs-number">1800</span>,
+	<span class="hljs-attr">"bedrooms"</span>:<span class="hljs-number">3</span>,
+	<span class="hljs-attr">"price"</span>:<span class="hljs-number">182650</span>
+}
+
+</code></pre>
+    <pre><code class="hljs language-json">
+{
+	<span class="hljs-attr">"_id"</span>:<span class="hljs-string">"3"</span>,
+	<span class="hljs-attr">"square_feet"</span>:<span class="hljs-number">2000</span>,
+	<span class="hljs-attr">"bedrooms"</span>:<span class="hljs-number">3</span>,
+	<span class="hljs-attr">"price"</span>:<span class="hljs-number">201260</span>
+}
+
+</code></pre>
+    <pre><code class="hljs language-json">
+{
+	<span class="hljs-attr">"_id"</span>:<span class="hljs-string">"4"</span>,
+	<span class="hljs-attr">"square_feet"</span>:<span class="hljs-number">2200</span>,
+	<span class="hljs-attr">"bedrooms"</span>:<span class="hljs-number">4</span>,
+	<span class="hljs-attr">"price"</span>:<span class="hljs-number">234980</span>
+}
+
+</code></pre>
+    <pre><code class="hljs language-json">
+{
+	<span class="hljs-attr">"_id"</span>:<span class="hljs-string">"5"</span>,
+	<span class="hljs-attr">"square_feet"</span>:<span class="hljs-number">1100</span>,
+	<span class="hljs-attr">"bedrooms"</span>:<span class="hljs-number">2</span>,
+	<span class="hljs-attr">"price"</span>:<span class="hljs-number">114310</span>
+}
+
+</code></pre>
+    <p>After inserting the above documents your database should look like this.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Working%20with%20Databases%20in%20Cloudant/images/create-document4.png" alt="">
+    </p>
+    <p>Cloudant is a NoSQL database. It is a schema less database. All documents in a database need not have the same schema.</p>
+    <p>Let us insert two documents that have additional keys, compared to the previously inserted documents.</p>
+    <pre><code class="hljs language-json">
+{
+	<span class="hljs-attr">"_id"</span>:<span class="hljs-string">"6"</span>,
+	<span class="hljs-attr">"square_feet"</span>:<span class="hljs-number">1400</span>,
+	<span class="hljs-attr">"bedrooms"</span>:<span class="hljs-number">3</span>,
+	<span class="hljs-attr">"price"</span>:<span class="hljs-number">123140</span>,
+	<span class="hljs-attr">"type"</span>:<span class="hljs-string">"apartment"</span>,
+	<span class="hljs-attr">"floor"</span>:<span class="hljs-number">5</span>
+}
+
+</code></pre>
+    <pre><code class="hljs language-json">
+{
+	<span class="hljs-attr">"_id"</span>:<span class="hljs-string">"7"</span>,
+	<span class="hljs-attr">"square_feet"</span>:<span class="hljs-number">3400</span>,
+	<span class="hljs-attr">"bedrooms"</span>:<span class="hljs-number">4</span>,
+	<span class="hljs-attr">"price"</span>:<span class="hljs-number">342720</span>,
+	<span class="hljs-attr">"type"</span>:<span class="hljs-string">"villa"</span>,
+	<span class="hljs-attr">"car_parks"</span>:<span class="hljs-number">3</span>
+}
+
+</code></pre>
+    <p>After inserting the above documents your database should now look like this.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Working%20with%20Databases%20in%20Cloudant/images/create-document5.png" alt="">
+    </p>
+    <h1>Exercise 4 - Query documents</h1>
+    <p>Click on <code>Query</code> as shown in the image below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Working%20with%20Databases%20in%20Cloudant/images/query-document1.png" alt="">
+    </p>
+    <p>You will see a screen like this.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Working%20with%20Databases%20in%20Cloudant/images/query-document2.png" alt="">
+    </p>
+    <p>Replace the default query with the one given below, and click on the <code>Run Query</code> button.</p>
+    <pre><code class="hljs language-json">{
+   <span class="hljs-attr">"selector"</span>: {}
+}
+
+</code></pre>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Working%20with%20Databases%20in%20Cloudant/images/query-document3.png" alt="">
+    </p>
+    <p>You should see an output like this.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Working%20with%20Databases%20in%20Cloudant/images/query-document4.png" alt="">
+    </p>
+    <p>Try out these Cloudant queries.</p>
+    <p>Select all fields in all documents</p>
+    <pre><code class="hljs language-json">
+{
+   <span class="hljs-attr">"selector"</span>: {}
+}
+
+</code></pre>
+    <p>Select all fields in all documents with _id greater than 4</p>
+    <pre><code class="hljs language-json">
+{
+   <span class="hljs-attr">"selector"</span>: {
+      <span class="hljs-attr">"_id"</span>: {
+         <span class="hljs-attr">"$gt"</span>: <span class="hljs-string">"4"</span>
+      }
+   }
+}
+
+</code></pre>
+    <p>Select all fields in all documents with _id less than 4</p>
+    <pre><code class="hljs language-json">
+{
+   <span class="hljs-attr">"selector"</span>: {
+      <span class="hljs-attr">"_id"</span>: {
+         <span class="hljs-attr">"$lt"</span>: <span class="hljs-string">"4"</span>
+      }
+   }
+}
+
+</code></pre>
+    <p>Select the fields _id, square_feet and price in all documents</p>
+    <pre><code class="hljs language-json">
+{
+   <span class="hljs-attr">"selector"</span>: {},
+   <span class="hljs-attr">"fields"</span>: [
+      <span class="hljs-string">"_id"</span>,
+      <span class="hljs-string">"price"</span>,
+      <span class="hljs-string">"square_feet"</span>
+   ]
+}
+
+</code></pre>
+    <p>Select the fields _id, square_feet and price in documents with _id less than 4</p>
+    <pre><code class="hljs language-json">
+{
+   <span class="hljs-attr">"selector"</span>: {
+   <span class="hljs-attr">"_id"</span>: {
+         <span class="hljs-attr">"$lt"</span>: <span class="hljs-string">"4"</span>
+      }
+   },
+   <span class="hljs-attr">"fields"</span>: [
+      <span class="hljs-string">"_id"</span>,
+      <span class="hljs-string">"price"</span>,
+      <span class="hljs-string">"square_feet"</span>
+   ]
+}
+
+</code></pre>
+    <p>Select the fields _id, bedrooms and price in documents with _id greater than 2 and sort by _id ascending</p>
+    <pre><code class="hljs language-json">
+{
+   <span class="hljs-attr">"selector"</span>: {
+      <span class="hljs-attr">"_id"</span>: {
+         <span class="hljs-attr">"$gt"</span>: <span class="hljs-string">"2"</span>
+      }
+   },
+   <span class="hljs-attr">"fields"</span>: [
+      <span class="hljs-string">"_id"</span>,
+      <span class="hljs-string">"price"</span>,
+      <span class="hljs-string">"square_feet"</span>
+   ],
+   <span class="hljs-attr">"sort"</span>: [
+      {
+         <span class="hljs-attr">"_id"</span>: <span class="hljs-string">"asc"</span>
+      }
+   ]
+}
+
+</code></pre>
+    <p>Select the fields _id, bedrooms and price in documents with _id greater than 2 and sort by _id descending</p>
+    <pre><code class="hljs language-json">
+{
+   <span class="hljs-attr">"selector"</span>: {
+      <span class="hljs-attr">"_id"</span>: {
+         <span class="hljs-attr">"$gt"</span>: <span class="hljs-string">"2"</span>
+      }
+   },
+   <span class="hljs-attr">"fields"</span>: [
+      <span class="hljs-string">"_id"</span>,
+      <span class="hljs-string">"price"</span>,
+      <span class="hljs-string">"square_feet"</span>
+   ],
+   <span class="hljs-attr">"sort"</span>: [
+      {
+         <span class="hljs-attr">"_id"</span>: <span class="hljs-string">"desc"</span>
+      }
+   ]
+}
+
+</code></pre>
+    <h1>Exercise 5 - Update documents</h1>
+    <p>Click on the database name <code>housing</code> as shown in the image below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Working%20with%20Databases%20in%20Cloudant/images/update-document1.png" alt="">
+    </p>
+    <p>You will see a screen as in the image below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Working%20with%20Databases%20in%20Cloudant/images/update-document2.png" alt="">
+    </p>
+    <p>Click on the document with _id 7.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Working%20with%20Databases%20in%20Cloudant/images/update-document3.png" alt="">
+    </p>
+    <p>The document will open up like this.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Working%20with%20Databases%20in%20Cloudant/images/update-document4.png" alt="">
+    </p>
+    <p>Change the number of <code>car parks</code> to 4 and add <code>facing</code> key with value <code>East</code>, as shown in the image below. Click <code>Save Changes</code> to save the document.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Working%20with%20Databases%20in%20Cloudant/images/update-document5.png" alt="">
+    </p>
+    <h1>Exercise 6 - Delete documents</h1>
+    <p>Select the document you wish to delete and click on the delete icon as shown in the image below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Working%20with%20Databases%20in%20Cloudant/images/delete-document1.png" alt="">
+    </p>
+    <p>You will get a pop up asking "Are you sure you want to delete this doc?"</p>
+    <p>Click <code>OK</code>.</p>
+    <h1>Practice exercises</h1>
+    <blockquote>
+      <p><em>1. Create a database named <strong>diamonds</strong>.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <p>Click on <code>Create Database</code></p>
+      <p>Enter <strong>diamonds</strong> as the database name.</p>
+      <p>Select 'Non-partitioned'.</p>
+      <p>Click on <code>Create</code></p>
+      <p>Refer to Exercise 2 if you wish to revise this topic.</p>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Working%20with%20Databases%20in%20Cloudant/images/solution1.png" alt="">
+      </p>
+    </details>
+    <blockquote>
+      <p><em>2. Insert the below documents into the <strong>diamonds</strong> database.</em></p>
+    </blockquote>
+    <pre><code class="hljs language-json">  {
+    <span class="hljs-attr">"_id"</span>: <span class="hljs-string">"1"</span>,
+    <span class="hljs-attr">"carat"</span>: <span class="hljs-number">0.31</span>,
+    <span class="hljs-attr">"cut"</span>: <span class="hljs-string">"Ideal"</span>,
+    <span class="hljs-attr">"color"</span>: <span class="hljs-string">"J"</span>,
+    <span class="hljs-attr">"clarity"</span>: <span class="hljs-string">"SI2"</span>,
+    <span class="hljs-attr">"depth"</span>: <span class="hljs-number">62.2</span>,
+    <span class="hljs-attr">"table"</span>: <span class="hljs-number">54</span>,
+    <span class="hljs-attr">"price"</span>: <span class="hljs-number">339</span>
+  }
+  
+  {
+    <span class="hljs-attr">"_id"</span>: <span class="hljs-string">"2"</span>,
+    <span class="hljs-attr">"carat"</span>: <span class="hljs-number">0.2</span>,
+    <span class="hljs-attr">"cut"</span>: <span class="hljs-string">"Premium"</span>,
+    <span class="hljs-attr">"color"</span>: <span class="hljs-string">"E"</span>,
+    <span class="hljs-attr">"clarity"</span>: <span class="hljs-string">"SI2"</span>,
+    <span class="hljs-attr">"depth"</span>: <span class="hljs-number">60.2</span>,
+    <span class="hljs-attr">"table"</span>: <span class="hljs-number">62</span>,
+    <span class="hljs-attr">"price"</span>: <span class="hljs-number">351</span>
+  
+  }
+  
+  {
+    <span class="hljs-attr">"_id"</span>: <span class="hljs-string">"3"</span>,
+    <span class="hljs-attr">"carat"</span>: <span class="hljs-number">0.32</span>,
+    <span class="hljs-attr">"cut"</span>: <span class="hljs-string">"Premium"</span>,
+    <span class="hljs-attr">"color"</span>: <span class="hljs-string">"E"</span>,
+    <span class="hljs-attr">"clarity"</span>: <span class="hljs-string">"I1"</span>,
+    <span class="hljs-attr">"depth"</span>: <span class="hljs-number">60.9</span>,
+    <span class="hljs-attr">"table"</span>: <span class="hljs-number">58</span>,
+    <span class="hljs-attr">"price"</span>: <span class="hljs-number">342</span>
+
+  }
+  
+  
+  {
+    <span class="hljs-attr">"_id"</span>: <span class="hljs-string">"4"</span>,
+    <span class="hljs-attr">"carat"</span>: <span class="hljs-number">0.3</span>,
+    <span class="hljs-attr">"cut"</span>: <span class="hljs-string">"Good"</span>,
+    <span class="hljs-attr">"color"</span>: <span class="hljs-string">"J"</span>,
+    <span class="hljs-attr">"clarity"</span>: <span class="hljs-string">"SI1"</span>,
+    <span class="hljs-attr">"depth"</span>: <span class="hljs-number">63.4</span>,
+    <span class="hljs-attr">"table"</span>: <span class="hljs-number">54</span>,
+    <span class="hljs-attr">"price"</span>: <span class="hljs-number">349</span>
+
+  }
+  
+  {
+    <span class="hljs-attr">"_id"</span>: <span class="hljs-string">"5"</span>,
+    <span class="hljs-attr">"carat"</span>: <span class="hljs-number">0.3</span>,
+    <span class="hljs-attr">"cut"</span>: <span class="hljs-string">"Good"</span>,
+    <span class="hljs-attr">"color"</span>: <span class="hljs-string">"J"</span>,
+    <span class="hljs-attr">"clarity"</span>: <span class="hljs-string">"SI1"</span>,
+    <span class="hljs-attr">"depth"</span>: <span class="hljs-number">63.8</span>,
+    <span class="hljs-attr">"table"</span>: <span class="hljs-number">56</span>,
+    <span class="hljs-attr">"price"</span>: <span class="hljs-number">347</span>
+
+  }
+  
+  {
+    <span class="hljs-attr">"_id"</span>: <span class="hljs-string">"6"</span>,
+    <span class="hljs-attr">"carat"</span>: <span class="hljs-number">0.3</span>,
+    <span class="hljs-attr">"cut"</span>: <span class="hljs-string">"Very Good"</span>,
+    <span class="hljs-attr">"color"</span>: <span class="hljs-string">"J"</span>,
+    <span class="hljs-attr">"clarity"</span>: <span class="hljs-string">"SI1"</span>,
+    <span class="hljs-attr">"depth"</span>: <span class="hljs-number">62.7</span>,
+    <span class="hljs-attr">"table"</span>: <span class="hljs-number">59</span>,
+    <span class="hljs-attr">"price"</span>: <span class="hljs-number">349</span>
+  }
+  
+  {
+    <span class="hljs-attr">"_id"</span>: <span class="hljs-string">"7"</span>,
+    <span class="hljs-attr">"carat"</span>: <span class="hljs-number">0.3</span>,
+    <span class="hljs-attr">"cut"</span>: <span class="hljs-string">"Good"</span>,
+    <span class="hljs-attr">"color"</span>: <span class="hljs-string">"I"</span>,
+    <span class="hljs-attr">"clarity"</span>: <span class="hljs-string">"SI2"</span>,
+    <span class="hljs-attr">"depth"</span>: <span class="hljs-number">63.3</span>,
+    <span class="hljs-attr">"table"</span>: <span class="hljs-number">56</span>,
+    <span class="hljs-attr">"price"</span>: <span class="hljs-number">343</span>
+  }
+  
+  {
+    <span class="hljs-attr">"_id"</span>: <span class="hljs-string">"8"</span>,
+    <span class="hljs-attr">"carat"</span>: <span class="hljs-number">0.23</span>,
+    <span class="hljs-attr">"cut"</span>: <span class="hljs-string">"Very Good"</span>,
+    <span class="hljs-attr">"color"</span>: <span class="hljs-string">"E"</span>,
+    <span class="hljs-attr">"clarity"</span>: <span class="hljs-string">"VS2"</span>,
+    <span class="hljs-attr">"depth"</span>: <span class="hljs-number">63.8</span>,
+    <span class="hljs-attr">"table"</span>: <span class="hljs-number">55</span>,
+    <span class="hljs-attr">"price"</span>: <span class="hljs-number">339</span>
+  }
+  
+  {
+    <span class="hljs-attr">"_id"</span>: <span class="hljs-string">"9"</span>,
+    <span class="hljs-attr">"carat"</span>: <span class="hljs-number">0.23</span>,
+    <span class="hljs-attr">"cut"</span>: <span class="hljs-string">"Very Good"</span>,
+    <span class="hljs-attr">"color"</span>: <span class="hljs-string">"H"</span>,
+    <span class="hljs-attr">"clarity"</span>: <span class="hljs-string">"VS1"</span>,
+    <span class="hljs-attr">"depth"</span>: <span class="hljs-number">61</span>,
+    <span class="hljs-attr">"table"</span>: <span class="hljs-number">57</span>,
+    <span class="hljs-attr">"price"</span>: <span class="hljs-number">323</span>
+  }
+  
+  {
+    <span class="hljs-attr">"_id"</span>: <span class="hljs-string">"10"</span>,
+    <span class="hljs-attr">"carat"</span>: <span class="hljs-number">0.31</span>,
+    <span class="hljs-attr">"cut"</span>: <span class="hljs-string">"Very Good"</span>,
+    <span class="hljs-attr">"color"</span>: <span class="hljs-string">"J"</span>,
+    <span class="hljs-attr">"clarity"</span>: <span class="hljs-string">"SI1"</span>,
+    <span class="hljs-attr">"depth"</span>: <span class="hljs-number">59.4</span>,
+    <span class="hljs-attr">"table"</span>: <span class="hljs-number">62</span>,
+    <span class="hljs-attr">"price"</span>: <span class="hljs-number">346</span>
+  }
+
+</code></pre>
+    <details>
+      <summary>Click here for Hint</summary>
+      <p>Click on <code>Create Document</code></p>
+      <p>Copy and paste the document in the text box.</p>
+      <p>Click on <code>Create Document</code></p>
+      <p>Refer to Exercise 3 if you wish to revise this topic.</p>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Working%20with%20Databases%20in%20Cloudant/images/solution2.png" alt="">
+      </p>
+    </details>
+    <blockquote>
+      <p><em>3. Write a query to fetch all documents</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <p>Go to the <strong>Query</strong> page.</p>
+      <p>Write the query in JSON form in the query box.</p>
+      <p>Click on <code>Run Query</code></p>
+      <p>Refer to Exercise 4 if you wish to revise this topic.</p>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Working%20with%20Databases%20in%20Cloudant/images/solution3.png" alt="">
+      </p>
+    </details>
+    <blockquote>
+      <p><em>4. Write a query to fetch all documents with <code>_id</code> greater than 2</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <p>Go to the <strong>Query</strong> page.</p>
+      <p>Write the query in JSON form in the query box.</p>
+      <p>Click on <code>Run Query</code></p>
+      <p>Refer to Exercise 4 if you wish to revise this topic.</p>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Working%20with%20Databases%20in%20Cloudant/images/solution4.png" alt="">
+      </p>
+    </details>
+    <blockquote>
+      <p><em>5. Write a query to fetch all documents with <code>_id</code> less than 4</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <p>Go to the <strong>Query</strong> page.</p>
+      <p>Write the query in JSON form in the query box.</p>
+      <p>Click on <code>Run Query</code></p>
+      <p>Refer to Exercise 4 if you wish to revise this topic.</p>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Working%20with%20Databases%20in%20Cloudant/images/solution5.png" alt="">
+      </p>
+    </details>
+    <blockquote>
+      <p><em>6. Set the price of the diamond with <code>_id</code> 7 to 352</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <p>From the list of documents, click on the document with <code>_id</code> 7.</p>
+      <p>Make the changes.</p>
+      <p>Click on <code>Save Changes</code></p>
+      <p>Refer to Exercise 5 if you wish to revise this topic.</p>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Working%20with%20Databases%20in%20Cloudant/images/solution6.png" alt="">
+      </p>
+    </details>
+    <blockquote>
+      <p><em>7. Delete the document with <code>_id</code> 3</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <p>From the list of documents, select the document with _id 3.</p>
+      <p>Click on the delete icon.</p>
+      <p>Refer to Exercise 6 if you wish to revise this topic.</p>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Working%20with%20Databases%20in%20Cloudant/images/solution7.png" alt="">
+      </p>
+    </details>
+    <h2>Authors</h2>
+    <p>Ramesh Sannareddy</p>
+    <h3>Other Contributors</h3>
+    <p>Rav Ahuja</p>
+    <h2>Change Log</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date (YYYY-MM-DD)</th>
+          <th>Version</th>
+          <th>Changed By</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-04-28</td>
+          <td>0.4</td>
+          <td>Steve Ryan</td>
+          <td>Changed IBM cloud links to markdown format</td>
+        </tr>
+        <tr>
+          <td>2021-04-14</td>
+          <td>0.3</td>
+          <td>Steve Ryan</td>
+          <td>Review pass</td>
+        </tr>
+        <tr>
+          <td>2021-04-13</td>
+          <td>0.2</td>
+          <td>Ramesh Sannareddy</td>
+          <td>Added hints and solutions to practice exercises</td>
+        </tr>
+        <tr>
+          <td>2021-04-6</td>
+          <td>0.1</td>
+          <td>Ramesh Sannareddy</td>
+          <td>Created initial version of the lab</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Copyright (c) 2021 IBM Corporation. All rights reserved.</p>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

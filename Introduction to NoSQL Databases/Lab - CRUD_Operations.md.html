@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <center>
+      <img src="https://gitlab.com/ibm/skills-network/courses/placeholder101/-/raw/master/labs/module%201/images/IDSNlogo.png" width="300" alt="cognitiveclass.ai logo">
+    </center>
+    <h1>Cassandra CRUD Operations</h1>
+    <p>Estimated time needed: <strong>15</strong> minutes</p>
+    <h2>Objectives</h2>
+    <p>After completing this lab you will be able to:</p>
+    <ul>
+      <li>Create data in a table.</li>
+      <li>Read data from a table.</li>
+      <li>Update data in a table.</li>
+      <li>Delete data from a table.</li>
+    </ul>
+    <h1>About This SN Labs Cloud IDE</h1>
+    <p>This Skills Network Labs Cloud IDE provides a hands-on environment for course and project related labs. It utilizes Theia, an open-source IDE (Integrated Development Environment) platform, that can be run on desktop or on the cloud. To complete this lab, we will be using the Cloud IDE based on Theia and Cassandra running in a Docker container.</p>
+    <h2>Important Notice about this lab environment</h2>
+    <p>Please be aware that sessions for this lab environment are not persisted. Every time you connect to this lab, a new environment is created for you. Any data you may have saved in the earlier session would get lost. Plan to complete these labs in a single session, to avoid losing your data.</p>
+    <h1>Exercise 1 - Getting the environment ready</h1>
+    <ol>
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Start the cassandra server.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Refer to the <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cassandra/Lab%20-%20Using%20the%20CQL%20Shell.md.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0151ENSkillsNetwork24597197-2021-01-01">Using the CQL Shell (cqlsh)</a> lab.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <p>Run the below command on the terminal.</p>
+      <pre><code class="hljs language-ebnf"><span class="hljs-attribute">start_cassandra</span>
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="2">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Connect to the cassandra server.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Refer to the <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cassandra/Lab%20-%20Using%20the%20CQL%20Shell.md.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0151ENSkillsNetwork24597197-2021-01-01">Using the CQL Shell (cqlsh)</a> lab.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>Use the below command with the user name and password generated on your terminal window, when you started the cassandra server using start_cassandra command.
+      <pre><code class="hljs language-apache"><span class="hljs-attribute">cqlsh</span> --username cassandra --password MTg<span class="hljs-number">3</span>MzMtcnNhbm<span class="hljs-number">5</span>h
+
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="3">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Create a keyspace named <strong>training</strong> using SimpleStrategy and replication factor of 3.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>use CREATE KEYSPACE command with appropriate options</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>On the cqlsh run the below command.
+      ```
+      CREATE KEYSPACE training
+      WITH replication = {'class':'SimpleStrategy', 'replication_factor' : 3};
+      ```
+      <p></p>
+    </details>
+    <ol start="4">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Create a table named <strong>movies</strong> with columns 'movie_id' which is the primary key and integer type, 'movie_name' of type text, and 'year_of_release' of type integer.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>use CREATE TABLE command with appropriate options</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>On the cqlsh run the below command.
+      ```
+      use training;
+      CREATE TABLE movies(
+      movie_id int PRIMARY KEY,
+      movie_name text,
+      year_of_release int
+      );
+      ```
+      <p></p>
+    </details>
+    <h1>Exercise 2 - Insert data into a table</h1>
+    <p>Let us insert a row into the table movies.</p>
+    <p>On cqlsh run the below command.</p>
+    <pre><code class="hljs language-sql"><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">into</span> movies(
+movie_id, movie_name, year_of_release)
+<span class="hljs-keyword">VALUES</span> (<span class="hljs-number">1</span>,<span class="hljs-string">'Toy Story'</span>,<span class="hljs-number">1995</span>);
+</code></pre>
+    <p></p>
+    <p>Verify that the data is saved.</p>
+    <pre><code class="hljs language-axapta">
+<span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> movies;
+</code></pre>
+    <p></p>
+    <p>Insert the below movies into the table.</p>
+    <table>
+      <thead>
+        <tr>
+          <th><code>movie_id</code></th>
+          <th><code>movie_name</code></th>
+          <th><code>year_of_release</code></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2</td>
+          <td>Jumanji</td>
+          <td>1995</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Heat</td>
+          <td>1995</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Scream</td>
+          <td>1995</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Fargo</td>
+          <td>1996</td>
+        </tr>
+      </tbody>
+    </table>
+    <details>
+      <summary>Click here for Solution</summary>On the cqlsh run the below command.
+      <pre><code class="hljs language-sql"><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">into</span> movies(
+movie_id, movie_name, year_of_release)
+<span class="hljs-keyword">VALUES</span> (<span class="hljs-number">2</span>,<span class="hljs-string">'Jumanji'</span>,<span class="hljs-number">1995</span>);
+
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">into</span> movies(
+movie_id, movie_name, year_of_release)
+<span class="hljs-keyword">VALUES</span> (<span class="hljs-number">3</span>,<span class="hljs-string">'Heat'</span>,<span class="hljs-number">1995</span>);
+
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">into</span> movies(
+movie_id, movie_name, year_of_release)
+<span class="hljs-keyword">VALUES</span> (<span class="hljs-number">4</span>,<span class="hljs-string">'Scream'</span>,<span class="hljs-number">1995</span>);
+
+<span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">into</span> movies(
+movie_id, movie_name, year_of_release)
+<span class="hljs-keyword">VALUES</span> (<span class="hljs-number">5</span>,<span class="hljs-string">'Fargo'</span>,<span class="hljs-number">1996</span>);
+
+</code></pre>
+      <p></p>
+    </details>
+    <h1>Exercise 3 - Read data from a table</h1>
+    <p>
+      In the previous exercise you have inserted some data into the table named <strong>movies</strong>.
+      Let us query the data in the <strong>movies</strong> table.
+    </p>
+    <p>Query all rows.</p>
+    <pre><code class="hljs language-axapta">
+<span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> movies;
+</code></pre>
+    <p></p>
+    <p>Query the movie name with movie_id 1.</p>
+    <pre><code class="hljs language-axapta">
+<span class="hljs-keyword">select</span> movie_name <span class="hljs-keyword">from</span> movies <span class="hljs-keyword">where</span> movie_id = <span class="hljs-number">1</span>;
+</code></pre>
+    <p></p>
+    <h1>Exercise 4 - Update data in a table</h1>
+    <p>
+      The movie_id for Scream is 4. It was released in 1996 and not 1995.
+      Here is how you modify it.
+    </p>
+    <pre><code class="hljs language-ini">
+UPDATE movies
+SET <span class="hljs-attr">year_of_release</span> = <span class="hljs-number">1996</span>
+WHERE <span class="hljs-attr">movie_id</span> = <span class="hljs-number">4</span><span class="hljs-comment">;</span>
+</code></pre>
+    <p></p>
+    <p>Verify that the update was successful.</p>
+    <pre><code class="hljs language-axapta">
+<span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> movies <span class="hljs-keyword">where</span> movie_id = <span class="hljs-number">4</span>;
+</code></pre>
+    <p></p>
+    <h1>Exercise 5 - Delete data from a table</h1>
+    <p>Delete the movie with the movie_id 5.</p>
+    <pre><code class="hljs language-ini">
+DELETE from movies
+WHERE <span class="hljs-attr">movie_id</span> = <span class="hljs-number">5</span><span class="hljs-comment">;</span>
+</code></pre>
+    <p></p>
+    <p>Verify using the below command.</p>
+    <pre><code class="hljs language-axapta">
+<span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> movies;
+</code></pre>
+    <p></p>
+    <h1>Practice exercises</h1>
+    <ol>
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Insert the below movie into the movies table.</em></p>
+    </blockquote>
+    <table>
+      <thead>
+        <tr>
+          <th><code>movie_id</code></th>
+          <th><code>movie_name</code></th>
+          <th><code>year_of_release</code></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>6</td>
+          <td>Twister</td>
+          <td>1997</td>
+        </tr>
+      </tbody>
+    </table>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>use the command 'insert into table'</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>On the cqlsh run the below command.
+      ```
+      INSERT into movies(
+      movie_id, movie_name, year_of_release)
+      VALUES (6,'Twister',1997);
+      ```
+      <p></p>
+    </details>
+    <ol start="2">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Modify the release year of Twister to 1996.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>use the command 'update table set column=value where column=value'</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>On the cqlsh run the below command.
+      ```
+      UPDATE movies
+      SET year_of_release = 1996
+      WHERE movie_id = 6;
+      ```
+      <p></p>
+    </details>
+    <ol start="3">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Delete the movie Twister.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>use the command 'delete from ..'</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>On the cqlsh run the below command.
+      ```
+      DELETE from movies
+      WHERE movie_id = 6;
+      ```
+      <p></p>
+    </details>
+    <h2>Authors</h2>
+    <p>Ramesh Sannareddy</p>
+    <h3>Other Contributors</h3>
+    <p>Rav Ahuja</p>
+    <h2>Change Log</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date (YYYY-MM-DD)</th>
+          <th>Version</th>
+          <th>Changed By</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-04-20</td>
+          <td>0.2</td>
+          <td>Steve Ryan</td>
+          <td>Review pass</td>
+        </tr>
+        <tr>
+          <td>2021-03-24</td>
+          <td>0.1</td>
+          <td>Ramesh Sannareddy</td>
+          <td>Created initial version of the lab</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Copyright (c) 2021 IBM Corporation. All rights reserved.</p>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <h2>Cloudant - Query optimization with indexes</h2>
+    <p>In databases, frequently used data and related queries are indexed to speed up queries. Cloudant supports two types of indexes:</p>
+    <ul>
+      <li>“type”: “text”</li>
+      <li>“type”: “json”</li>
+    </ul>
+    <p>There is a significant difference between these two types of indexes related to the purpose of use and the method of use.</p>
+    <p>From the perspective of purpose of use, the index of the text type focuses on the specific content of Cloudant documents, rather than the structure of the document itself. So, if a user is not familiar with the structures of the documents in the database, or the structures of the documents vary a lot and their formats are complex, text index will be preferred.</p>
+    <p>In contrast, the JSON index has high requirements on the structure of the document, and it is built on one or more specific fields. Therefore, if the user is familiar with the document structure in the database, he or she can choose to create a JSON index.</p>
+    <p>From the perspective of method of use, the text index can only be used in the Cloudant data search interface, of which the supported syntax is Apache Lucene Query Parse Syntax.</p>
+    <p>In contrast, the JSON index can only be used in Cloudant’s data query interface, allowing users to query with a JSON object in accordance with the Cloudant query parsing syntax. Interfaces of both indexing type are powerful and support various custom queries.</p>
+    <p>In terms of the speed of indexing, the indexing of text type is slower than that of JSON type when dealing with the same amount of data. The reason is, when creating a text index, Cloudant deals with not only the specified data structure, but also its content. In contrast, the JSON index is only concerned with the structure itself. In some cases, the text index can be used for full-text search of the entire database.</p>
+    <p>In addition, some of Cloudant’s advanced features, such as sophisticated aggregations and geospatial-based calculations, can only be used in query interfaces based on JSON index. Therefore, the key to selecting which of these two types of index to use lies in the understanding of existing data.</p>
+    <h3>How to create indexes on Cloudant</h3>
+    <p>Example 1: This command creates a json index on the field "firstname", on the employees database</p>
+    <pre><code class="hljs language-json">
+curl -X POST $SERVERURL/employees/_index \
+-H<span class="hljs-string">"Content-Type: application/json"</span> \
+-d'{
+    <span class="hljs-attr">"index"</span>: {
+        <span class="hljs-attr">"fields"</span>: [<span class="hljs-string">"firstname"</span>]
+    }
+}'
+
+</code></pre>
+    <p>
+      Example 2: This command creates a json index on the field "firstname", and names the index as firstname-index.
+      You can mention JSON index explicitly. The default is JSON index.
+    </p>
+    <pre><code class="hljs language-json">
+curl -X POST $SERVERURL/employees/_index \
+-H<span class="hljs-string">"Content-Type: application/json"</span> \
+-d'{
+    <span class="hljs-attr">"index"</span>: {
+        <span class="hljs-attr">"fields"</span>: [<span class="hljs-string">"firstname"</span>]
+    },
+    <span class="hljs-attr">"name"</span> : <span class="hljs-string">"firstname-index"</span>,
+    <span class="hljs-attr">"type"</span> : <span class="hljs-string">"json"</span>
+}'
+
+</code></pre>
+    <p>Example 3: This command creates a text index on the employees database.</p>
+    <pre><code class="hljs language-json">
+curl -X POST $SERVERURL/employees/_index \
+-H<span class="hljs-string">"Content-Type: application/json"</span> \
+-d'{ <span class="hljs-attr">"index"</span>: {},
+     <span class="hljs-attr">"type"</span>: <span class="hljs-string">"text"</span>
+}'
+
+</code></pre>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

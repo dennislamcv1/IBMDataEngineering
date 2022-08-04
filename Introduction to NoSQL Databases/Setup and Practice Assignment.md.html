@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <h1>Hands-on Lab: Setup and Practice Assignment</h1>
+    <center>
+      <img src="https://gitlab.com/ibm/skills-network/courses/placeholder101/-/raw/master/labs/module%201/images/IDSNlogo.png" width="300" alt="cognitiveclass.ai logo">
+    </center>
+    <p>Estimated time needed: <strong>30</strong> minutes</p>
+    <h2>Objectives</h2>
+    <p>In this assignment you will:</p>
+    <ul>
+      <li>install the couchimport and couchexport tools.</li>
+      <li>install the mongoimport and mongoexport tools.</li>
+      <li>export data from a Cloudant database.</li>
+      <li>import data into a Cloudant database.</li>
+      <li>export data from a MongoDB database.</li>
+      <li>import data into a MongoDB database.</li>
+      <li>export data from a Cassandra database.</li>
+      <li>import data into a Cassandra database.</li>
+      <li>create indexes on a Cassandra database.</li>
+    </ul>
+    <h1>About This SN Labs Cloud IDE</h1>
+    <p>This Skills Network Labs Cloud IDE provides a hands-on environment for course and project related labs. It utilizes Theia, an open-source IDE (Integrated Development Environment) platform, that can be run on desktop or on the cloud. To complete this lab, we will be using the Cloud IDE based on Theia and Cassandra and Mongodb running in a Docker container. You will also need an instance of Cloudant running in IBM Cloud.</p>
+    <h2>Important Notice about this lab environment</h2>
+    <p>Please be aware that sessions for this lab environment are not persisted. Every time you connect to this lab, a new environment is created for you. Any data you may have saved in the earlier session would get lost. Plan to complete these labs in a single session, to avoid losing your data.</p>
+    <h1>Useful tips about the lab IDE</h1>
+    <p>The lab environment allows you to open multiple terminals should you need them.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Final%20Assignment/images/new_terminal.png" alt="">
+    </p>
+    <p>Click on <code>New Terminal</code> from the Terminal menu.</p>
+    <p>You can resize the terminal window. You may wish to increase the terminal size to view longer outputs.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Final%20Assignment/images/resize_terminal.png" alt="">
+    </p>
+    <h1>Exercise 1 - Getting the environment ready</h1>
+    <p>You need the 'couchimport' and 'couchexport' tools to move data in and out of the Cloudant database.</p>
+    <p>To install these tools run the below commands on the terminal.</p>
+    <pre><code class="hljs language-elm">
+<span class="hljs-title">sudo</span> npm install -g couch<span class="hljs-keyword">import</span>
+
+</code></pre>
+    <p></p>
+    <p>Here is the expected output.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Final%20Assignment/images/npm-couchimport.png" alt="">
+    </p>
+    <p>Verify that the tool got installed, by running the below command on the terminal.</p>
+    <pre><code class="hljs language-ada">
+couchimport <span class="hljs-comment">--version</span>
+
+</code></pre>
+    <p></p>
+    <p>If you do not get an error and get a version number, you are good to go ahead.</p>
+    <p>You need the 'mongoimport' and 'mongoexport' tools to move data in and out of the mongodb database.</p>
+    <p>To install these tools run the below commands on the terminal.</p>
+    <pre><code class="hljs language-apache">
+<span class="hljs-attribute">wget</span> https://fastdl.mongodb.org/tools/db/mongodb-database-tools-ubuntu<span class="hljs-number">1804</span>-x<span class="hljs-number">86</span>_<span class="hljs-number">64</span>-<span class="hljs-number">100</span>.<span class="hljs-number">3</span>.<span class="hljs-number">1</span>.tgz
+<span class="hljs-attribute">tar</span> -xf mongodb-database-tools-ubuntu<span class="hljs-number">1804</span>-x<span class="hljs-number">86</span>_<span class="hljs-number">64</span>-<span class="hljs-number">100</span>.<span class="hljs-number">3</span>.<span class="hljs-number">1</span>.tgz
+<span class="hljs-attribute">export</span> PATH=$PATH:/home/project/mongodb-database-tools-ubuntu<span class="hljs-number">1804</span>-x<span class="hljs-number">86</span>_<span class="hljs-number">64</span>-<span class="hljs-number">100</span>.<span class="hljs-number">3</span>.<span class="hljs-number">1</span>/bin
+<span class="hljs-attribute">echo</span> <span class="hljs-string">"done"</span>
+ 
+</code></pre>
+    <p></p>
+    <p>Verify that the tools got installed, by running the below command on the terminal.</p>
+    <pre><code class="hljs language-ada">
+mongoimport <span class="hljs-comment">--version</span>
+
+</code></pre>
+    <p></p>
+    <p>If you do not get an error and get a version number, you are good to go ahead.</p>
+    <h1>Exercise 2 - Cloudant import/export data</h1>
+    <p>Before going ahead set the environment varible CLOUDANTURL to your actual cloudant url from your service credentials.</p>
+    <details>
+      <summary>Click here for Hint</summary>
+      <p><a href="https://labs.cognitiveclass.ai/tools/theiadocker/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0151ENSkillsNetwork24597197-2021-01-01&#x26;md_instructions_url=https%3A%2F%2Fcf-courses-data.s3.us.cloud-object-storage.appdomain.cloud%2FIBM-DB0151EN-SkillsNetwork%2Flabs%2FCloudant%2FLab+-+Using+HTTP+API+to+create+and+query+Cloudant+databases%2FLab+-+Using+HTTP+API+to+create+and+query+Cloudant+databases.md.html" target="_blank">Using HTTP API to create and query Cloudant databases</a> lab has instructions to setup the CLOUDANTURL variable.</p>
+    </details>
+    <p>Export data from the 'diamonds' database into csv format. (You have created this database in the Cloudant practice labs. If you do not have this database, use any database you have on your Cloudant instance.)</p>
+    <pre><code class="hljs language-dsconfig">
+<span class="hljs-string">couchexport</span> <span class="hljs-built_in">--url</span> $<span class="hljs-string">CLOUDANTURL</span> <span class="hljs-built_in">--db</span> <span class="hljs-string">diamonds</span> <span class="hljs-built_in">--delimiter</span> <span class="hljs-string">","</span>
+
+</code></pre>
+    <p></p>
+    <p>You should see all the documents in the 'diamonds' database printed in csv format.</p>
+    <p>Export data from the 'diamonds' database into json format (one document per line).</p>
+    <pre><code class="hljs language-brainfuck">
+<span class="hljs-comment">couchexport</span> --<span class="hljs-comment">url</span> <span class="hljs-comment">$CLOUDANTURL</span> --<span class="hljs-comment">db</span> <span class="hljs-comment">diamonds</span> --<span class="hljs-comment">type</span> <span class="hljs-comment">jsonl</span>
+
+</code></pre>
+    <p></p>
+    <p>You should see all the documents in the 'diamonds' database printed in json format.</p>
+    <p>Export data from the 'diamonds' database into json format and save to a file named 'diamonds.json'.</p>
+    <pre><code class="hljs language-mipsasm">
+couchexport --url $<span class="hljs-keyword">CLOUDANTURL </span>--db <span class="hljs-keyword">diamonds </span>--type <span class="hljs-keyword">jsonl </span>> <span class="hljs-keyword">diamonds.json
+</span>
+</code></pre>
+    <p></p>
+    <p>Export data from the 'diamonds' database into csv format and save to a file named 'diamonds.csv'.</p>
+    <pre><code class="hljs language-dsconfig">
+<span class="hljs-string">couchexport</span> <span class="hljs-built_in">--url</span> $<span class="hljs-string">CLOUDANTURL</span> <span class="hljs-built_in">--db</span> <span class="hljs-string">diamonds</span> <span class="hljs-built_in">--delimiter</span> <span class="hljs-string">","</span> > <span class="hljs-string">diamonds</span>.<span class="hljs-string">csv</span>
+
+</code></pre>
+    <p></p>
+    <h1>Exercise 3 - MongoDB import/export data</h1>
+    <p>Start the mongodb server.</p>
+    <pre><code class="hljs language-ebnf">
+<span class="hljs-attribute">start_mongo</span>
+
+</code></pre>
+    <p></p>
+    <p>Make a note of the username and password based on the output of the previous command.</p>
+    <p>Import data in 'diamonds.json' into a collection named 'diamonds' and a database named 'training'.</p>
+    <pre><code class="hljs language-brainfuck">
+<span class="hljs-comment">mongoimport</span> <span class="hljs-literal">-</span><span class="hljs-comment">u</span> <span class="hljs-comment">root</span> <span class="hljs-literal">-</span><span class="hljs-comment">p</span> <span class="hljs-comment">MzA2NDAtcnNhbm5h</span> --<span class="hljs-comment">authenticationDatabase</span> <span class="hljs-comment">admin</span> --<span class="hljs-comment">db</span> <span class="hljs-comment">training</span> --<span class="hljs-comment">collection</span> <span class="hljs-comment">diamonds</span> --<span class="hljs-comment">file</span> <span class="hljs-comment">diamonds</span><span class="hljs-string">.</span><span class="hljs-comment">json</span>
+
+</code></pre>
+    <p></p>
+    <p>Login to mongodb and check if the 'training' database and the 'diamonds' collection are created and the collection has the imported documents.</p>
+    <p>Export data into json format.</p>
+    <p>Export data from the 'training' database, 'diamonds' collection into a file named 'mongodb_exported_data.json'</p>
+    <pre><code class="hljs language-brainfuck">
+<span class="hljs-comment">mongoexport</span> <span class="hljs-literal">-</span><span class="hljs-comment">u</span> <span class="hljs-comment">root</span> <span class="hljs-literal">-</span><span class="hljs-comment">p</span> <span class="hljs-comment">MzA2NDAtcnNhbm5h</span> --<span class="hljs-comment">authenticationDatabase</span> <span class="hljs-comment">admin</span> --<span class="hljs-comment">db</span> <span class="hljs-comment">training</span> --<span class="hljs-comment">collection</span> <span class="hljs-comment">diamonds</span> --<span class="hljs-comment">out</span> <span class="hljs-comment">mongodb_exported_data</span><span class="hljs-string">.</span><span class="hljs-comment">json</span>
+
+</code></pre>
+    <p></p>
+    <p>Export data into csv format.</p>
+    <p>Export the fields <code>_id,clarity,cut,price</code> from the 'training' database, 'diamonds' collection into a file named 'mongodb_exported_data.csv'</p>
+    <pre><code class="hljs language-brainfuck">
+<span class="hljs-comment">mongoexport</span> <span class="hljs-literal">-</span><span class="hljs-comment">u</span> <span class="hljs-comment">root</span> <span class="hljs-literal">-</span><span class="hljs-comment">p</span> <span class="hljs-comment">MzA2NDAtcnNhbm5h</span> --<span class="hljs-comment">authenticationDatabase</span> <span class="hljs-comment">admin</span> --<span class="hljs-comment">db</span> <span class="hljs-comment">training</span> --<span class="hljs-comment">collection</span> <span class="hljs-comment">diamonds</span> --<span class="hljs-comment">out</span> <span class="hljs-comment">mongodb_exported_data</span><span class="hljs-string">.</span><span class="hljs-comment">csv</span> --<span class="hljs-comment">type=csv</span> --<span class="hljs-comment">fields</span> <span class="hljs-comment">_id</span><span class="hljs-string">,</span><span class="hljs-comment">clarity</span><span class="hljs-string">,</span><span class="hljs-comment">cut</span><span class="hljs-string">,</span><span class="hljs-comment">price</span>
+
+</code></pre>
+    <p></p>
+    <h1>Exercise 4 - Cassandra import/export data</h1>
+    <p>Start the Cassandra server.</p>
+    <pre><code class="hljs language-ebnf">
+<span class="hljs-attribute">start_cassandra</span>
+
+</code></pre>
+    <p></p>
+    <p>Import csv into cassandra.</p>
+    <p>Import 'diamonds.csv' into the 'training' keyspace and the 'diamonds' table/column family.</p>
+    <p>Step - 1: Login to cqlsh.</p>
+    <p>Step - 2: Create a keyspace named 'training'.</p>
+    <details>
+      <summary>Click here for hint</summary>
+      <p>Refer to the <a href="https://labs.cognitiveclass.ai/tools/theiadocker/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0151ENSkillsNetwork24597197-2021-01-01&#x26;md_instructions_url=https%3A%2F%2Fcf-courses-data.s3.us.cloud-object-storage.appdomain.cloud%2FIBM-DB0151EN-SkillsNetwork%2Flabs%2FCassandra%2FLab+-+Keyspace_Operations.md.html" target="_blank">Keyspace Operations Hands on Lab</a></p>
+    </details>
+    <p>Step - 3: In the 'training' keyspace create a table named 'diamonds' with the below schema</p>
+    <ul>
+      <li>
+        <p>id - primary key (use 'id' as the primary key; Cassandra does not allow you to create a column starting with underscore(_))</p>
+      </li>
+      <li>
+        <p>clarity - text</p>
+      </li>
+      <li>
+        <p>cut - text</p>
+      </li>
+      <li>
+        <p>price - integer.</p>
+      </li>
+    </ul>
+    <details>
+      <summary>Click here for hint</summary>
+      <p>Refer to the <a href="https://labs.cognitiveclass.ai/tools/theiadocker/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0151ENSkillsNetwork24597197-2021-01-01&#x26;md_instructions_url=https%3A%2F%2Fcf-courses-data.s3.us.cloud-object-storage.appdomain.cloud%2FIBM-DB0151EN-SkillsNetwork%2Flabs%2FCassandra%2FLab+-+Table_Operations.md" target="_blank">Table Operations Hands on Lab</a></p>
+    </details>
+    <p>Step 4: Run the below commands on cqlsh.</p>
+    <pre><code class="hljs language-pgsql">
+use training;
+<span class="hljs-keyword">COPY</span> training.diamonds(id,clarity,cut,price) <span class="hljs-keyword">FROM</span> <span class="hljs-string">'mongodb_exported_data.csv'</span> <span class="hljs-keyword">WITH</span> DELIMITER=<span class="hljs-string">','</span> <span class="hljs-keyword">AND</span> <span class="hljs-keyword">HEADER</span>=<span class="hljs-keyword">TRUE</span>;
+
+</code></pre>
+    <p></p>
+    <p>Export the 'diamonds' table into a csv file.</p>
+    <pre><code class="hljs language-oxygene">
+<span class="hljs-keyword">COPY</span> diamonds <span class="hljs-keyword">TO</span> <span class="hljs-string">'cassandra-diamonds.csv'</span>;
+
+
+</code></pre>
+    <p></p>
+    <h1>Exercise 5 - Creating an index on Cassandra</h1>
+    <p>The command below creates an index named 'price_index' for the 'price' column which is in the 'diamonds' table.</p>
+    <pre><code class="hljs language-n1ql">
+<span class="hljs-keyword">create</span> <span class="hljs-keyword">index</span> price_index <span class="hljs-keyword">on</span> diamonds(price);
+
+</code></pre>
+    <p></p>
+    <h2>Authors</h2>
+    <p>Ramesh Sannareddy</p>
+    <h3>Other Contributors</h3>
+    <p>Rav Ahuja</p>
+    <h2>Change Log</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date (YYYY-MM-DD)</th>
+          <th>Version</th>
+          <th>Changed By</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-04-23</td>
+          <td>0.2</td>
+          <td>Steve Ryan</td>
+          <td>Review pass</td>
+        </tr>
+        <tr>
+          <td>2021-04-16</td>
+          <td>0.1</td>
+          <td>Ramesh Sannareddy</td>
+          <td>Created initial version</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Copyright (c) 2021 IBM Corporation. All rights reserved.</p>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

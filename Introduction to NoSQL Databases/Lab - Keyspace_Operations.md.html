@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <center>
+      <img src="https://gitlab.com/ibm/skills-network/courses/placeholder101/-/raw/master/labs/module%201/images/IDSNlogo.png" width="300" alt="cognitiveclass.ai logo">
+    </center>
+    <h1>Cassandra Keyspace Operations</h1>
+    <p>Estimated time needed: <strong>15</strong> minutes</p>
+    <h2>Objectives</h2>
+    <p>After completing this lab you will be able to:</p>
+    <ul>
+      <li>Create a keyspace.</li>
+      <li>Describe a keyspace.</li>
+      <li>Alter a keyspace.</li>
+      <li>Use a keyspace.</li>
+      <li>Drop a keyspace.</li>
+    </ul>
+    <h1>About This SN Labs Cloud IDE</h1>
+    <p>This Skills Network Labs Cloud IDE provides a hands-on environment for course and project related labs. It utilizes Theia, an open-source IDE (Integrated Development Environment) platform, that can be run on desktop or on the cloud. To complete this lab, we will be using the Cloud IDE based on Theia and Cassandra running in a Docker container.</p>
+    <h2>Important Notice about this lab environment</h2>
+    <p>Please be aware that sessions for this lab environment are not persisted. Every time you connect to this lab, a new environment is created for you. Any data you may have saved in the earlier session would get lost. Plan to complete these labs in a single session, to avoid losing your data.</p>
+    <h1>Exercise 1 - Getting the environment ready</h1>
+    <ol>
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Start the cassandra server.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Refer to the <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cassandra/Lab%20-%20Using%20the%20CQL%20Shell.md.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0151ENSkillsNetwork24597197-2021-01-01">Using the CQL Shell (cqlsh)</a> lab.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <p>Run the below command on the terminal.</p>
+      <pre><code class="hljs language-ebnf"><span class="hljs-attribute">start_cassandra</span>
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="2">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Connect to the cassandra server.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Refer to the <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cassandra/Lab%20-%20Using%20the%20CQL%20Shell.md.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0151ENSkillsNetwork24597197-2021-01-01">Using the CQL Shell (cqlsh)</a> lab.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>Use the below command with the user name and password generated on your terminal window, when you started the cassandra server using start_cassandra command.
+      <pre><code class="hljs language-apache"><span class="hljs-attribute">cqlsh</span> --username cassandra --password MTg<span class="hljs-number">3</span>MzMtcnNhbm<span class="hljs-number">5</span>h
+
+</code></pre>
+      <p></p>
+    </details>
+    <h1>Exercise 2 - Create a keyspace</h1>
+    <p>The below command creates a keyspace called <strong>training</strong>, using SimpleStrategy and a replication_factor of 3.</p>
+    <p>SimpleStrategy is used when all the nodes in your cassandra cluster exist in a single data center.</p>
+    <p>On cqlsh run the below command.</p>
+    <pre><code class="hljs language-ini">CREATE KEYSPACE training  
+WITH <span class="hljs-attr">replication</span> = {<span class="hljs-string">'class'</span>:<span class="hljs-string">'SimpleStrategy'</span>, <span class="hljs-string">'replication_factor'</span> : <span class="hljs-number">3</span>}<span class="hljs-comment">;</span>
+</code></pre>
+    <p></p>
+    <p>List all keyspaces.</p>
+    <pre><code class="hljs language-ebnf">
+<span class="hljs-attribute">describe keyspaces</span>
+</code></pre>
+    <p></p>
+    <h1>Exercise 3 - Describe a keyspace</h1>
+    <p>
+      In the previous exercise you have created a keyspace named <strong>training</strong>.
+      Let us print more details of it using the describe command.
+    </p>
+    <p>Describe a keyspace.</p>
+    <pre><code class="hljs language-ebnf">
+<span class="hljs-attribute">describe training</span>
+</code></pre>
+    <p></p>
+    <h1>Exercise 4 - Alter a keyspace</h1>
+    <p>
+      In a previous exercise you created a keyspace named <strong>training</strong> using SimpleStrategy.
+      Let us change that to use NetworkTopologyStrategy.
+    </p>
+    <p>NetworkTopologyStrategy is used when all the nodes in your cassandra cluster are spread across multiple data centers.</p>
+    <p>Alter a keyspace.</p>
+    <pre><code class="hljs language-ini">
+ALTER KEYSPACE training
+WITH <span class="hljs-attr">replication</span> = {<span class="hljs-string">'class'</span>: <span class="hljs-string">'NetworkTopologyStrategy'</span>}<span class="hljs-comment">;</span>
+</code></pre>
+    <p></p>
+    <p>Verify the changes using the describe command.</p>
+    <pre><code class="hljs language-ebnf">
+<span class="hljs-attribute">describe training</span>
+</code></pre>
+    <p></p>
+    <h1>Exercise 5 - Use a keyspace</h1>
+    <p>To use a keyspace run the below command.</p>
+    <pre><code class="hljs language-abnf">
+use training<span class="hljs-comment">;</span>
+</code></pre>
+    <p></p>
+    <p>List all tables in this keyspace.</p>
+    <pre><code class="hljs language-sql_more">
+<span class="hljs-keyword">describe</span> <span class="hljs-keyword">tables</span>
+</code></pre>
+    <p></p>
+    <p>You will get an empty list because we do not have any tables yet.</p>
+    <h1>Exercise 6 - Drop a keyspace</h1>
+    <p>To drop a keyspace run the below command.</p>
+    <pre><code class="hljs language-n1ql">
+<span class="hljs-keyword">drop</span> <span class="hljs-keyword">keyspace</span> training;
+
+</code></pre>
+    <p></p>
+    <p>Verify the changes using the describe command.</p>
+    <pre><code class="hljs language-sql_more">
+<span class="hljs-keyword">use</span> <span class="hljs-keyword">system</span>;
+<span class="hljs-keyword">describe</span> keyspaces
+
+</code></pre>
+    <p></p>
+    <h1>Practice exercises</h1>
+    <ol>
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Create a keyspace named <strong>sales</strong> using SimpleStrategy and a replication factor of 1.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>use the 'create keyspace' command</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>On the cqlsh run the below command.
+      ```
+      CREATE KEYSPACE sales
+      WITH replication = {'class':'SimpleStrategy', 'replication_factor' : 1};
+      ```
+      <p></p>
+    </details>
+    <ol start="2">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Change the replication factor to 3 for the <strong>sales</strong> keyspace.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>use the 'alter keyspace' command</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>On the cqlsh run the below command.
+      ```
+      ALTER KEYSPACE sales
+      WITH replication = {'class':'SimpleStrategy', 'replication_factor' : 3};
+      ```
+      <p></p>
+    </details>
+    <ol start="3">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Drop the <strong>sales</strong> keyspace.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>use the 'drop keyspace' command</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>On the cqlsh run the below command.
+      ```
+      drop keyspace sales;
+      ```
+      <p></p>
+    </details>
+    <ol start="4">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Verify that the <strong>sales</strong> keyspace is dropped.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>use the describe command</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>On the cqlsh run the below command.
+      ```
+      describe keyspaces
+      ```
+      <p></p>
+    </details>
+    <h2>Authors</h2>
+    <p>Ramesh Sannareddy</p>
+    <h3>Other Contributors</h3>
+    <p>Rav Ahuja</p>
+    <h2>Change Log</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date (YYYY-MM-DD)</th>
+          <th>Version</th>
+          <th>Changed By</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-04-20</td>
+          <td>0.2</td>
+          <td>Steve Ryan</td>
+          <td>Review pass</td>
+        </tr>
+        <tr>
+          <td>2021-03-24</td>
+          <td>0.1</td>
+          <td>Ramesh Sannareddy</td>
+          <td>Created initial version of the lab</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Copyright (c) 2021 IBM Corporation. All rights reserved.</p>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

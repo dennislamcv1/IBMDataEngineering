@@ -1,0 +1,11 @@
+{"_id":"2","_rev":"1-bb99032cde872d889f41bb4069e23675","carat":0.2,"cut":"Premium","color":"E","clarity":"SI2","depth":60.2,"table":62,"price":351}
+{"_id":"6","_rev":"1-123dab0cac8ea522248f6b754fbd0324","carat":0.3,"cut":"Very Good","color":"J","clarity":"SI1","depth":62.7,"table":59,"price":349}
+{"_id":"3","_rev":"1-6cae93b085edb9425839d170243dda33","carat":0.32,"cut":"Premium","color":"E","clarity":"I1","depth":60.9,"table":58,"price":342}
+{"_id":"_design/b065d26fac7b5667acb5f43699e2ddebb6b9a539","_rev":"1-63dab70a549f451cd2f0e09f7d6f6214","language":"query","views":{"b065d26fac7b5667acb5f43699e2ddebb6b9a539":{"map":{"fields":{"price":"asc"},"partial_filter_selector":{}},"reduce":"_count","options":{"def":{"fields":["price"]}}}}}
+{"_id":"1","_rev":"1-382b01d4e862168ea846699e0b43f1c2","carat":0.31,"cut":"Ideal","color":"J","clarity":"SI2","depth":62.2,"table":54,"price":339}
+{"_id":"10","_rev":"1-fddbbbca9448f121ecbf83b054231e06","carat":0.31,"cut":"Very Good","color":"J","clarity":"SI1","depth":59.4,"table":62,"price":346}
+{"_id":"4","_rev":"1-05804d3e703d804d594a3b6c3e682009","carat":0.3,"cut":"Good","color":"J","clarity":"SI1","depth":63.4,"table":54,"price":349}
+{"_id":"5","_rev":"1-0e3d121da9ecf20d914feecc5bf75695","carat":0.3,"cut":"Good","color":"J","clarity":"SI1","depth":63.8,"table":56,"price":347}
+{"_id":"9","_rev":"1-41642c0c3515988461e9f7bda7c429b1","carat":0.23,"cut":"Very Good","color":"H","clarity":"VS1","depth":61,"table":57,"price":323}
+{"_id":"8","_rev":"1-25555992de6885ff8bfb6dda79e4ff39","carat":0.23,"cut":"Very Good","color":"E","clarity":"VS2","depth":63.8,"table":55,"price":339}
+{"_id":"7","_rev":"1-b709e1c9ca25953abd6e0f991c14ec31","carat":0.3,"cut":"Good","color":"I","clarity":"SI2","depth":63.3,"table":56,"price":343}

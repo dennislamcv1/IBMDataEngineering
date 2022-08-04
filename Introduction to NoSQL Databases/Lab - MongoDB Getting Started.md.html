@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <center>
+      <img src="https://gitlab.com/ibm/skills-network/courses/placeholder101/-/raw/master/labs/module%201/images/IDSNlogo.png" width="300" alt="cognitiveclass.ai logo">
+    </center>
+    <h1>Hands-on Lab: Getting Started with MongoDB</h1>
+    <p>Estimated time needed: <strong>30</strong> minutes</p>
+    <h2>Objectives</h2>
+    <p>After completing this lab you will be able to:</p>
+    <ul>
+      <li>Start mongodb server on the Skills Network Cloud IDE (Theia).</li>
+      <li>Connect to mongodb using a command-line interface.</li>
+      <li>Find the version of the server.</li>
+      <li>List databases.</li>
+      <li>Create databases.</li>
+      <li>Create collections.</li>
+      <li>Insert documents into a collection.</li>
+      <li>List collections.</li>
+      <li>List all documents in a collection.</li>
+      <li>Disconnect from mongodb server.</li>
+    </ul>
+    <h1>About Skills Network Cloud IDE</h1>
+    <p>Skills Network Cloud IDE (based on Theia and Docker) provides an environment for hands on labs for course and project related labs. Theia is an open source IDE (Integrated Development Environment), that can be run on desktop or on the cloud. to complete this lab, we will be using the Cloud IDE based on Theia and MongoDB running in a Docker container.</p>
+    <h2>Important Notice about this lab environment</h2>
+    <p>Please be aware that sessions for this lab environment are not persisted. Every time you connect to this lab, a new environment is created for you. Any data you may have saved in the earlier session would get lost. Plan to complete these labs in a single session, to avoid losing your data.</p>
+    <h1>Exercise 1 - Start mongodb server</h1>
+    <p>Open a new terminal, by clicking on the menu bar and selecting <strong>Terminal</strong>-><strong>New Terminal</strong>, as in the image below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/MongoDB/images/new-terminal.png" alt="">
+    </p>
+    <p>This will open a new terminal at the bottom of the screen as in the image below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/MongoDB/images/terminal_bottom_screen.png" alt="">
+    </p>
+    <p>Run the below command on the newly opened terminal. (You can copy the code by clicking on the little copy button on the bottom right of the codeblock below and then paste it, wherever you wish.)</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">start_mongo</span>
+</code></pre>
+    <p></p>
+    <p>This will start the mongodb server. It will also give you the command to connect to your instance of mongodb, as in the image below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/MongoDB/images/mongo_command_line.png" alt="">
+    </p>
+    <p>The command will look similar to the one given below.</p>
+    <pre><code class="hljs language-apache"><span class="hljs-attribute">mongo</span> -u root -p NTc<span class="hljs-number">0</span>My<span class="hljs-number">1</span>yc<span class="hljs-number">2</span>FubmFy --authenticationDatabase admin local
+</code></pre>
+    <p></p>
+    <p>The command contains the username and password to connect to mongodb server (the text after the -p option is the password). Your output would be different from the one shown above. Copy the command given to you, and keep it handy. You will need it in the next step.</p>
+    <h1>Exercise 2 - Connect to mongodb server</h1>
+    <p>On the terminal, paste or type the command you copied in the previous step, as in the image below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/MongoDB/images/mongo_connect_command.png" alt="">
+    </p>
+    <p>You should now get connected to the mongodb database, and see an output as in the figure below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/MongoDB/images/mongo_client.png" alt="">
+    </p>
+    <h1>Exercise 3 - Find the version of the server</h1>
+    <p>On the mongo client run the below command.</p>
+    <pre><code class="hljs language-stata"><span class="hljs-keyword">db</span>.<span class="hljs-keyword">version</span>()
+</code></pre>
+    <p></p>
+    <p>This will show the version of the mongodb server.</p>
+    <h1>Exercise 4 - List databases</h1>
+    <p>On the mongo client run the below command.</p>
+    <pre><code class="hljs language-dart"><span class="hljs-keyword">show</span> dbs
+</code></pre>
+    <p></p>
+    <p>This will print a list of the databases present on the server.</p>
+    <h1>Exercise 5 - Create database</h1>
+    <p>On the mongo client run the below command.</p>
+    <pre><code class="hljs language-actionscript"><span class="hljs-keyword">use</span> training
+</code></pre>
+    <p></p>
+    <p>This will create a new database named <strong>training</strong>. If a database named training already exists, it will start using it.</p>
+    <h1>Exercise 6 - Create collecton</h1>
+    <p>On the mongo client run the below command.</p>
+    <pre><code class="hljs language-clojure">db.createCollection(<span class="hljs-string">"mycollection"</span>)
+</code></pre>
+    <p></p>
+    <p>This will create a collection name <strong>mycollection</strong> inside the <strong>training</strong> database.</p>
+    <h1>Exercise 7 - List collections</h1>
+    <p>On the mongo client run the below command.</p>
+    <pre><code class="hljs language-dart"><span class="hljs-keyword">show</span> collections
+</code></pre>
+    <p></p>
+    <p>This will print the list of collections in your current database.</p>
+    <h1>Exercise 8 - Insert documents into a collection</h1>
+    <p>On the mongo client run the below command.</p>
+    <pre><code class="hljs language-json">db.mycollection.insert({<span class="hljs-attr">"color"</span>:<span class="hljs-string">"white"</span>,<span class="hljs-attr">"example"</span>:<span class="hljs-string">"milk"</span>})
+</code></pre>
+    <p></p>
+    <p>The above command inserts the json document {"color":"white","example":"milk"} into the collection.</p>
+    <p>Let us insert one more document.</p>
+    <pre><code class="hljs language-json">db.mycollection.insert({<span class="hljs-attr">"color"</span>:<span class="hljs-string">"blue"</span>,<span class="hljs-attr">"example"</span>:<span class="hljs-string">"sky"</span>})
+</code></pre>
+    <p></p>
+    <p>The above command inserts the json document {"color":"blue","example":"sky"} into the collection.</p>
+    <p>Insert 3 more documents of your choice.</p>
+    <h1>Exercise 9 - Count the number of documents in a collection</h1>
+    <p>On the mongo client run the below command.</p>
+    <pre><code class="hljs language-sql">db.mycollection.<span class="hljs-built_in">count</span>()
+</code></pre>
+    <p></p>
+    <p>This command gives you the number of documents in the collection.</p>
+    <h1>Exercise 10 - List all documents in a collection</h1>
+    <p>On the mongo client run the below command.</p>
+    <pre><code class="hljs language-routeros">db.mycollection.<span class="hljs-builtin-name">find</span>()
+</code></pre>
+    <p></p>
+    <p>This command lists all the documents in the collection <strong>mycollection</strong></p>
+    <p>Notice that mongodb automatically adds an '_id' field to every document in order to uniquely identify the document.</p>
+    <h1>Exercise 11 - Disconnect from mongodb server</h1>
+    <p>On the mongo client run the below command.</p>
+    <pre><code class="hljs language-awk"><span class="hljs-keyword">exit</span>
+</code></pre>
+    <p></p>
+    <h1>Practice exercises</h1>
+    <ol>
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Connect to mongodb server.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Use the 'mongo' command with correct username and password.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>Use the below command with the user name and password generated on your terminal window, when you started the mongodb server using start_mongo command.
+      <pre><code class="hljs language-apache"><span class="hljs-attribute">mongo</span> -u root -p NTc<span class="hljs-number">0</span>My<span class="hljs-number">1</span>yc<span class="hljs-number">2</span>FubmFy --authenticationDatabase admin local
+
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="2">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>List databases.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Use the 'show' command with dbs option.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-dart"><span class="hljs-keyword">show</span> dbs
+
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="3">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Create a database named <strong>mydatabase</strong>.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Use the 'use' command with the database name.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-actionscript"><span class="hljs-keyword">use</span> mydatabase
+
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="4">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Create a collection named <strong>landmarks</strong> in the database <strong>mydatabase</strong>.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Use the 'createCollection' command.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-clojure">db.createCollection(<span class="hljs-string">"landmarks"</span>)
+
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="5">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>List collections</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Use the 'show' command with collections_ option.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-dart"><span class="hljs-keyword">show</span> collections
+
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="6">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Insert details of five landmarks including name, city, and country. Example: Eiffel Tower, Paris, France.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Use the 'db.collection.insert()' command with the correct options.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-json">db.landmarks.insert({<span class="hljs-attr">"name"</span>:<span class="hljs-string">"Statue of Liberty"</span>,<span class="hljs-attr">"city"</span>:<span class="hljs-string">"New York"</span>,<span class="hljs-attr">"country"</span>:<span class="hljs-string">"USA"</span>})
+db.landmarks.insert({<span class="hljs-attr">"name"</span>:<span class="hljs-string">"Big Ben"</span>,<span class="hljs-attr">"city"</span>:<span class="hljs-string">"London"</span>,<span class="hljs-attr">"country"</span>:<span class="hljs-string">"UK"</span>})
+db.landmarks.insert({<span class="hljs-attr">"name"</span>:<span class="hljs-string">"Taj Mahal"</span>,<span class="hljs-attr">"city"</span>:<span class="hljs-string">"Agra"</span>,<span class="hljs-attr">"country"</span>:<span class="hljs-string">"India"</span>})
+db.landmarks.insert({<span class="hljs-attr">"name"</span>:<span class="hljs-string">"Pyramids"</span>,<span class="hljs-attr">"country"</span>:<span class="hljs-string">"Egypt"</span>})
+db.landmarks.insert({<span class="hljs-attr">"name"</span>:<span class="hljs-string">"Great Wall of China"</span>,<span class="hljs-attr">"country"</span>:<span class="hljs-string">"China"</span>})
+
+
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="7">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Count the number of documents you have inserted.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Use the 'count' command on your collections.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-sql">db.landmarks.<span class="hljs-built_in">count</span>()
+
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="8">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>List the documents.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Use the 'db.collection.find()' command.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-routeros">db.landmarks.<span class="hljs-builtin-name">find</span>()
+
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="9">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Disconnect from the server.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Use the 'exit' command.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-awk"><span class="hljs-keyword">exit</span>
+
+</code></pre>
+      <p></p>
+    </details>
+    <h2>Authors</h2>
+    <p>Ramesh Sannareddy</p>
+    <h3>Other Contributors</h3>
+    <p>Rav Ahuja</p>
+    <h2>Change Log</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date (YYYY-MM-DD)</th>
+          <th>Version</th>
+          <th>Changed By</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-04-19</td>
+          <td>0.3</td>
+          <td>Steve Ryan</td>
+          <td>Review pass</td>
+        </tr>
+        <tr>
+          <td>2021-03-16</td>
+          <td>0.2</td>
+          <td>Ramesh Sannareddy</td>
+          <td>Added Hints/Solutions to Practise exercises</td>
+        </tr>
+        <tr>
+          <td>2021-02-24</td>
+          <td>0.1</td>
+          <td>Ramesh Sannareddy</td>
+          <td>Created initial version of the lab</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Copyright (c) 2021 IBM Corporation. All rights reserved.</p>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

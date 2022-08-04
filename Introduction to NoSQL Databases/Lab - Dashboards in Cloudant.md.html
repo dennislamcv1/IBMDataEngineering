@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <center>
+      <img src="https://gitlab.com/ibm/skills-network/courses/placeholder101/-/raw/master/labs/module%201/images/IDSNlogo.png" width="300" alt="cognitiveclass.ai logo">
+    </center>
+    <h1>Hands-on Lab: Dashboards in Cloudant</h1>
+    <p>Estimated time needed: <strong>30</strong> minutes</p>
+    <h2>Objectives</h2>
+    <p>After completing this lab you will be able to:</p>
+    <ul>
+      <li>Launch the IBM Cloudant dashboard.</li>
+      <li>Create a database.</li>
+      <li>Perform a simple insert.</li>
+      <li>Perform a simple query.</li>
+      <li>Replicate a database.</li>
+      <li>Monitor active tasks.</li>
+      <li>Monitor your instance.</li>
+    </ul>
+    <h1>Pre-requisites</h1>
+    <p>Before you start this lab, please ensure you have an instance of Cloudant on IBM Cloud.</p>
+    <p>Refer to <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Sign%20Up%20for%20an%20IBM%20Cloudant%20Instance/Lab_-_Sign_Up_for_an_IBM_Cloudant_Instance.md.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0151ENSkillsNetwork24597197-2021-01-01" target="_blank">this</a> lab if you need to create one.</p>
+    <p>Note: While working on this lab, you may be prompted to login when ever your session expires. Use your credentials to authentiate. This may happen when you step out or leave your cloudant session unattented.</p>
+    <h1>Exercise 1 - Launch Cloudant Dashboard</h1>
+    <p>Step 1: Click on <a href="https://cloud.ibm.com/resources?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0151ENSkillsNetwork24597197-2021-01-01" target="_blank" rel="external">cloud.ibm.com/resources</a>.</p>
+    <p>Step 2: Click on the Services chevron.</p>
+    <p>Step 3: Click on your instance of Cloudant.</p>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Sign%20Up%20for%20an%20IBM%20Cloudant%20Instance/images/cloudant-instance-create4.png">
+      </blockquote>
+    </details>
+    <p>Step 4: Click on <code>Launch Dashboard</code>.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Dashboards%20in%20Cloudant/images/launch-dashboard.png" alt="">
+    </p>
+    <p>The Cloudant dashboard looks like this.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Dashboards%20in%20Cloudant/images/cloudant-dashboard.png" alt="">
+    </p>
+    <h1>Exercise 2 - Create a database</h1>
+    <p>Step 1: Click on <code>Create Database</code>.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Dashboards%20in%20Cloudant/images/create-database0.png" alt="">
+    </p>
+    <p>Step 2: Enter <em>training</em> as the name of the database.</p>
+    <p>Step 3: Select 'Non-partitioned'.</p>
+    <p>Step 4: Click on <code>Create</code>.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Dashboards%20in%20Cloudant/images/create-database1.png" alt="">
+    </p>
+    <p>The database will be created. You should see a screen like this.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Dashboards%20in%20Cloudant/images/create-database2.png" alt="">
+    </p>
+    <h1>Exercise 3 - Perform a simple insert</h1>
+    <p>Step 1: Click on <code>Create Document</code>.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Dashboards%20in%20Cloudant/images/create-document1.png" alt="">
+    </p>
+    <p>Step 2: Copy the below given JSON document and replace the default sample document given on the page.</p>
+    <pre>{
+  "_id": "1",
+  "Topic" : "NoSQL Databases",
+  "Lesson" : "IBM Cloudant"
+}
+</pre>
+    <p>Step 3: Click on <code>Create Document</code></p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Dashboards%20in%20Cloudant/images/create-document2.png" alt="">
+    </p>
+    <p>The document is created, and you should see a screen like this.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Dashboards%20in%20Cloudant/images/create-document3.png" alt="">
+    </p>
+    <p>Step 4: Select <code>Table</code> view to view the documents in a tabular form.</p>
+    <p>You should now see documents like this.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Dashboards%20in%20Cloudant/images/create-document4.png" alt="">
+    </p>
+    <h1>Exercise 4 - Perform a simple query</h1>
+    <p>Step 1: Click on <code>Query</code>.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Dashboards%20in%20Cloudant/images/query-document1.png" alt="">
+    </p>
+    <p>Step 2: Copy the below given query and replace the default sample query given on the page.</p>
+    <pre><code class="hljs language-json">
+{
+   <span class="hljs-attr">"selector"</span>: {}
+}
+
+</code></pre>
+    <p>Step 3: Click on <code>Run Query</code></p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Dashboards%20in%20Cloudant/images/query-document2.png" alt="">
+    </p>
+    <p>You will see the query results.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Dashboards%20in%20Cloudant/images/query-document3.png" alt="">
+    </p>
+    <p>Cloudant queries are also in the JSON format. What we have queried here is the equivalent of select * from training.</p>
+    <h1>Exercise 5 - Replicate a database</h1>
+    <p>Step 1: Api Key is needed for setting up replication. Fetch the apikey from Cloudant Service Credentials.</p>
+    <details>
+      <summary>Click here for Hint</summary>
+      <p>Step 1: Go to <a href="http://cloud.ibm.com/resources?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0151ENSkillsNetwork24597197-2021-01-01" _target="_blank"></a><a href="http://cloud.ibm.com/resources" target="_blank" rel="external">http://cloud.ibm.com/resources</a>.</p>
+      <p>Step 2: Under Services click on your instance of Cloudant.</p>
+      <p>Step 3: On the Cloudant instance page, click on <code>Service Credentials</code>.</p>
+      <p>Step 4: Click on the chevron of your Service Credentials. You should see your Service Credentials.</p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Dashboards%20in%20Cloudant/images/api-key.png">
+      <p>Step 5: Copy the apikey without the double quotes on either side.</p>
+      <p>Example : My expired api key is M5_LAn8A0d13NK2Y7HcZ-X6flSfX2o-1ezsyUyP2XyQz</p>
+      <p>End of hint.</p>
+    </details>
+    <p>Step 2: Click on the <code>Replication</code> icon.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Dashboards%20in%20Cloudant/images/replicate1.png" alt="">
+    </p>
+    <p>Step 3: You will land on the Replication dashboard. Click on <code>New Replication</code>.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Dashboards%20in%20Cloudant/images/replicate2.png" alt="">
+    </p>
+    <p>Step 4: On the Job Configuration page, select the following details.</p>
+    <pre>
+Under Source
+  Select Type = Local database
+  Select Name = training
+  Select Authentication = "IAM Authentication"
+  Paste the api key you copied earlier in the IAM API Key textbox.
+
+Under Target
+  Select Type = New local database
+  Select Name = training_replica
+  Select Authentication = "IAM Authentication"
+  Paste the api key you copied earlier in the IAM API Key textbox.
+
+Under Options:
+  Select Type = Continuous
+
+</pre>
+    <p>Step 5: Click on <code>Start Replication</code>.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Dashboards%20in%20Cloudant/images/replicate3.png" alt="">
+    </p>
+    <p>Step 6: A replication status of <code>running</code> indicates that the replication is working.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Dashboards%20in%20Cloudant/images/replicate4.png" alt="">
+    </p>
+    <p>Step 7: Click on the <code>Database</code> icon. You should see a new database named <strong>training_replica</strong>.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Dashboards%20in%20Cloudant/images/replicate5.png" alt="">
+    </p>
+    <p>Step 8: Click on the <strong>training_replica</strong> database. You should see the document you have inserted in the training database.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Dashboards%20in%20Cloudant/images/replicate6.png" alt="">
+    </p>
+    <p>You have successfully setup continuous replication between the training and training_replica databases. Whatever changes you make on the training database will be replicated to the training_replica database.</p>
+    <h1>Exercise 6 - Monitor active tasks</h1>
+    <p>Step 1: Click on the <code>Active Tasks</code> icon.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Dashboards%20in%20Cloudant/images/cloudant-active-tasks.png" alt="">
+    </p>
+    <p>The Active tasks page displays a list of all running tasks. You can use this to find out what is happening on your Cloudant instance. You can see a list of active tasks, which includes compaction, replication, and indexing.</p>
+    <p>Here is a sample Active Tasks view.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Dashboards%20in%20Cloudant/images/active-tasks-page.png" alt="">
+    </p>
+    <h1>Exercise 7 - Monitor your instance</h1>
+    <p>Monitor your usage in realtime with a graph that shows your throughput by reads, writes, and global queries. You can see your current operations, denied requests, and storage usage.</p>
+    <p>Step 1: Click on the <code>Monitoring</code> icon.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Dashboards%20in%20Cloudant/images/cloudant-monitoring.png" alt="">
+    </p>
+    <p>Here is a sample monitoring view for Current Operations.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Dashboards%20in%20Cloudant/images/current-operations-tab.png" alt="">
+    </p>
+    <p>Note: Your monitoring output could be different from the screen shot above, mostly 0 ops/s as there may not be any load on your instance.</p>
+    <p>Step 2: Click on the <code>Denied Requests</code> tab.</p>
+    <p>Here is a sample monitoring view for Denied Requests. Whenever we perform more reads or writes than our plan allows, those requests will be denied and shown here.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Dashboards%20in%20Cloudant/images/denied-requests-tab.png" alt="">
+    </p>
+    <p>Note: Your monitoring output could be different from the screen shot above, depending upon your usage.</p>
+    <p>Step 3: Click on the <code>Storage</code> tab.</p>
+    <p>Here is a sample Storage view. It shows how much storage is used for data, indexes and views.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/Cloudant/Lab%20-%20Dashboards%20in%20Cloudant/images/storage-tab.png" alt="">
+    </p>
+    <p>Note: Your monitoring output could be different from the screen shot above, depending upon your usage.</p>
+    <h1>Practice exercises</h1>
+    <ol>
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Create a database named <strong>test</strong>.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>On the Cloudant dashboard, click on the Databases icon, click on Add Database.</p>
+      </blockquote>
+    </details>
+    <ol start="2">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Insert a sample doccument.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Remember the _id key is mandatory.</p>
+      </blockquote>
+      <p>Click on <strong>test</strong> on the databases screen. Click on <code>Create Document</code>. Replace the default text with the following JSON and click <code>Create Document</code>.</p>
+      <pre>{
+  "_id": "1",
+  "Topic" : "NoSQL Databases",
+  "Lesson" : "MongoDB"
+}
+</pre>
+    </details>
+    <ol start="3">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Setup continuous replication between test and test_replica databases.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>
+          Keep you api key handy.
+          Go to the replication page.
+          Click on New Replication.
+          Select these details.
+        </p>
+      </blockquote>
+      <pre>
+Under Source
+  Select Type = Local Database
+  Select Name = test
+  Select Authentiation = "IAM Authentication"
+  Paste the api key you copied earlier in the IAM API Key  textbox.
+
+Under Target
+  Select Type = Local Database
+  Select Name = test_replica
+  Select Authentiation = "IAM Authentication"
+  Paste the api key you copied earlier in the IAM API Key  textbox.
+
+Under Options:
+  Select Type = Continuous
+
+</pre>
+    </details>
+    <ol start="4">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Find out if any denied requests were denied.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>
+          Go to the monitoring page.
+          Click on denied requests.
+        </p>
+      </blockquote>
+    </details>
+    <h2>Authors</h2>
+    <p>Ramesh Sannareddy</p>
+    <h3>Other Contributors</h3>
+    <p>Rav Ahuja</p>
+    <h2>Change Log</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date (YYYY-MM-DD)</th>
+          <th>Version</th>
+          <th>Changed By</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-04-28</td>
+          <td>0.3</td>
+          <td>Steve Ryan</td>
+          <td>Changed IBM cloud links to markdown format</td>
+        </tr>
+        <tr>
+          <td>2021-04-13</td>
+          <td>0.2</td>
+          <td>Steve Ryan</td>
+          <td>Review pass</td>
+        </tr>
+        <tr>
+          <td>2021-04-11</td>
+          <td>0.1</td>
+          <td>Ramesh Sannareddy</td>
+          <td>Created initial version of the lab</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Copyright (c) 2021 IBM Corporation. All rights reserved.</p>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

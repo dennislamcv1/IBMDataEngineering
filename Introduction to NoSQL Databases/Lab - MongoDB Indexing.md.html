@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <center>
+      <img src="https://gitlab.com/ibm/skills-network/courses/placeholder101/-/raw/master/labs/module%201/images/IDSNlogo.png" width="300" alt="cognitiveclass.ai logo">
+    </center>
+    <h1>MongoDB Indexing</h1>
+    <p>Estimated time needed: <strong>30</strong> minutes</p>
+    <h2>Objectives</h2>
+    <p>After completing this lab you will be able to:</p>
+    <ul>
+      <li>Measure the execution time of a query.</li>
+      <li>Create an index.</li>
+      <li>List indexes.</li>
+      <li>Delete an index.</li>
+      <li>Find out how effective an index is.</li>
+    </ul>
+    <h1>About Skills Network Cloud IDE</h1>
+    <p>Skills Network Cloud IDE (based on Theia and Docker) provides an environment for hands on labs for course and project related labs. Theia is an open source IDE (Integrated Development Environment), that can be run on desktop or on the cloud. to complete this lab, we will be using the Cloud IDE based on Theia and MongoDB running in a Docker container.</p>
+    <h2>Important Notice about this lab environment</h2>
+    <p>Please be aware that sessions for this lab environment are not persisted. Every time you connect to this lab, a new environment is created for you. Any data you may have saved in the earlier session would get lost. Plan to complete these labs in a single session, to avoid losing your data.</p>
+    <h1>Exercise 1 - Get the environment ready</h1>
+    <ol>
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Start the mongodb server.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Refer to the <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/MongoDB/Lab%20-%20MongoDB%20Getting%20Started.md.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0151ENSkillsNetwork24597197-2021-01-01">Mongodb Getting Started</a> lab.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <p>Run the below command on the terminal.</p>
+      <pre><code class="hljs language-ebnf"><span class="hljs-attribute">start_mongo</span>
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="2">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Connect to the mongodb server.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Refer to the <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/MongoDB/Lab%20-%20MongoDB%20Getting%20Started.md.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0151ENSkillsNetwork24597197-2021-01-01">Mongodb Getting Started</a> lab.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>Use the below command with the user name and password generated on your terminal window, when you started the mongodb server using start_mongo command.
+      <pre><code class="hljs language-apache"><span class="hljs-attribute">mongo</span> -u root -p NTc<span class="hljs-number">0</span>My<span class="hljs-number">1</span>yc<span class="hljs-number">2</span>FubmFy --authenticationDatabase admin local
+
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="3">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Select the <strong>training</strong> database.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Refer to the <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/MongoDB/Lab%20-%20MongoDB%20Getting%20Started.md.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0151ENSkillsNetwork24597197-2021-01-01">Mongodb Getting Started</a> lab.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-actionscript"><span class="hljs-keyword">use</span> training
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="4">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Create a collection named <strong>bigdata</strong>.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Refer to the <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0151EN-SkillsNetwork/labs/MongoDB/Lab%20-%20MongoDB%20Getting%20Started.md.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDB0151ENSkillsNetwork24597197-2021-01-01">Mongodb Getting Started</a> lab.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-clojure">db.createCollection(<span class="hljs-string">"bigdata"</span>)
+</code></pre>
+      <p></p>
+    </details>
+    <h1>Exercise 2 - Insert documents</h1>
+    <ul>
+      <li>Let us insert a lot of documents into the newly created collection.</li>
+      <li>This should take around 3 minutes, so please be patient.</li>
+      <li>The code given below will insert 200000 documents into the 'bigdata' collection.</li>
+      <li>Each document would have a field named <strong>account_no</strong> which is a simple auto increment number.</li>
+      <li>And a field named <strong>balance</strong> which is a randomly generated number, to simulate the bank balance for the account.</li>
+    </ul>
+    <p>Copy the below code and paste it on the mongo client.</p>
+    <pre><code class="hljs language-css">use training
+for (<span class="hljs-selector-tag">i</span>=<span class="hljs-number">1</span>;<span class="hljs-selector-tag">i</span>&#x3C;=<span class="hljs-number">200000</span>;<span class="hljs-selector-tag">i</span>++){print(<span class="hljs-selector-tag">i</span>);db<span class="hljs-selector-class">.bigdata</span><span class="hljs-selector-class">.insert</span>({"account_no":i,<span class="hljs-string">"balance"</span>:Math.<span class="hljs-built_in">round</span>(Math.<span class="hljs-built_in">random</span>()*<span class="hljs-number">1000000</span>)})}
+</code></pre>
+    <p></p>
+    <p>Verify that 200000 documents got inserted by running the below command.</p>
+    <pre><code class="hljs language-sql">db.bigdata.<span class="hljs-built_in">count</span>()
+</code></pre>
+    <p></p>
+    <h1>Exercise 3 - Measure the time taken by a query</h1>
+    <p>Let us run a query and find out how much time it takes to complete.</p>
+    <p>Let us query for the details of account number 58982.</p>
+    <p>We will make use of the explain function to find the time taken to run the query in milliseconds.</p>
+    <p>Run the below command.</p>
+    <pre><code class="hljs language-stylus">db<span class="hljs-selector-class">.bigdata</span><span class="hljs-selector-class">.find</span>({<span class="hljs-string">"account_no"</span>:<span class="hljs-number">58982</span>})<span class="hljs-selector-class">.explain</span>(<span class="hljs-string">"executionStats"</span>)<span class="hljs-selector-class">.executionStats</span><span class="hljs-selector-class">.executionTimeMillis</span>
+</code></pre>
+    <p></p>
+    <p>Make a note of the milliseconds it took to run the query. We will need this at a later stage.</p>
+    <h1>Exercise 4 - Working with indexes</h1>
+    <p>Before you create an index, choose the field you wish to create an index on. It is usually the field that you query most.</p>
+    <p>Run the below command to create an index on the field <strong>account_no</strong>.</p>
+    <pre><code class="hljs language-clojure">	
+db.bigdata.createIndex({<span class="hljs-string">"account_no"</span>:<span class="hljs-number">1</span>})
+</code></pre>
+    <p></p>
+    <p>Run the below command to get a list of indexes on the 'bigdata' collection.</p>
+    <pre><code class="hljs language-stylus">db<span class="hljs-selector-class">.bigdata</span><span class="hljs-selector-class">.getIndexes</span>()
+</code></pre>
+    <p></p>
+    <p>You should see an index named <code>account_no_1</code></p>
+    <h1>Exercise 5 - Find out how effective an index is</h1>
+    <p>Let us run a query and find out how much time it takes to complete, using an index.</p>
+    <p>Let us query for the details of account number 69271.</p>
+    <p>Run the below command.</p>
+    <pre><code class="hljs language-stylus">db<span class="hljs-selector-class">.bigdata</span><span class="hljs-selector-class">.find</span>({<span class="hljs-string">"account_no"</span>: <span class="hljs-number">69271</span>})<span class="hljs-selector-class">.explain</span>(<span class="hljs-string">"executionStats"</span>)<span class="hljs-selector-class">.executionStats</span><span class="hljs-selector-class">.executionTimeMillis</span>
+</code></pre>
+    <p></p>
+    <p>Make a note of the milliseconds it took to run the query. Compare this with the time you recored during Exercise-3. This should be a lot less than that.</p>
+    <h1>Exercise 6 - Delete an index</h1>
+    <p>Use the below command to delete the index we created earlier.</p>
+    <pre><code class="hljs language-clojure">db.bigdata.dropIndex({<span class="hljs-string">"account_no"</span>:<span class="hljs-number">1</span>})
+</code></pre>
+    <p></p>
+    <h1>Practice exercises</h1>
+    <ol>
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Create an index on the <strong>balance</strong> field.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>use the command db.collection.createIndex()</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <p>On the mongo client run the below commands.</p>
+      <pre><code class="hljs language-clojure">db.bigdata.createIndex({<span class="hljs-string">"balance"</span>:<span class="hljs-number">1</span>})
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="2">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Query for documents with a balance of 10000 and record the time taken.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>use the command db.collection.find().explain()</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>```
+      db.bigdata.find({"balance": 10000}).explain("executionStats").executionStats.executionTimeMillis
+      ```
+      <p></p>
+    </details>
+    <ol start="3">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Drop the index you have created.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>use the command db.collection.dropIndex()</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>```
+      db.bigdata.dropIndex({"balance":1})
+      ```
+      <p></p>
+    </details>
+    <ol start="4">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Query for documents with a balance of 10000 and record the time taken, and compare it with the previously recorded time.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>use the command db.collection.find().explain()</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>```
+      db.bigdata.find({"balance": 10000}).explain("executionStats").executionStats.executionTimeMillis
+      ```
+      <p></p>
+    </details>
+    <h2>Authors</h2>
+    <p>Ramesh Sannareddy</p>
+    <h3>Other Contributors</h3>
+    <p>Rav Ahuja</p>
+    <h2>Change Log</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date (YYYY-MM-DD)</th>
+          <th>Version</th>
+          <th>Changed By</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-04-19</td>
+          <td>0.3</td>
+          <td>Steve Ryan</td>
+          <td>Review pass</td>
+        </tr>
+        <tr>
+          <td>2021-03-17</td>
+          <td>0.2</td>
+          <td>Ramesh Sannareddy</td>
+          <td>Added Hints/Solutions to Practise exercises</td>
+        </tr>
+        <tr>
+          <td>2021-02-24</td>
+          <td>0.1</td>
+          <td>Ramesh Sannareddy</td>
+          <td>Created initial version of the lab</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Copyright (c) 2021 IBM Corporation. All rights reserved.</p>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

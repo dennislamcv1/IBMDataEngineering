@@ -1,0 +1,98 @@
+sudo npm install -g couchimport
+
+couchimport --version
+
+wget https://fastdl.mongodb.org/tools/db/mongodb-database-tools-ubuntu1804-x86_64-100.3.1.tgz
+
+tar -xf mongodb-database-tools-ubuntu1804-x86_64-100.3.1.tgz
+
+export PATH=$PATH:/home/project/mongodb-database-tools-ubuntu1804-x86_64-100.3.1/bin
+
+echo "done"
+
+mongoimport --version
+
+
+export CLOUDANTURL="https://apikey-v2-pzly5uir95zsj9gdps49ja7mdn70kopfk8zni69mp48:e236d8eea416f281d0c6348b8e92595a@6d56f606-4e6b-4907-bc0a-f63860b30085-bluemix.cloudantnosqldb.appdomain.cloud"
+
+curl $CLOUDANTURL
+
+curl $CLOUDANTURL/_all_dbs
+
+couchexport --url $CLOUDANTURL --db diamonds --delimiter ","
+
+couchexport --url $CLOUDANTURL --db diamonds --type jsonl
+
+couchexport --url $CLOUDANTURL --db diamonds --type jsonl > diamonds.json
+
+couchexport --url $CLOUDANTURL --db diamonds --delimiter "," > diamonds.csv
+
+start_mongo
+
+mongo -u root -p MTkzMzEtZGVubmlz --authenticationDatabase admin local
+
+mongoimport -u root -p MTkzMzEtZGVubmlz --authenticationDatabase admin local --db entertainment --collection movies --file movies.json
+
+mongoexport -u root -p MTkzMzEtZGVubmlz --authenticationDatabase admin --db training --collection diamonds --out mongodb_exported_data.json
+
+ongoexport -u root -p MTkzMzEtZGVubmlz --authenticationDatabase admin --db training --collection diamonds --out mongodb_exported_data.csv --type=csv --fields _id,clarity,cut,price
+
+start_cassandra
+
+cqlsh --username cassandra --password MjEwMDktZGVubmlz
+
+
+
+
+curl -X POST $CLOUDANTURL/movies/_index \
+-H"Content-Type: application/json" \
+-d'{
+    "index": {
+        "fields": ["director"]
+    }
+}'
+
+curl -X POST $CLOUDANTURL/movies/_find \
+-H"Content-Type: application/json" \
+-d'{ "selector":
+        {
+            "director":"Richard Gage"
+        }
+    }'
+
+
+curl -X POST $CLOUDANTURL/movies/_index \
+-H"Content-Type: application/json" \
+-d'{
+    "index": {
+        "fields": ["title"]
+    }
+}'
+
+
+
+curl -X POST $CLOUDANTURL/movies/_find \
+-H"Content-Type: application/json" \
+-d'{ "selector":
+        {
+            "title":"Top Dog"
+        }
+    }'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
