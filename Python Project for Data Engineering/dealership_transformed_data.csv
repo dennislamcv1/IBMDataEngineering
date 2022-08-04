@@ -1,0 +1,91 @@
+,car_model,year_of_manufacture,price,fuel
+0,ritz,2014,5000.0,Petrol
+1,sx4,2013,7089.55,Diesel
+2,ciaz,2017,10820.9,Petrol
+3,wagon r,2011,4253.73,Petrol
+4,swift,2014,6865.67,Diesel
+5,vitara brezza,2018,13805.97,Diesel
+6,ciaz,2015,10074.63,Petrol
+7,s cross,2015,9701.49,Diesel
+8,ciaz,2016,13059.7,Diesel
+9,ciaz,2015,11119.4,Diesel
+10,alto 800,2017,4253.73,Petrol
+11,ciaz,2015,10223.88,Diesel
+12,ciaz,2015,11194.03,Petrol
+13,ertiga,2015,9104.48,Petrol
+14,dzire,2009,3358.21,Petrol
+15,ertiga,2016,11567.16,Diesel
+16,ertiga,2015,10820.9,Diesel
+17,ertiga,2016,11567.16,Diesel
+18,wagon r,2015,4850.75,CNG
+19,sx4,2010,3955.22,Petrol
+20,alto k10,2016,4253.73,Petrol
+21,ignis,2017,7313.43,Petrol
+22,sx4,2011,6567.16,Petrol
+23,alto k10,2014,3731.34,Petrol
+24,wagon r,2013,4328.36,Petrol
+25,swift,2011,4477.61,Petrol
+26,swift,2013,6194.03,Petrol
+27,swift,2017,8955.22,Petrol
+28,alto k10,2010,2910.45,Petrol
+29,ciaz,2015,11119.4,Diesel
+30,ritz,2012,4626.87,Diesel
+31,ritz,2011,3507.46,Petrol
+32,swift,2014,7388.06,Diesel
+33,ertiga,2014,8955.22,Diesel
+34,dzire,2014,8208.96,Diesel
+35,sx4,2011,4402.99,CNG
+36,dzire,2015,6940.3,Petrol
+37,800,2003,522.39,Petrol
+38,alto k10,2016,4477.61,Petrol
+39,sx4,2003,3358.21,Petrol
+40,baleno,2016,8731.34,Petrol
+41,alto k10,2014,3805.97,Petrol
+42,sx4,2008,2910.45,Petrol
+43,dzire,2014,8208.96,Diesel
+44,omni,2012,1865.67,Petrol
+45,ciaz,2014,11194.03,Petrol
+46,ritz,2013,3955.22,Petrol
+47,wagon r,2006,1567.16,Petrol
+48,ertiga,2015,8656.72,Petrol
+49,ciaz,2017,11567.16,Petrol
+50,fortuner,2012,22238.81,Diesel
+51,fortuner,2015,34328.36,Diesel
+52,innova,2017,26865.67,Diesel
+53,fortuner,2013,23880.6,Diesel
+54,innova,2005,4104.48,Petrol
+55,corolla altis,2009,5373.13,Petrol
+56,etios cross,2015,6716.42,Petrol
+57,corolla altis,2010,7089.55,Petrol
+58,etios g,2014,6119.4,Petrol
+59,fortuner,2014,29835.82,Diesel
+60,corolla altis,2013,10373.13,Petrol
+61,etios cross,2015,6716.42,Petrol
+62,fortuner,2014,27985.07,Diesel
+63,fortuner,2015,35074.63,Diesel
+64,fortuner,2017,49253.73,Diesel
+65,etios liva,2014,7089.55,Diesel
+66,innova,2017,29477.61,Petrol
+67,fortuner,2010,13805.97,Diesel
+68,corolla altis,2011,6492.54,Petrol
+69,corolla altis,2016,21268.66,Petrol
+70,etios liva,2014,5895.52,Diesel
+71,corolla altis,2011,6716.42,Diesel
+72,corolla altis,2013,11119.4,Petrol
+73,etios liva,2011,3955.22,Petrol
+74,etios cross,2014,7313.43,Diesel
+75,etios g,2015,5895.52,Petrol
+76,corolla altis,2013,8208.96,Petrol
+77,corolla,2004,2238.81,Petrol
+78,corolla altis,2010,7835.82,Petrol
+79,fortuner,2012,21641.79,Diesel
+80,corolla altis,2016,21985.07,Diesel
+81,etios gd,2015,7089.55,Diesel
+82,innova,2017,34328.36,Diesel
+83,innova,2015,18656.72,Diesel
+84,innova,2005,5208.96,Diesel
+85,camry,2006,3731.34,Petrol
+86,land cruiser,2010,52238.81,Diesel
+87,corolla altis,2012,8805.97,Petrol
+88,etios liva,2013,5149.25,Petrol
+89,etios g,2014,7089.55,Petrol
