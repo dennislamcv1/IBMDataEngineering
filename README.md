@@ -1,5 +1,4 @@
-# IBMDataEngineering
-## IBM Data Engineering Professional Certificate
+# IBM Data Engineering Professional Certificate
 
 ### About this Professional Certificate
 
