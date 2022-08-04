@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/styles/sn.css">
+  </head>
+  <body>
+    <h2>Reading: Examples to CREATE and DROP tables (5:00)</h2>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Module%202/images/IDSNlogo.png" width="200" height="200">
+    <h2>Objective(s)</h2>
+    <p>At the end of this lab you will be able to:</p>
+    <ul>
+      <li>Create and Drop tables in the database</li>
+    </ul>
+    <p><b>Effort:</b> 20 min</p>
+    <p>
+      Here we will look at some examples to create and drop tables.
+      In the previous video we saw the general syntax to create a table:
+      create table TABLENAME (
+      COLUMN1 datatype,
+      COLUMN2 datatype,
+      COLUMN3 datatype,
+      ...
+      );
+    </p>
+    <p>Therefore to create a table called TEST with two columns - ID of type integer, and Name of type varchar, we could create it using the following SQL statement:</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Module%202/images/1_Create.png" alt="image">
+    </p>
+    <p>Now let's create a table called COUNTRY with an ID column, a two letter country code column, and a variable length country name column:</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Module%202/images/2_Create.png" alt="image">
+    </p>
+    <p>Sometimes you may see additional keywords in a create table statement:</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Module%202/images/3_Create.png" alt="image">
+    </p>
+    <p>
+      In the above example the ID column has the <strong>NOT NULL</strong> constraint added after the datatype - meaning that it cannot contain a NULL or an empty value. If you look at the last row in the create table statement above you will note that we are using ID as a Primary Key and the database does not allow Primary Keys to have NULL values. A Primary Key is a unique identifier in a table, and using Primary Keys can help speed up your queries significantly.
+      If the table you are trying to create already exists in the database, you will get an error indicating <strong>table XXX.YYY already exists</strong>. To circumvent this error, either create a table with a different name or first DROP the existing table. It is quite common to issue a DROP before doing a CREATE in test and development scenarios.
+      Here is an example:
+    </p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Module%202/images/4_Create.png" alt="image">
+    </p>
+    <p>
+      WARNING: before dropping a table ensure that it doesn't contain important data that can't be recovered easily.
+      Note that if the table does not already exist and you try to drop it, you will see an error like <strong>XXX.YYY is an undefined name</strong>. You can ignore this error as long as the subsequent CREATE statement executed successfully.
+    </p>
+    <p>In the lab later in this module you will practice creating tables and other SQL statements hands-on.</p>
+    <h2>Author(s)</h2>
+    <h4>Rav Ahuja</h4>
+    <h4></h4>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2020-08-31</td>
+          <td>2.0</td>
+          <td>Malika Singla</td>
+          <td>Markdown file creation</td>
+        </tr>
+      </tbody>
+    </table>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.min.js"></script>
+  </body>
+</html>

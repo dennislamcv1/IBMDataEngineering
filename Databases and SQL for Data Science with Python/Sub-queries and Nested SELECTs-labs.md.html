@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/styles/sn.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Sub-queries%20and%20Nested%20SELECTs%20/images/IDSNlogo.png" width="200" height="200">
+    <h1>Hands-on Lab : Sub-queries and Nested SELECTs</h1>
+    <p><strong>Estimated time needed:</strong> 20 minutes</p>
+    <p>In this lab, you will run through some SQL practice problems that will provide hands-on experience with nested SQL SELECT statements (also known as Sub-queries).</p><br>
+    <p><strong>How does a typical Nested SELECT statement syntax look?</strong></p>
+    <pre><code>SELECT column_name [, column_name ]
+FROM table1 [, table2 ]
+WHERE column_name OPERATOR
+   (SELECT column_name [, column_name ]
+   FROM table1 [, table2 ]
+   WHERE condition);
+</code></pre><br>
+    <h2>Software Used in this Lab</h2>
+    <p>In this lab, you will use an <a href="https://www.ibm.com/products/db2-database" target="_blank">IBM Db2 Database</a>. Db2 is a Relational Database Management System (RDBMS) from IBM, designed to store, analyze and retrieve data efficiently.</p>
+    <p>To complete this lab you will utilize a Db2 database service on IBM Cloud. If you did not already complete this lab task earlier in this module, you will not yet have access to Db2 on IBM Cloud, and you will need to follow the lab below first:</p>
+    <ul>
+      <li><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Sign%20up%20for%20IBM%20Cloud%20-%20Create%20Db2%20service%20instance%20-%20Get%20started%20with%20the%20Db2%20console/instructional-labs.md.html" target="_blank" rel="external">Hands-on Lab : Sign up for IBM Cloud, Create Db2 service instance and Get started with the Db2 console</a></li>
+    </ul>
+    <h2>Database Used in this Lab</h2>
+    <p>The database used in this lab is an internal database. You will be working on a sample HR database. This HR database schema consists of 5 tables called <strong>EMPLOYEES</strong>, <strong>JOB_HISTORY</strong>, <strong>JOBS</strong>, <strong>DEPARTMENTS</strong> and <strong>LOCATIONS</strong>. Each table has a few rows of sample data. The following diagram shows the tables for the HR database:</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Sub-queries%20and%20Nested%20SELECTs%20/images/HR_Database.PNG" width="670" height="400">
+    <p><strong>NOTE:</strong> This lab requires you to have all 5 of these tables of the HR database populated with sample data on Db2. If you didn't complete the earlier lab in this module, you won't have the tables above populated with sample data on Db2, so you will need to go through the lab below first:</p>
+    <ul>
+      <li><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Create%20tables%20using%20SQL%20scripts%20and%20Load%20data%20into%20tables/instructional-labs.md.html" target="_blank" rel="external">Hands-on Lab : Create tables using SQL scripts and Load data into tables</a></li>
+    </ul>
+    <h2>Objectives</h2>
+    <p>After completing this lab you will be able to:</p>
+    <ul>
+      <li>Write SQL queries that demonstrate the necessity of using sub-queries</li>
+      <li>Compose sub-queries in the where clause</li>
+      <li>Build Column Expressions (i.e. sub-query in place of a column)</li>
+      <li>Write Table Expressions (i.e. sub-query in place of a table)</li>
+    </ul>
+    <h2>Instructions</h2>
+    <p>When you approach the exercises in this lab, follow the instructions to run the queries on Db2:</p>
+    <ul>
+      <li>
+        <p>Go to the <a href="https://cloud.ibm.com/resources?cm_mmc=Email_Newsletter-_-Developer_Ed%2BTech-_-WW_WW-_-SkillsNetwork-Courses-IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork-20127838&#x26;cm_mmca1=000026UJ&#x26;cm_mmca2=10006555&#x26;cm_mmca3=M12345678&#x26;cvosrc=email.Newsletter.M12345678&#x26;cvo_campaign=000026UJ" target="_blank" rel="external">Resource List</a> of IBM Cloud by logging in where you can find the Db2 service instance that you created in a previous lab under <strong>Services</strong> section. Click on the <strong>Db2-xx service</strong>. Next, open the Db2 Console by clicking on <strong>Open Console</strong> button. Click on the 3-bar menu icon in the top left corner and go to the <strong>Run SQL</strong> page. The Run SQL tool enables you to run SQL statements.</p>
+        <ul>
+          <li>If needed, follow <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Sign%20up%20for%20IBM%20Cloud%20-%20Create%20Db2%20service%20instance%20-%20Get%20started%20with%20the%20Db2%20console/instructional-labs.md.html" target="_blank" rel="external">Hands-on Lab : Sign up for IBM Cloud, Create Db2 service instance and Get started with the Db2 console</a></li>
+        </ul>
+      </li>
+    </ul>
+    <h1>Exercise:</h1>
+    <ol>
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Execute a failing query (i.e. one which gives an error) to retrieve all employees records whose salary is lower than the average salary.</em></p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Use the AVG aggregate function.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>select * 
+from employees 
+where salary &#x3C; AVG(salary);
+</code></pre>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Sub-queries%20and%20Nested%20SELECTs%20/images/1.png" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Execute a working query using a sub-select to retrieve all employees records whose salary is lower than the average salary.</em></p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Put AVG(SALARY) of the inner SELECT in comparison with SALARY of the outer SELECT.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>select EMP_ID, F_NAME, L_NAME, SALARY 
+from employees 
+where SALARY &#x3C; (select AVG(SALARY) 
+                from employees);
+</code></pre>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Sub-queries%20and%20Nested%20SELECTs%20/images/2.png" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Execute a failing query (i.e. one which gives an error) to retrieve all employees records with EMP_ID, SALARY and maximum salary as MAX_SALARY in every row.</em></p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Use the MAX aggregate function.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>select EMP_ID, SALARY, MAX(SALARY) AS MAX_SALARY 
+from employees; 
+</code></pre>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Sub-queries%20and%20Nested%20SELECTs%20/images/3.png" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Execute a Column Expression that retrieves all employees records with EMP_ID, SALARY and maximum salary as MAX_SALARY in every row.</em></p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Use the SELECT (which retrieves MAX(SALARY)) as a column of the other SELECT.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>select EMP_ID, SALARY, ( select MAX(SALARY) from employees ) AS MAX_SALARY 
+from employees;
+</code></pre>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Sub-queries%20and%20Nested%20SELECTs%20/images/4.png" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Execute a Table Expression for the EMPLOYEES table that excludes columns with sensitive employee data (i.e. does not include columns: SSN, B_DATE, SEX, ADDRESS, SALARY).</em></p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Use a SELECT (which retrieves non-sensitive employee data) after FROM of the other SELECT.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>select * from ( select EMP_ID, F_NAME, L_NAME, DEP_ID from employees) AS EMP4ALL;
+</code></pre>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Sub-queries%20and%20Nested%20SELECTs%20/images/5.png" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol><br>
+    <h1>Solution Script</h1>
+    <p>If you would like to run all the solution queries of the SQL problems in this lab with a script, download the script below. Upload the script to the Db2 console and run it. Follow <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Create%20tables%20using%20SQL%20scripts%20and%20Load%20data%20into%20tables/instructional-labs.md.html" target="_blank" rel="external">Hands-on Lab : Create tables using SQL scripts and Load data into tables</a> on how to upload a script to Db2 console and run it.</p>
+    <ul>
+      <li><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Sub-queries%20and%20Nested%20SELECTs%20/SubQueries_Solution_Script.sql" target="_blank" rel="external">SubQueries_Solution_Script.sql</a></li>
+    </ul><br>
+    <h3>Congratulations! You have completed this lab, and you are ready for the next topic.</h3>
+    <h3><br></h3>
+    <h1>Author(s)</h1>
+    <ul>
+      <li><a href="https://www.linkedin.com/in/ravahuja?cm_mmc=Email_Newsletter-_-Developer_Ed%2BTech-_-WW_WW-_-SkillsNetwork-Courses-IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork-20127838&#x26;cm_mmca1=000026UJ&#x26;cm_mmca2=10006555&#x26;cm_mmca3=M12345678&#x26;cvosrc=email.Newsletter.M12345678&#x26;cvo_campaign=000026UJ" target="_blank" rel="external">Rav Ahuja</a></li>
+      <li><a href="https://www.linkedin.com/in/sandipsahajoy?cm_mmc=Email_Newsletter-_-Developer_Ed%2BTech-_-WW_WW-_-SkillsNetwork-Courses-IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork-20127838&#x26;cm_mmca1=000026UJ&#x26;cm_mmca2=10006555&#x26;cm_mmca3=M12345678&#x26;cvosrc=email.Newsletter.M12345678&#x26;cvo_campaign=000026UJ" target="_blank" rel="external">Sandip Saha Joy</a></li>
+    </ul>
+    <h1>Other Contributor(s)</h1>
+    <ul>
+      <li></li>
+    </ul>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2020-12-25</td>
+          <td>2.1</td>
+          <td>Steve Ryan</td>
+          <td>ID Reviewed</td>
+        </tr>
+        <tr>
+          <td>2020-12-10</td>
+          <td>2.0</td>
+          <td>Sandip Saha Joy</td>
+          <td>Created revised version from DB0201EN</td>
+        </tr>
+        <tr>
+          <td>2020</td>
+          <td>1.0</td>
+          <td>Rav Ahuja</td>
+          <td>Created initial version</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2020. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/styles/sn.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Stored%20Procedures/images/IDSNlogo.png" width="200" height="200">
+    <h1>Hands-on Lab: Stored Procedures</h1>
+    <p><strong>Estimated time needed:</strong> 10 minutes</p>
+    <p>In this lab, you will create and execute stored procedures on IBM Db2 using SQL. A stored procedure is a set of SQL statements that are stored and executed on the database server. So instead of sending multiple SQL statements from the client to the server, you encapsulate them in a stored procedure on the server and send one statement from the client to execute them. Also, stored procedures can be useful if you have an SQL query that you write over and over again. You can save it as a stored procedure, and then just call it to execute it. In stored procedures, you can also pass parameters so that a stored procedure can act based on the passed parameter values.</p><br>
+    <h2>Software Used in this Lab</h2>
+    <p>In this lab, you will use an <a href="https://www.ibm.com/products/db2-database" target="_blank">IBM Db2 Database</a>. Db2 is a Relational Database Management System (RDBMS) from IBM, designed to store, analyze and retrieve data efficiently.</p>
+    <p>To complete this lab you will utilize a Db2 database service on IBM Cloud. If you did not already complete this lab task earlier in this module, you will not yet have access to Db2 on IBM Cloud, and you will need to follow the lab below first:</p>
+    <ul>
+      <li><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Sign%20up%20for%20IBM%20Cloud%20-%20Create%20Db2%20service%20instance%20-%20Get%20started%20with%20the%20Db2%20console/instructional-labs.md.html" target="_blank" rel="external">Hands-on Lab : Sign up for IBM Cloud, Create Db2 service instance and Get started with the Db2 console</a></li>
+    </ul><br>
+    <h2>Data Used in this Lab</h2>
+    <p>The data used in this lab is internal data. You will be working on the <strong>PETSALE</strong> table.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Stored%20Procedures/images/PETSALE_table_v2.png" alt="image">
+    </p>
+    <p>This lab requires you to have the PETSALE table populated with sample data on Db2. You might have created and populated a PETSALE table in a previous lab. But for this lab, it is recommended you download the <code>PETSALE-CREATE-v2.sql</code> script below, upload it to Db2 console and run it. The script will create a new PETSALE table dropping any previous PETSALE table if exists, and will populate it with the required sample data.</p>
+    <ul>
+      <li><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/datasets/PETSALE_PETRESCUE/PETSALE-CREATE-v2.sql" target="_blank" rel="external">PETSALE-CREATE-v2.sql</a></li>
+    </ul>
+    <p>Please go through the lab below to learn how to upload and run a script on Db2 console (for this case, you need don't need to know anything else other than how to upload and run a script):</p>
+    <ul>
+      <li><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Create%20tables%20using%20SQL%20scripts%20and%20Load%20data%20into%20tables/instructional-labs.md.html" target="_blank" rel="external">Hands-on Lab : Create tables using SQL scripts and Load data into tables</a></li>
+    </ul><br>
+    <h2>Objectives</h2>
+    <p>After completing this lab, you will be able to:</p>
+    <ul>
+      <li>Create stored procedures</li>
+      <li>Execute stored procedures</li>
+    </ul><br>
+    <h2>Instructions</h2>
+    <p>When you approach the exercises in this lab, follow the instructions to run the queries on Db2:</p>
+    <ul>
+      <li>
+        <p>Go to the <a href="https://cloud.ibm.com/resources?cm_mmc=Email_Newsletter-_-Developer_Ed%2BTech-_-WW_WW-_-SkillsNetwork-Courses-IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork-20127838&#x26;cm_mmca1=000026UJ&#x26;cm_mmca2=10006555&#x26;cm_mmca3=M12345678&#x26;cvosrc=email.Newsletter.M12345678&#x26;cvo_campaign=000026UJ" target="_blank" rel="external">Resource List</a> of IBM Cloud by logging in where you can find the Db2 service instance that you created in a previous lab under <strong>Services</strong> section. Click on the <strong>Db2-xx service</strong>. Next, open the Db2 Console by clicking on <strong>Open Console</strong> button. Click on the 3-bar menu icon in the top left corner and go to the <strong>Run SQL</strong> page. The Run SQL tool enables you to run SQL statements.</p>
+        <ul>
+          <li>If needed, follow <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Sign%20up%20for%20IBM%20Cloud%20-%20Create%20Db2%20service%20instance%20-%20Get%20started%20with%20the%20Db2%20console/instructional-labs.md.html" target="_blank" rel="external">Hands-on Lab : Sign up for IBM Cloud, Create Db2 service instance and Get started with the Db2 console</a></li>
+        </ul>
+      </li>
+    </ul><br>
+    <h1>Exercise 1</h1>
+    <p>In this exercise, you will create and execute a stored procedure to read data from a table on Db2 using SQL.</p>
+    <ol>
+      <li>
+        <p>Make sure you have created and populated the <strong>PETSALE</strong> table following the steps in the <strong>"Data Used in this Lab"</strong> section of this lab.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Stored%20Procedures/images/PETSALE_table_v2.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <ul>
+          <li>You will create a stored procedure routine named <strong>RETRIEVE_ALL</strong>.</li>
+          <li>This <strong>RETRIEVE_ALL</strong> routine will contain an SQL query to retrieve all the records from the PETSALE table, so you don't need to write the same query over and over again. You just call the stored procedure routine to execute the query everytime.</li>
+          <li>To create the stored procedure routine, copy the code below and paste it to the textbox of the <strong>Run SQL</strong> page. Click <strong>Run all</strong>.</li>
+        </ul>
+        <p></p>
+        <pre><code>--#SET TERMINATOR @
+CREATE PROCEDURE RETRIEVE_ALL       -- Name of this stored procedure routine
+
+LANGUAGE SQL                        -- Language used in this routine 
+READS SQL DATA                      -- This routine will only read data from the table
+
+DYNAMIC RESULT SETS 1               -- Maximum possible number of result-sets to be returned to the caller query
+
+BEGIN 
+
+    DECLARE C1 CURSOR               -- CURSOR C1 will handle the result-set by retrieving records row by row from the table
+    WITH RETURN FOR                 -- This routine will return retrieved records as a result-set to the caller query
+    
+    SELECT * FROM PETSALE;          -- Query to retrieve all the records from the table
+    
+    OPEN C1;                        -- Keeping the CURSOR C1 open so that result-set can be returned to the caller query
+
+END
+@                                   -- Routine termination character
+</code></pre>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Stored%20Procedures/images/1.2.png" alt="image">
+        </p>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>To call the RETRIEVE_ALL routine, copy the code below in a <strong>new blank script</strong> and paste it to the textbox of the <strong>Run SQL</strong> page. Click <strong>Run all</strong>. You will have all the records retrieved from the PETSALE table.</p>
+        <pre><code>CALL RETRIEVE_ALL;      -- Caller query
+</code></pre>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Stored%20Procedures/images/1.3.png" alt="image">
+        </p>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>You can view the created stored procedure routine RETRIEVE_ALL. Click on the 3-bar menu icon in the top left corner and click <strong>EXPLORE > APPLICATION OBJECTS > Stored Procedures</strong>. Find the procedure routine RETRIEVE_ALL from Procedures by clicking <strong>Select All</strong>. Click on the procedure routine <strong>RETRIEVE_ALL</strong>.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Stored%20Procedures/images/1.4.png" alt="image">
+        </p>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        <p>If you wish to drop the stored procedure routine RETRIEVE_ALL, copy the code below and paste it to the textbox of the <strong>Run SQL</strong> page. Click <strong>Run all</strong>.</p>
+        <pre><code>DROP PROCEDURE RETRIEVE_ALL;
+
+CALL RETRIEVE_ALL;
+</code></pre>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Stored%20Procedures/images/1.5.png" alt="image">
+        </p>
+        <p></p>
+      </li>
+    </ol><br>
+    <h1>Exercise 2</h1>
+    <p>In this exercise, you will create and execute a stored procedure to write/modify data in a table on Db2 using SQL.</p>
+    <ol>
+      <li>
+        <p>Make sure you have created and populated the <strong>PETSALE</strong> table following the steps in the <strong>"Data Used in this Lab"</strong> section of this lab.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Stored%20Procedures/images/PETSALE_table_v2.png" alt="image">
+        </p>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <ul>
+          <li>You will create a stored procedure routine named <strong>UPDATE_SALEPRICE</strong> with parameters <strong>Animal_ID</strong> and <strong>Animal_Health</strong>.</li>
+          <li>This <strong>UPDATE_SALEPRICE</strong> routine will contain SQL queries to update the sale price of the animals in the PETSALE table depending on their health conditions, <strong>BAD</strong> or <strong>WORSE</strong>.</li>
+          <li>This procedure routine will take animal ID and health conditon as parameters which will be used to update the sale price of animal in the PETSALE table by an amount depending on their health condition. Suppose -
+            <ul>
+              <li>For animal with ID XX having BAD health condition, the sale price will be reduced further by 25%.</li>
+              <li>For animal with ID YY having WORSE health condition, the sale price will be reduced further by 50%.</li>
+              <li>For animal with ID ZZ having other health condition, the sale price won't change.</li>
+            </ul>
+          </li>
+          <li>To create the stored procedure routine, copy the code below and paste it to the textbox of the <strong>Run SQL</strong> page. Click <strong>Run all</strong>.</li>
+        </ul>
+        <p></p>
+        <pre><code>--#SET TERMINATOR @
+CREATE PROCEDURE UPDATE_SALEPRICE ( 
+    IN Animal_ID INTEGER, IN Animal_Health VARCHAR(5) )     -- ( { IN/OUT type } { parameter-name } { data-type }, ... )
+
+LANGUAGE SQL                                                -- Language used in this routine
+MODIFIES SQL DATA                                           -- This routine will only write/modify data in the table
+
+BEGIN 
+
+    IF Animal_Health = 'BAD' THEN                           -- Start of conditional statement
+        UPDATE PETSALE
+        SET SALEPRICE = SALEPRICE - (SALEPRICE * 0.25)
+        WHERE ID = Animal_ID;
+    
+    ELSEIF Animal_Health = 'WORSE' THEN
+        UPDATE PETSALE
+        SET SALEPRICE = SALEPRICE - (SALEPRICE * 0.5)
+        WHERE ID = Animal_ID;
+        
+    ELSE
+        UPDATE PETSALE
+        SET SALEPRICE = SALEPRICE
+        WHERE ID = Animal_ID;
+
+    END IF;                                                 -- End of conditional statement
+    
+END
+@                                                           -- Routine termination character
+</code></pre>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Stored%20Procedures/images/2.2.png" alt="image">
+        </p>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Let's call the UPDATE_SALEPRICE routine. We want to update the sale price of animal with ID <strong>1</strong> having <strong>BAD</strong> health condition in the PETSALE table. Copy the code below in a <strong>new blank script</strong> and paste it to the textbox of the <strong>Run SQL</strong> page. Click <strong>Run all</strong>. You will have all the records retrieved from the PETSALE table.</p>
+        <pre><code>CALL RETRIEVE_ALL;
+
+CALL UPDATE_SALEPRICE(1, 'BAD');        -- Caller query
+
+CALL RETRIEVE_ALL;
+</code></pre>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Stored%20Procedures/images/2.3.png" alt="image">
+        </p>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>Let's call the UPDATE_SALEPRICE routine once again. We want to update the sale price of animal with ID <strong>3</strong> having <strong>WORSE</strong> health condition in the PETSALE table. Copy the code below and paste it to the textbox of the <strong>Run SQL</strong> page. Click <strong>Run all</strong>. You will have all the records retrieved from the PETSALE table.</p>
+        <pre><code>CALL RETRIEVE_ALL;
+
+CALL UPDATE_SALEPRICE(3, 'WORSE');      -- Caller query
+
+CALL RETRIEVE_ALL;
+</code></pre>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Stored%20Procedures/images/2.4.png" alt="image">
+        </p>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        <p>You can view the created stored procedure routine UPDATE_SALEPRICE. Click on the 3-bar menu icon in the top left corner and click <strong>EXPLORE > APPLICATION OBJECTS > Stored Procedures</strong>. Find the procedure routine UPDATE_SALEPRICE from Procedures by clicking <strong>Select All</strong>. Click on the procedure routine <strong>UPDATE_SALEPRICE</strong>.</p>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Stored%20Procedures/images/2.5.png" alt="image">
+        </p>
+        <p></p>
+      </li>
+    </ol><br>
+    <ol start="6">
+      <li>
+        <p>If you wish to drop the stored procedure routine UPDATE_SALEPRICE, copy the code below and paste it to the textbox of the <strong>Run SQL</strong> page. Click <strong>Run all</strong>.</p>
+        <pre><code>DROP PROCEDURE UPDATE_SALEPRICE;
+</code></pre>
+        <p>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Stored%20Procedures/images/2.6.png" alt="image">
+        </p>
+        <p></p>
+      </li>
+    </ol><br>
+    <h3>Congratulations! You have completed this lab, and you are ready for the next topic.</h3>
+    <h3><br></h3>
+    <h2>Author(s)</h2>
+    <ul>
+      <li><a href="https://www.linkedin.com/in/sandipsahajoy?cm_mmc=Email_Newsletter-_-Developer_Ed%2BTech-_-WW_WW-_-SkillsNetwork-Courses-IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork-20127838&#x26;cm_mmca1=000026UJ&#x26;cm_mmca2=10006555&#x26;cm_mmca3=M12345678&#x26;cvosrc=email.Newsletter.M12345678&#x26;cvo_campaign=000026UJ" target="_blank" rel="external">Sandip Saha Joy</a></li>
+    </ul>
+    <h2>Other Contributor(s)</h2>
+    <ul>
+      <li></li>
+    </ul>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2020-12-25</td>
+          <td>1.1</td>
+          <td>Steve Ryan</td>
+          <td>ID Reviewed</td>
+        </tr>
+        <tr>
+          <td>2020-12-14</td>
+          <td>1.0</td>
+          <td>Sandip Saha Joy</td>
+          <td>Created initial version</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2020. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.min.js"></script>
+  </body>
+</html>

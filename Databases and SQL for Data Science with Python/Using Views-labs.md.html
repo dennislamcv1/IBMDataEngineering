@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/styles/sn.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Using%20Views/images/IDSNlogo.png" width="200" height="200">
+    <h1>Hands-on Lab: Using Views</h1>
+    <p><strong>Estimated time needed:</strong> 10 minutes</p>
+    <p>In this lab, you will learn about using views. In SQL, a view is an alternative way of representing data that exists in one or more tables. Just like a real table, it contains rows and columns. The fields in a view are fields from one or more real tables in the database. Though views can be queried like a table, views are dynamic; only the definition of the view is stored, not the data.</p><br>
+    <p><strong>How does the syntax of a CREATE VIEW statement look?</strong></p>
+    <pre><code>CREATE VIEW view_name AS
+SELECT column1, column2, ...
+FROM table_name
+WHERE condition;
+</code></pre><br>
+    <p><strong>How does the syntax of a REPLACE VIEW statement look?</strong></p>
+    <pre><code>CREATE OR REPLACE VIEW view_name AS
+SELECT column1, column2, ...
+FROM table_name
+WHERE condition;
+</code></pre><br>
+    <p><strong>How does the syntax of a DROP VIEW statement look?</strong></p>
+    <pre><code>DROP VIEW view_name;
+</code></pre><br>
+    <h2>Software Used in this Lab</h2>
+    <p>In this lab, you will use <a href="https://www.ibm.com/products/db2-database" target="_blank">IBM Db2 Database</a>. Db2 is a Relational Database Management System (RDBMS) from IBM, designed to store, analyze and retrieve the data efficiently.</p>
+    <p>To complete this lab you will utilize a Db2 database service on IBM Cloud. If you did not already complete this lab task earlier in this module, you will not yet have access to Db2 on IBM Cloud, and you will need to follow the lab below first:</p>
+    <ul>
+      <li><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Sign%20up%20for%20IBM%20Cloud%20-%20Create%20Db2%20service%20instance%20-%20Get%20started%20with%20the%20Db2%20console/instructional-labs.md.html" target="_blank" rel="external">Hands-on Lab : Sign up for IBM Cloud, Create Db2 service instance and Get started with the Db2 console</a></li>
+    </ul>
+    <h2>Database Used in this Lab</h2>
+    <p>The database used in this lab is an internal database. You will be working on a sample HR database. This HR database schema consists of 5 tables called <strong>EMPLOYEES</strong>, <strong>JOB_HISTORY</strong>, <strong>JOBS</strong>, <strong>DEPARTMENTS</strong> and <strong>LOCATIONS</strong>. Each table has a few rows of sample data. The following diagram shows the tables for the HR database:</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Using%20Views/images/HR_Database.PNG" width="670" height="400">
+    <p><strong>NOTE:</strong> This lab requires you to have all 5 of these tables of the HR database populated with sample data on Db2. If you don't have the tables above populated with sample data on Db2, please go through the lab below first:</p>
+    <ul>
+      <li><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Create%20tables%20using%20SQL%20scripts%20and%20Load%20data%20into%20tables/instructional-labs.md.html" target="_blank" rel="external">Hands-on Lab : Create tables using SQL scripts and Load data into tables</a></li>
+    </ul>
+    <h2>Objectives</h2>
+    <p>After completing this lab, you will be able to:</p>
+    <ul>
+      <li>Create a View and show a selection of data for a given table</li>
+      <li>Update a View to combine two or more tables in meaningful ways</li>
+      <li>Drop a created View</li>
+    </ul>
+    <h2>Instructions</h2>
+    <p>When you approach the exercises in this lab, follow the instructions to run the queries on Db2:</p>
+    <ul>
+      <li>
+        <p>Go to the <a href="https://cloud.ibm.com/resources?cm_mmc=Email_Newsletter-_-Developer_Ed%2BTech-_-WW_WW-_-SkillsNetwork-Courses-IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork-20127838&#x26;cm_mmca1=000026UJ&#x26;cm_mmca2=10006555&#x26;cm_mmca3=M12345678&#x26;cvosrc=email.Newsletter.M12345678&#x26;cvo_campaign=000026UJ" target="_blank" rel="external">Resource List</a> of IBM Cloud by logging in where you can find the Db2 service instance that you created in a previous lab under <strong>Services</strong> section. Click on the <strong>Db2-xx service</strong>. Next, open the Db2 Console by clicking on <strong>Open Console</strong> button. Click on the 3-bar menu icon in the top left corner and go to the <strong>Run SQL</strong> page. The Run SQL tool enables you to run SQL statements.</p>
+        <ul>
+          <li>If needed, follow <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Sign%20up%20for%20IBM%20Cloud%20-%20Create%20Db2%20service%20instance%20-%20Get%20started%20with%20the%20Db2%20console/instructional-labs.md.html" target="_blank" rel="external">Hands-on Lab : Sign up for IBM Cloud, Create Db2 service instance and Get started with the Db2 console</a></li>
+        </ul>
+      </li>
+    </ul>
+    <h1>Exercise 1: Create a View</h1>
+    <p>In this exercise, you will create a View and show a selection of data for a given table.</p>
+    <ol>
+      <li>
+        <p>Let's create a view called <strong>EMPSALARY</strong> to display salary along with some basic sensitive data of employees from the HR database. To create the <strong>EMPSALARY</strong> view from the <strong>EMPLOYEES</strong> table, copy the code below and paste it to the textbox of the <strong>Run SQL</strong> page. Click <strong>Run all</strong>.</p>
+        <pre><code>CREATE VIEW EMPSALARY AS 
+SELECT EMP_ID, F_NAME, L_NAME, B_DATE, SEX, SALARY
+FROM EMPLOYEES; 
+</code></pre>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Using%20Views/images/1.1.png" width="1060" height="150">
+        <p></p>
+      </li>
+      <li>
+        <p>Using SELECT, query the <strong>EMPSALARY</strong> view to retrieve all the records. Copy the code below and paste it to the textbox of the <strong>Run SQL</strong> page. Click <strong>Run all</strong>.</p>
+        <pre><code>SELECT * FROM EMPSALARY;
+</code></pre>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Using%20Views/images/1.2.png" width="1100" height="500">
+      </li>
+    </ol>
+    <h1>Exercise 2: Update a View</h1>
+    <p>In this exercise, you will update a View to combine two or more tables in meaningful ways.</p>
+    <ol>
+      <li>
+        <p>It now seems that the <strong>EMPSALARY</strong> view we created in exercise 1 doesn't contain enough salary information, such as max/min salary and the job title of the employees. Let's update the <strong>EMPSALARY</strong> view:</p>
+        <ul>
+          <li>combining two tables <strong>EMPLOYEES</strong> and <strong>JOBS</strong> so that we can display our desired information from the HR database.</li>
+          <li>including the columns <strong>JOB_TITLE, MIN_SALARY, MAX_SALARY</strong> of the <strong>JOBS</strong> table as well as excluding the <strong>SALARY</strong> column of the <strong>EMPLOYEES</strong> table.
+            <p></p>
+          </li>
+        </ul>
+        <p>Copy the code below and paste it to the textbox of the <strong>Run SQL</strong> page. Click <strong>Run all</strong>.</p>
+        <pre><code>CREATE OR REPLACE VIEW EMPSALARY  AS 
+SELECT EMP_ID, F_NAME, L_NAME, B_DATE, SEX, JOB_TITLE, MIN_SALARY, MAX_SALARY
+FROM EMPLOYEES, JOBS
+WHERE EMPLOYEES.JOB_ID = JOBS.JOB_IDENT;
+</code></pre>
+        <blockquote>
+          <p><strong>NOTE:</strong> Don't worry if you don't understand how to combine to two tables using implicit inner join. You will learn more about joins later on. For now, just think you are combining the data of two different tables, <strong>EMPLOYEES</strong> and <strong>JOBS</strong> by connecting their respective columns <strong>JOB_ID</strong> and <strong>JOB_IDENT</strong> since both the columns contain common unique data. You can have a look at the diagram (at the beginning of the lab) showing the tables for the HR database to observe how the <strong>JOB_ID</strong> and <strong>JOB_IDENT</strong> columns from the <strong>EMPLOYEES</strong> and <strong>JOBS</strong> tables respectively contain common unique data.</p>
+        </blockquote>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Using%20Views/images/2.1.png" width="1120" height="150">
+        <p></p>
+      </li>
+      <li>
+        <p>Using SELECT, query the updated <strong>EMPSALARY</strong> view to retrieve all the records. Copy the code below and paste it to the textbox of the <strong>Run SQL</strong> page. Click <strong>Run all</strong>.</p>
+        <pre><code>SELECT * FROM EMPSALARY;
+</code></pre>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Using%20Views/images/2.2.png" width="1200" height="450">
+      </li>
+    </ol>
+    <h1>Exercise 3: Drop a View</h1>
+    <p>In this exercise, you will drop a created View.</p>
+    <ol>
+      <li>
+        <p>Let's delete the created <strong>EMPSALARY</strong> view. Copy the code below and paste it to the textbox of the <strong>Run SQL</strong> page. Click <strong>Run all</strong>.</p>
+        <pre><code>DROP VIEW EMPSALARY;
+</code></pre>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Using%20Views/images/3.1.png" width="980" height="150">
+        <p></p>
+      </li>
+      <li>
+        <p>Using SELECT, you can verify whether the <strong>EMPSALARY</strong> view has been deleted or not. Copy the code below and paste it to the textbox of the <strong>Run SQL</strong> page. Click <strong>Run all</strong>.</p>
+        <pre><code>SELECT * FROM EMPSALARY;
+</code></pre>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Using%20Views/images/3.2.png" width="1055" height="250">
+      </li>
+    </ol><br>
+    <h3>Congratulations! You have completed this lab, and you are ready for the next topic.</h3>
+    <h3><br></h3>
+    <h2>Author(s)</h2>
+    <ul>
+      <li><a href="https://www.linkedin.com/in/sandipsahajoy?cm_mmc=Email_Newsletter-_-Developer_Ed%2BTech-_-WW_WW-_-SkillsNetwork-Courses-IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork-20127838&#x26;cm_mmca1=000026UJ&#x26;cm_mmca2=10006555&#x26;cm_mmca3=M12345678&#x26;cvosrc=email.Newsletter.M12345678&#x26;cvo_campaign=000026UJ" target="_blank" rel="external">Sandip Saha Joy</a></li>
+    </ul>
+    <h2>Other Contributor(s)</h2>
+    <ul>
+      <li></li>
+    </ul>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2020-12-24</td>
+          <td>1.1</td>
+          <td>Steve Ryan</td>
+          <td>ID reviewed</td>
+        </tr>
+        <tr>
+          <td>2020-12-14</td>
+          <td>1.0</td>
+          <td>Sandip Saha Joy</td>
+          <td>Created initial version</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2020. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.min.js"></script>
+  </body>
+</html>

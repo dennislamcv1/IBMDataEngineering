@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/styles/sn.css">
+  </head>
+  <body>
+    <img style="float:left;" src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/BonusModule_Coursera_v5/images/IDSNlogo.png" width="200" height="200">
+    <h1>Hands on Lab: Joins</h1>
+    <p>Estimated time needed: <strong>30</strong> minutes</p>
+    <h1>Objectives</h1>
+    <p>After completing this lab, you will be able to:</p>
+    <ol>
+      <li>
+        <p>Determine the correct type of join to use for a given problem.</p>
+      </li>
+      <li>
+        <p>Write and execute joins to query data from multiple tables.</p>
+      </li>
+    </ol>
+    <h1>Scenario</h1>
+    <p>In this hands-on lab, you will work with three datasets that are available on the City of Chicago's Data Portal:</p>
+    <ul>
+      <li>Socioeconomic indicators in Chicago</li>
+      <li>Chicago public schools</li>
+      <li>Chicago crime data</li>
+    </ul>
+    <p>You must download each dataset, create a table for each one, and load the appropiate dataset through the Db2 console. You should not reuse similar tables with other names from other exercises or labs, as they may not create the correct results.</p>
+    <p><strong>Important note:</strong></p>
+    <p>
+      If you have <b>not</b> yet downloaded the three datasets from the City of Chicago's Data Portal,
+      created the required tables, and loaded the data, please follow the instructions in this section.
+    </p>
+    <h2>City of Chicago Datasets</h2>
+    <ol>
+      <li><strong>Socioeconomic indicators in Chicago</strong></li>
+    </ol>
+    <p>
+      This dataset contains a selection of six socioeconomic indicators of public health significance and a “hardship index,” for each Chicago community area, for the years 2008 – 2012. A detailed description of this dataset and the original dataset can be obtained from the Chicago Data Portal at:
+      <a href="https://data.cityofchicago.org/Health-Human-Services/Census-Data-Selected-socioeconomic-indicators-in-C/kn9c-c2s2?cm_mmc=Email_Newsletter-_-Developer_Ed%2BTech-_-WW_WW-_-SkillsNetwork-Courses-IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork-20127838&#x26;cm_mmca1=000026UJ&#x26;cm_mmca2=10006555&#x26;cm_mmca3=M12345678&#x26;cvosrc=email.Newsletter.M12345678&#x26;cvo_campaign=000026UJ&#x26;cm_mmc=Email_Newsletter-_-Developer_Ed%2BTech-_-WW_WW-_-SkillsNetwork-Courses-IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork-20127838&#x26;cm_mmca1=000026UJ&#x26;cm_mmca2=10006555&#x26;cm_mmca3=M12345678&#x26;cvosrc=email.Newsletter.M12345678&#x26;cvo_campaign=000026UJ" target="_blank" rel="external">https://data.cityofchicago.org/Health-Human-Services/Census-Data-Selected-socioeconomic-indicators-in-C/kn9c-c2s2</a>
+    </p>
+    <ol start="2">
+      <li><strong>Chicago public schools</strong></li>
+    </ol>
+    <p>
+      This dataset shows all school level performance data used to create CPS School Report Cards for the 2011-2012 school year. A detailed description of this dataset and the original dataset can be obtained from the Chicago Data Portal at:
+      <a href="https://data.cityofchicago.org/Education/Chicago-Public-Schools-Progress-Report-Cards-2011-/9xs2-f89t?cm_mmc=Email_Newsletter-_-Developer_Ed%2BTech-_-WW_WW-_-SkillsNetwork-Courses-IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork-20127838&#x26;cm_mmca1=000026UJ&#x26;cm_mmca2=10006555&#x26;cm_mmca3=M12345678&#x26;cvosrc=email.Newsletter.M12345678&#x26;cvo_campaign=000026UJ" target="_blank" rel="external">https://data.cityofchicago.org/Education/Chicago-Public-Schools-Progress-Report-Cards-2011-/9xs2-f89t</a>
+    </p>
+    <ol start="3">
+      <li><strong>Chicago crime data</strong></li>
+    </ol>
+    <p>This dataset reflects reported incidents of crime (with the exception of murders where data exists for each victim) that occurred in the City of Chicago from 2001 to present, minus the most recent seven days. A detailed description of this dataset and the original dataset can be obtained from the Chicago Data Portal at: <a href="https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-present/ijzp-q8t2?cm_mmc=Email_Newsletter-_-Developer_Ed%2BTech-_-WW_WW-_-SkillsNetwork-Courses-IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork-20127838&#x26;cm_mmca1=000026UJ&#x26;cm_mmca2=10006555&#x26;cm_mmca3=M12345678&#x26;cvosrc=email.Newsletter.M12345678&#x26;cvo_campaign=000026UJ" target="_blank" rel="external">https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-present/ijzp-q8t2</a></p>
+    <h3>Store the datasets in database tables</h3>
+    <p>The lab requires you to have these three tables populated with a subset of the whole datasets. Download the 'ChicagoCensusData.csv', 'ChicagoPublicSchools.csv', and 'ChicagoCrimeData.csv' datasets below and load the data into your Db2 On Cloud database.</p>
+    <p><a href="datasets/ChicagoCensusData.csv">Chicago Census Data</a></p>
+    <p><a href="datasets/ChicagoPublicSchools.csv">Chicago Public Schools</a></p>
+    <p><a href="datasets/ChicagoCrimeData.csv">Chicago Crime Data</a></p>
+    <p>You need to create a new table for each dataset. As you load each dataset, click on "(+) New Table", specify the name of the table you want to create, and then click "Next".</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/BonusModule_Coursera_v5/images/LoadingData.png" width="800">
+    <p>Name the new tables as follows:</p>
+    <ol>
+      <li>CENSUS_DATA</li>
+      <li>CHICAGO_PUBLIC_SCHOOLS</li>
+      <li>CHICAGO_CRIME_DATA</li>
+    </ol>
+    <p>After you have created the tables, review the data in each table by using the View Data feature in the Db2 On Cloud console.</p>
+    <h2>Problems</h2>
+    <p>When you have confirmed that the three datasets are loaded into the CENSUS_DATA, CHICAGO_PUBLIC_SCHOOLS, and CHICAGO_CRIME_DATA tables, you can proceed. Write and execute SQL queries to solve the problems below.</p>
+    <h3>Problem 1</h3>
+    <h5>List the case number, type of crime and community area for all crimes in community area number 18.</h5>
+    <details>
+      <summary>Hint 1</summary>Use tables CHICAGO_CRIME_DATA and CENSUS_DATA.
+    </details>
+    <details>
+      <summary>Hint 2</summary>Use an inner join.
+    </details>
+    <details>
+      <summary>Hint 3</summary>The column PRIMARY_TYPE contains the crime type.
+    </details>
+    <h3>Problem 2</h3>
+    <h5>List all crimes that took place at a school. Include case number, crime type and community name.</h5>
+    <details>
+      <summary>Hint 1</summary>Use tables CHICAGO_CRIME_DATA and CENSUS_DATA.
+    </details>
+    <details>
+      <summary>Hint 2</summary>Use a left join or a right join.
+    </details>
+    <details>
+      <summary>Hint 3</summary>The column LOCATION_DESCRIPTION will help you find the crime location.
+    </details>
+    <h3>Problem 3</h3>
+    <h5>For the communities of Oakland, Armour Square, Edgewater and CHICAGO list the associated community_area_numbers and the case_numbers.</h5>
+    <details>
+      <summary>Hint 1</summary>Use tables CHICAGO_CRIME_DATA and CENSUS_DATA.
+    </details>
+    <details>
+      <summary>Hint 2</summary>Use a full outer join.
+    </details>
+    <details>
+      <summary>Hint 3</summary>Use COMMUNITY_AREA_NUMBER from CENSUS_DATA.
+    </details>
+    <p>Copyright © 2020 IBM Corporation. All rights reserved.</p>
+    <h2>Author(s)</h2>
+    <h4>Ramesh Sannareddy</h4>
+    <h2>Contribtuor(s)</h2>
+    <h4>Rav Ahuja</h4>
+    <h2>Change log</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-01-29</td>
+          <td>1.2</td>
+          <td>Rav Ahuja</td>
+          <td>Fixed license statement</td>
+        </tr>
+        <tr>
+          <td>2021-01-28</td>
+          <td>1.1</td>
+          <td>Rose Malcolm</td>
+          <td>Converted to markdown. Added instructions to skip table setup if done in previous lab.</td>
+        </tr>
+        <tr>
+          <td>2020-11-25</td>
+          <td>1.0</td>
+          <td>Ramesh Sannareddy</td>
+          <td>New lab created</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2020. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.min.js"></script>
+  </body>
+</html>

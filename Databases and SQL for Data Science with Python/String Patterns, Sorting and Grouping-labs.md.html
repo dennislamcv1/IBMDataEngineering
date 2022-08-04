@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/styles/sn.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20String%20Patterns%20-%20Sorting%20-%20Grouping/images/IDSNlogo.png" width="200" height="200">
+    <h1>Hands-on Lab : String Patterns, Sorting and Grouping</h1>
+    <p><strong>Estimated time needed:</strong> 35 minutes</p>
+    <p>In this lab, you will go through some SQL practice problems that will provide hands-on experience with string patterns, sorting result sets and grouping result sets.</p>
+    <h2>Software Used in this Lab</h2>
+    <p>In this lab, you will use an <a href="https://www.ibm.com/products/db2-database" target="_blank">IBM Db2 Database</a>. Db2 is a Relational Database Management System (RDBMS) from IBM, designed to store, analyze and retrieve data efficiently.</p>
+    <p>To complete this lab you will utilize a Db2 database service on IBM Cloud. If you did not already complete this lab task earlier in this module, you will not yet have access to Db2 on IBM Cloud, and you will need to follow the lab below first:</p>
+    <ul>
+      <li><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Sign%20up%20for%20IBM%20Cloud%20-%20Create%20Db2%20service%20instance%20-%20Get%20started%20with%20the%20Db2%20console/instructional-labs.md.html" target="_blank" rel="external">Hands-on Lab : Sign up for IBM Cloud, Create Db2 service instance and Get started with the Db2 console</a></li>
+    </ul>
+    <h2>Database Used in this Lab</h2>
+    <p>The database used in this lab is an internal database. You will be working on a sample HR database. This HR database schema consists of 5 tables called <strong>EMPLOYEES</strong>, <strong>JOB_HISTORY</strong>, <strong>JOBS</strong>, <strong>DEPARTMENTS</strong> and <strong>LOCATIONS</strong>. Each table has a few rows of sample data. The following diagram shows the tables for the HR database:</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20String%20Patterns%20-%20Sorting%20-%20Grouping/images/HR_Database.PNG" width="670" height="400">
+    <p><strong>NOTE:</strong> This lab requires you to have all 5 of these tables of the HR database populated with sample data on Db2. If you didn't complete the earlier lab in this module, you won't have the tables above populated with sample data on Db2, so you will need to go through the lab below first:</p>
+    <ul>
+      <li><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Create%20tables%20using%20SQL%20scripts%20and%20Load%20data%20into%20tables/instructional-labs.md.html" target="_blank" rel="external">Hands-on Lab : Create tables using SQL scripts and Load data into tables</a></li>
+    </ul>
+    <h2>Objectives</h2>
+    <p>After completing this lab, you will be able to:</p>
+    <ul>
+      <li>Simplify a SELECT statement by using string patterns, ranges, or sets of values</li>
+      <li>Sort the result set in either ascending or descending order and identify which column to use for the sorting order</li>
+      <li>Eliminate duplicates from a result set and further restrict a result set</li>
+    </ul>
+    <h2>Instructions</h2>
+    <p>When you approach the exercises in this lab, follow the instructions to run the queries on Db2:</p>
+    <ul>
+      <li>
+        <p>Go to the <a href="https://cloud.ibm.com/resources?cm_mmc=Email_Newsletter-_-Developer_Ed%2BTech-_-WW_WW-_-SkillsNetwork-Courses-IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork-20127838&#x26;cm_mmca1=000026UJ&#x26;cm_mmca2=10006555&#x26;cm_mmca3=M12345678&#x26;cvosrc=email.Newsletter.M12345678&#x26;cvo_campaign=000026UJ" target="_blank" rel="external">Resource List</a> of IBM Cloud by logging in where you can find the Db2 service instance that you created in a previous lab under <strong>Services</strong> section. Click on the <strong>Db2-xx service</strong>. Next, open the Db2 Console by clicking on <strong>Open Console</strong> button. Click on the 3-bar menu icon in the top left corner and go to the <strong>Run SQL</strong> page. The Run SQL tool enables you to run SQL statements.</p>
+        <ul>
+          <li>If needed, follow <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Sign%20up%20for%20IBM%20Cloud%20-%20Create%20Db2%20service%20instance%20-%20Get%20started%20with%20the%20Db2%20console/instructional-labs.md.html" target="_blank" rel="external">Hands-on Lab : Sign up for IBM Cloud, Create Db2 service instance and Get started with the Db2 console</a></li>
+        </ul>
+      </li>
+    </ul>
+    <h1>Exercise 1: String Patterns</h1>
+    <p>In this exercise, you will go through some SQL problems on String Patterns.</p>
+    <ol>
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Retrieve all employees whose address is in Elgin,IL.</em></p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Use the LIKE operator to find similar strings.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>SELECT F_NAME , L_NAME
+FROM EMPLOYEES
+WHERE ADDRESS LIKE '%Elgin,IL%';
+</code></pre>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20String%20Patterns%20-%20Sorting%20-%20Grouping/images/1.1.PNG" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Retrieve all employees who were born during the 1970's.</em></p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Use the LIKE operator to find similar strings.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>SELECT F_NAME , L_NAME
+FROM EMPLOYEES
+WHERE B_DATE LIKE '197%';
+</code></pre>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20String%20Patterns%20-%20Sorting%20-%20Grouping/images/1.2.PNG" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Retrieve all employees in department 5 whose salary is between 60000 and 70000.</em></p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Use the keyword BETWEEN for this SQL problem.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>SELECT *
+FROM EMPLOYEES
+WHERE (SALARY BETWEEN 60000 AND 70000) AND DEP_ID = 5;
+</code></pre>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20String%20Patterns%20-%20Sorting%20-%20Grouping/images/1.3.PNG" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol><br>
+    <h1>Exercise 2: Sorting</h1>
+    <p>In this exercise, you will go through some SQL problems on Sorting.</p>
+    <ol>
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Retrieve a list of employees ordered by department ID.</em></p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Use the ORDER BY clause for this SQL problem. By default, the ORDER BY clause sorts the records in ascending order.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>SELECT F_NAME, L_NAME, DEP_ID 
+FROM EMPLOYEES
+ORDER BY DEP_ID;
+</code></pre>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20String%20Patterns%20-%20Sorting%20-%20Grouping/images/2.1.PNG" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Retrieve a list of employees ordered in descending order by department ID and within each department ordered alphabetically in descending order by last name.</em></p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Use the ORDER BY clause with DESC for this SQL problem.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>SELECT F_NAME, L_NAME, DEP_ID 
+FROM EMPLOYEES
+ORDER BY DEP_ID DESC, L_NAME DESC;
+</code></pre>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20String%20Patterns%20-%20Sorting%20-%20Grouping/images/2.2.PNG" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>(Optional) Problem:</p>
+        <blockquote>
+          <p><em>In SQL problem 2 (Exercise 2 Problem 2), use department name instead of department ID. Retrieve a list of employees ordered by department name, and within each department ordered alphabetically in descending order by last name.</em></p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Department name is in the DEPARTMENTS table. So your query will need to retrieve data from more than one table. Don’t worry if you are not able to figure this SQL problem out. We’ll cover working with multiple tables in the lecture <strong>Working with Multiple Tables</strong>.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>SELECT D.DEP_NAME , E.F_NAME, E.L_NAME
+FROM EMPLOYEES as E, DEPARTMENTS as D
+WHERE E.DEP_ID = D.DEPT_ID_DEP
+ORDER BY D.DEP_NAME, E.L_NAME DESC;
+</code></pre>
+          <blockquote>
+            <p>In the SQL Query above, <code>D</code> and <code>E</code> are aliases for the table names. Once you define an alias like <code>D</code> in your query, you can simply write <code>D.COLUMN_NAME</code> rather than the full form <code>DEPARTMENTS.COLUMN_NAME</code>.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20String%20Patterns%20-%20Sorting%20-%20Grouping/images/2.3.PNG" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol><br>
+    <h1>Exercise 3: Grouping</h1>
+    <p>In this exercise, you will go through some SQL problems on Grouping.</p>
+    <p><strong>NOTE:</strong> The SQL problems in this exercise involve usage of SQL Aggregate functions AVG and COUNT. COUNT has been covered earlier. AVG is a function that can be used to calculate the Average or Mean of all values of a specified column in the result set. For example, to retrieve the average salary for all employees in the EMPLOYEES table, issue the query: <code>SELECT AVG(SALARY) FROM EMPLOYEES;</code>. You will learn more about AVG and other aggregate functions later in the lecture <strong>Built-in Database Functions</strong>.</p>
+    <ol>
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>For each department ID retrieve the number of employees in the department.</em></p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Use COUNT(*) to retrieve the total count of a column, and then GROUP BY.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>SELECT DEP_ID, COUNT(*)
+FROM EMPLOYEES
+GROUP BY DEP_ID;
+</code></pre>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20String%20Patterns%20-%20Sorting%20-%20Grouping/images/3.1.PNG" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>For each department retrieve the number of employees in the department, and the average employee salary in the department..</em></p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Use COUNT(*) to retrieve the total count of a column, and AVG() function to compute average salaries, and then GROUP BY.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>SELECT DEP_ID, COUNT(*), AVG(SALARY)
+FROM EMPLOYEES
+GROUP BY DEP_ID;
+</code></pre>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20String%20Patterns%20-%20Sorting%20-%20Grouping/images/3.2.PNG" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Label the computed columns in the result set of SQL problem 2 (Exercise 3 Problem 2) as NUM_EMPLOYEES and AVG_SALARY.</em></p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Use SQL Aliases: <code>column_name AS alias_name</code>. For example, AVG(SALARY) AS "AVG_SALARY".</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>SELECT DEP_ID, COUNT(*) AS "NUM_EMPLOYEES", AVG(SALARY) AS "AVG_SALARY"
+FROM EMPLOYEES
+GROUP BY DEP_ID;
+</code></pre>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20String%20Patterns%20-%20Sorting%20-%20Grouping/images/3.3.PNG" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol><br>
+    <ol start="4">
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>In SQL problem 3 (Exercise 3 Problem 3), order the result set by Average Salary..</em></p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Use ORDER BY after the GROUP BY.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>SELECT DEP_ID, COUNT(*) AS "NUM_EMPLOYEES", AVG(SALARY) AS "AVG_SALARY"
+FROM EMPLOYEES
+GROUP BY DEP_ID
+ORDER BY AVG_SALARY;
+</code></pre>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20String%20Patterns%20-%20Sorting%20-%20Grouping/images/3.4.PNG" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol><br>
+    <ol start="5">
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>In SQL problem 4 (Exercise 3 Problem 4), limit the result to departments with fewer than 4 employees.</em></p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Use HAVING after the GROUP BY, and use the count() function in the HAVING clause instead of the column label.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>SELECT DEP_ID, COUNT(*) AS "NUM_EMPLOYEES", AVG(SALARY) AS "AVG_SALARY"
+FROM EMPLOYEES
+GROUP BY DEP_ID
+HAVING count(*) &#x3C; 4
+ORDER BY AVG_SALARY;
+</code></pre>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20String%20Patterns%20-%20Sorting%20-%20Grouping/images/3.5.PNG" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol><br>
+    <h1>Solution Script</h1>
+    <p>If you would like to run all the solution queries of the SQL problems of this lab with a script, download the script below. Upload the script to the Db2 console and run. Follow <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Create%20tables%20using%20SQL%20scripts%20and%20Load%20data%20into%20tables/instructional-labs.md.html" target="_blank" rel="external">Hands-on Lab : Create tables using SQL scripts and Load data into tables</a> on how to upload a script to Db2 console and run it.</p>
+    <ul>
+      <li><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20String%20Patterns%20-%20Sorting%20-%20Grouping/StringPattern-Sorting-Grouping_Solution_Script.sql" target="_blank" rel="external">StringPattern-Sorting-Grouping_Solution_Script.sql</a></li>
+    </ul><br>
+    <h3>Congratulations! You have completed this lab, and you are ready for the next topic.</h3>
+    <h3><br></h3>
+    <h1>Author(s)</h1>
+    <ul>
+      <li><a href="https://www.linkedin.com/in/ravahuja?cm_mmc=Email_Newsletter-_-Developer_Ed%2BTech-_-WW_WW-_-SkillsNetwork-Courses-IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork-20127838&#x26;cm_mmca1=000026UJ&#x26;cm_mmca2=10006555&#x26;cm_mmca3=M12345678&#x26;cvosrc=email.Newsletter.M12345678&#x26;cvo_campaign=000026UJ" target="_blank" rel="external">Rav Ahuja</a></li>
+      <li><a href="https://www.linkedin.com/in/sandipsahajoy?cm_mmc=Email_Newsletter-_-Developer_Ed%2BTech-_-WW_WW-_-SkillsNetwork-Courses-IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork-20127838&#x26;cm_mmca1=000026UJ&#x26;cm_mmca2=10006555&#x26;cm_mmca3=M12345678&#x26;cvosrc=email.Newsletter.M12345678&#x26;cvo_campaign=000026UJ" target="_blank" rel="external">Sandip Saha Joy</a></li>
+    </ul>
+    <h1>Other Contributor(s)</h1>
+    <ul>
+      <li></li>
+    </ul>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2020-12-24</td>
+          <td>2.1</td>
+          <td>Steve Ryan</td>
+          <td>ID Reviewed</td>
+        </tr>
+        <tr>
+          <td>2020-12-08</td>
+          <td>2.0</td>
+          <td>Sandip Saha Joy</td>
+          <td>Created revised version from DB0201EN</td>
+        </tr>
+        <tr>
+          <td>2020</td>
+          <td>1.0</td>
+          <td>Rav Ahuja</td>
+          <td>Created initial version</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2020. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/styles/sn.css">
+  </head>
+  <body>
+    <center>
+      <img src="https://s3-api.us-geo.objectstorage.softlayer.net/cf-courses-data/CognitiveClass/Logos/organization_logo/organization_logo.png" width="300" alt="cognitiveclass.ai logo">
+    </center>
+    <base target="_blank">
+    <h2>Instructions</h2>
+    <p>As a hands on Assignment, you will be working on a real world dataset provided by the Chicago Data Portal. You will be asked questions that will help you understand the data just like a data scientist would. You will be assessed both on the correctness of your SQL queries and results.</p>
+    <p>A Jupyter notebook has been provided to help with completing this assignment. Follow the instructions to complete all the problems. Then share the Queries and Results with your peers for reviewing.</p>
+    <h3>Review criteria</h3>
+    <p>There are <strong>25</strong> total points possible for this assignment. Here is the breakdown:</p>
+    <ul>
+      <li>
+        <p>Problem 1: 2 Points</p>
+      </li>
+      <li>
+        <p>Problem 2: 2 Points</p>
+      </li>
+      <li>
+        <p>Problem 3: 2 Points</p>
+      </li>
+      <li>
+        <p>Problem 4: 2 Points</p>
+      </li>
+      <li>
+        <p>Problem 5: 2 Points</p>
+      </li>
+      <li>
+        <p>Problem 6: 2 Points</p>
+      </li>
+      <li>
+        <p>Problem 7: 3 Points</p>
+      </li>
+      <li>
+        <p>Problem 8: 3 Points</p>
+      </li>
+      <li>
+        <p>Problem 9: 3 Points</p>
+      </li>
+      <li>
+        <p>Problem 10: 4 Points</p>
+      </li>
+    </ul>
+    <p>For each problem points will be awarded as follows:</p>
+    <ul>
+      <li>
+        <p>Full points: Used a correct SQL query that yielded a correct result</p>
+      </li>
+      <li>
+        <p>Half or partial points: The query and results are not fully correct</p>
+      </li>
+      <li>
+        <p>No points: Did not attempt the problem or did not upload any solution</p>
+      </li>
+    </ul>
+    <h3>Step-By-Step Assignment Instructions</h3>
+    <h4>Assignment Topic:</h4>
+    <p>In this assignment, you will download the datasets provided, load them into a database, write and execute SQL queries to answer the problems provided, and upload a screenshot showing the correct SQL query and result for review by your peers. A Jupyter notebook is provided in the preceding lesson to help you with the process.</p>
+    <p>This assignment involves 3 datasets for the city of Chicago obtained from the Chicago Data Portal:</p>
+    <p><strong>1. Chicago Socioeconomic Indicators</strong></p>
+    <p>This <a href="https://data.cityofchicago.org/Health-Human-Services/Census-Data-Selected-socioeconomic-indicators-in-C/kn9c-c2s2" target="_blank">dataset</a> contains a selection of six socioeconomic indicators of public health significance and a <em>hardship index</em>, by Chicago community area, for the years 2008 – 2012.</p>
+    <p><strong>2. Chicago Public Schools</strong></p>
+    <p>This <a href="https://data.cityofchicago.org/Education/Chicago-Public-Schools-Progress-Report-Cards-2011-/9xs2-f89t" target="_blank">dataset</a> shows all school level performance data used to create CPS School Report Cards for the 2011-2012 school year.</p>
+    <p><strong>3. Chicago Crime Data</strong></p>
+    <p>This <a href="https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-present/ijzp-q8t2" target="_blank">dataset</a> reflects reported incidents of crime (with the exception of murders where data exists for each victim) that occurred in the City of Chicago from 2001 to present, minus the most recent seven days.</p>
+    <h3>Instructions:</h3>
+    <p><strong>1. Review the datasets</strong></p>
+    <p>Before you begin, you will need to become familiar with the datasets. Snapshots for the three datasets in .CSV format can be downloaded from the following links:</p>
+    <ul>
+      <li>
+        <p>Chicago Socioeconomic Indicators: <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/FinalModule_Coursera/data/Census_Data_-_Selected_socioeconomic_indicators_in_Chicago__2008___2012-v2.csv">Click here</a></p>
+      </li>
+      <li>
+        <p>Chicago Public Schools: <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/FinalModule_Coursera/data/Chicago_Public_Schools_-_Progress_Report_Cards__2011-2012-v3.csv">Click here</a></p>
+      </li>
+      <li>
+        <p>Chicago Crime Data: <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/FinalModule_Coursera/data/Chicago_Crime_Data-v2.csv">Click here</a></p>
+      </li>
+    </ul>
+    <p>NOTE: Ensure you have downloaded the datasets using the links above instead of directly from the Chicago Data Portal. The versions linked here are subsets of the original datasets and have some of the column names modified to be more database friendly which will make it easier to complete this assignment. The CSV file provided above for the Chicago Crime Data is a very small subset of the full dataset available from the Chicago Data Portal. The original dataset is over 1.55GB in size and contains over 6.5 million rows. For the purposes of this assignment you will use a much smaller sample with only about 500 rows.</p>
+    <p><strong>2. Load the datasets into a database</strong></p>
+    <p>Perform this step using the LOAD tool in the Db2 console. You will need to create 3 tables in the database, one for each dataset, named as follows, and then load the respective .CSV file into the table:</p>
+    <ol>
+      <li>
+        <p>CENSUS_DATA</p>
+      </li>
+      <li>
+        <p>CHICAGO_PUBLIC_SCHOOLS</p>
+      </li>
+      <li>
+        <p>CHICAGO_CRIME_DATA</p>
+      </li>
+    </ol>
+    <p>To load the data into the tables the steps are similar to Week 2 Lab 1 Part II. The only difference with that lab is that in Step 5 of the instructions you will need to click on create <em>(+) New Table</em> and specify the name of the table you want to create and then click <em>Next</em>.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/FinalModule_Coursera_V5/images/LOADschool.jpg" alt="image">
+    </p>
+    <p><strong>3. Write and execute queries</strong></p>
+    <p>Perform this step in the Jupyter notebook provided in the previous section. Carefully read and understand each problem. Compose and execute the appropriate SQL queries to answer each of the problems. Take a screenshot of each query and its results and save it as a jpg file..</p>
+    <p>Problem 1: Find the total number of crimes recorded in the CRIME table.</p>
+    <p>Problem 2: List community areas with per capita income less than 11000.</p>
+    <p>Problem 3: List all case numbers for crimes involving minors?</p>
+    <p>Problem 4: List all kidnapping crimes involving a child?</p>
+    <p>Problem 5: What kind of crimes were recorded at schools?</p>
+    <p>Problem 6: List the average safety score for all types of schools.</p>
+    <p>Problem 7: List 5 community areas with highest % of households below poverty line.</p>
+    <p>Problem 8: Which community area(number) is most crime prone?</p>
+    <p>Problem 9: Use a sub-query to find the name of the community area with highest hardship index.</p>
+    <p>Problem 10: Use a sub-query to determine the Community Area Name with most number of crimes?</p>
+    <p><strong>How to submit:</strong></p>
+    <p>A screenshot in JPEG format is required to be submitted for solution to each of the problems. The screenshot for each problem should clearly show the SQL query and results for the query. The screenshots will be uploaded in the following sections.</p>
+    <h2>Example Submissions</h2>
+    <p>Here is an example of a submission clearly showing both the SQL Query and its Results/output, when executed from a Jupyter notebook.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/FinalModule_Coursera_V5/images/SubmissionExample-notmarkedup.jpg" alt="image">
+    </p>
+    <p>Important aspects of the submission are highlighted below for illustrative purposes:</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/FinalModule_Coursera_V5/images/SubmissionExample.jpg" alt="image">
+    </p>
+    <h2>Author(s)</h2>
+    <h4>Rav Ahuja</h4>
+    <h4></h4>
+    <h2>Change log</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-14-01</td>
+          <td>1.0</td>
+          <td>Rose Malcolm</td>
+          <td>Updated</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2020. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.min.js"></script>
+  </body>
+</html>

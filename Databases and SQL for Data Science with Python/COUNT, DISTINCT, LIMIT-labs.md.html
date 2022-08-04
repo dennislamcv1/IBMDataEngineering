@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/styles/sn.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20COUNT%20-%20DISTINCT%20-%20LIMIT/images/IDSNlogo.png" width="200" height="200">
+    <h1>Hands-on Lab : COUNT, DISTINCT, LIMIT</h1>
+    <p><strong>Estimated time needed:</strong> 35 minutes</p>
+    <p>In this lab, you will learn a few useful expressions that are used with SELECT statements. First, you will learn COUNT, which is an aggregate function that retrieves the number of rows that matches the query criteria. Next, you will learn DISTINCT, which is used to remove duplicate values from a specified result set and only return the unique values. Lastly, you will learn LIMIT, which is used for restricting the number of rows retrieved from the table.</p><br>
+    <h1></h1>
+    <h2>Software Used in this Lab</h2>
+    <p>In this lab, you will use <a href="https://github.com/simonw/datasette" target="_blank">Datasette </a>, an open source multi-tool for exploring and publishing data.</p><br>
+    <h2>Database Used in this Lab</h2>
+    <p>The database used in this lab comes from the following dataset source: <a href="https://data.sfgov.org/Culture-and-Recreation/Film-Locations-in-San-Francisco/yitu-d5am" target="_blank">Film Locations in San Francisco</a> under a <a href="https://opendatacommons.org/licenses/pddl/1-0/" target="_blank">PDDL: Public Domain Dedication and License</a>.</p><br>
+    <h2>Objectives</h2>
+    <p>After completing this lab, you will be able to:</p>
+    <ul>
+      <li>Retrieve the number of rows that match a query criteria</li>
+      <li>Remove duplicate values from a result set and return the unique values</li>
+      <li>Restrict the number of rows retrieved from a table</li>
+    </ul><br>
+    <h1>Exploring the Database</h1>
+    <p>Let us first explore the <strong>SanFranciscoFilmLocations</strong> database using the <strong>Datasette</strong> tool:</p>
+    <ol>
+      <li>
+        <p>If the first statement listed below is not already in the Datasette textbox on the right, then copy the code below by clicking on the little copy button on the bottom right of the codeblock below and then paste it into the textbox of the Datasette tool using either <strong>Ctrl+V</strong> or right-click in the text box and choose <strong>Paste</strong>.</p>
+        <pre><code>SELECT * FROM FilmLocations;
+</code></pre>
+        <p>{: codeblock}</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20COUNT%20-%20DISTINCT%20-%20LIMIT/images/ExploringDB.1.png" width="520" height="180">
+      </li>
+    </ol>
+    <ol>
+      <li>
+        <p>Click <strong>Submit Query</strong>.</p>
+      </li>
+      <li>
+        <p>Now you can scroll down the table and explore all the columns and rows of the <strong>FilmLocations</strong> table to get an overall idea of the table.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20COUNT%20-%20DISTINCT%20-%20LIMIT/images/ExploringDB.2.png" width="520" height="400">
+      </li>
+    </ol>
+    <ol>
+      <li>
+        <p>These are the column attribute descriptions from the <strong>FilmLocations</strong> table:</p>
+        <pre><code>FilmLocations(
+    Title:              titles of the films, 
+    ReleaseYear:        time of public release of the films, 
+    Locations:          locations of San Francisco where the films were shot, 
+    FunFacts:           funny facts about the filming locations, 
+    ProductionCompany:  companies who produced the films, 
+    Distributor:        companies who distributed the films, 
+    Director:           people who directed the films, 
+    Writer:             people who wrote the films, 
+    Actor1:             person 1 who acted in the films, 
+    Actor2:             person 2 who acted in the films, 
+    Actor3:             person 3 who acted in the films
+)
+</code></pre>
+        <p>{: codeblock}</p>
+      </li>
+    </ol><br>
+    <h1>Exercise 1: COUNT</h1>
+    <p>In this exercise, you will first go through some examples of using COUNT in queries and then solve some exercise problems by using it.</p>
+    <h1></h1>
+    <h2>Task A: Example exercises on COUNT</h2>
+    <p>Let us go through some examples of COUNT related queries:</p><br>
+    <ol>
+      <li>
+        <p>In this example, suppose we want to count the number of records or rows of the "FilmLocations" table.</p>
+        <ol>
+          <li>
+            <p>Problem:</p>
+            <blockquote>
+              <p><em>Retrieve the number of rows from the "FilmLocations" table.</em></p>
+            </blockquote>
+          </li>
+          <li>
+            <p>Solution:</p>
+            <pre><code>SELECT COUNT(*) FROM FilmLocations;
+</code></pre>
+            <p>{: codeblock}</p>
+          </li>
+        </ol><br>
+        <ol start="3">
+          <li>Copy the solution code above by clicking on the little copy button on the bottom right of the codeblock below and paste it to the textbox of the Datasette tool. Then click <strong>Submit query</strong>.</li>
+        </ol><br>
+        <ol start="4">
+          <li>
+            <p>Your output resultset should look like the image below:</p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20COUNT%20-%20DISTINCT%20-%20LIMIT/images/1.A.1.4.png" width="520" height="400">
+          </li>
+        </ol>
+      </li>
+    </ol><br><br>
+    <ol start="2">
+      <li>
+        <p>In this example, now we want to count the number of locations of the films. But we also want to restrict the output resultset in such a way that we only retrieve the number of locations of the films written by a certain writer.</p>
+        <ol>
+          <li>
+            <p>Problem:</p>
+            <blockquote>
+              <p><em>Retrieve the number of locations of the films which are written by James Cameron.</em></p>
+            </blockquote>
+          </li>
+          <li>
+            <p>Solution:</p>
+            <pre><code>SELECT COUNT(Locations) FROM FilmLocations WHERE Writer="James Cameron";
+</code></pre>
+            <p>{: codeblock}</p>
+          </li>
+        </ol><br>
+        <ol start="3">
+          <li>Copy the solution code above by clicking on the little copy button on the bottom right of the codeblock below and paste it to the textbox of the Datasette tool. Then click <strong>Submit query</strong>.</li>
+        </ol><br>
+        <ol start="4">
+          <li>
+            <p>Your output resultset should look like the image below:</p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20COUNT%20-%20DISTINCT%20-%20LIMIT/images/1.A.2.4.png" width="520" height="400">
+          </li>
+        </ol>
+      </li>
+    </ol>
+    <h1></h1>
+    <h2>Task B: Practice exercises on COUNT</h2>
+    <p>Now, let us practice creating and running some COUNT related queries.</p><br>
+    <ol>
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Retrieve the number of locations of the films which are directed by Woody Allen.</em></p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Follow example 2 of the COUNT exercise. Use the WHERE clause comparison operator <code>=</code> which means <strong>"Equal to"</strong>.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>SELECT COUNT(Locations) FROM FilmLocations WHERE Director="Woody Allen";
+</code></pre>
+          <p>{: codeblock}</p>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20COUNT%20-%20DISTINCT%20-%20LIMIT/images/1.B.1.O.png" width="520" height="400">
+        </details>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Retrieve the number of films shot at Russian Hill.</em></p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Follow example 2 of the COUNT exercise. Use the WHERE clause comparison operator <code>=</code> which means <strong>"Equal to"</strong>.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>SELECT Count(Title) FROM FilmLocations WHERE Locations="Russian Hill";
+</code></pre>
+          <p>{: codeblock}</p>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20COUNT%20-%20DISTINCT%20-%20LIMIT/images/1.B.2.O.png" width="520" height="400">
+        </details>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Retrieve the number of rows having a release year older than 1950 from the "FilmLocations" table.</em></p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Follow example 1 of the COUNT exercise. Use the WHERE clause comparison operator <code>&#x3C;</code> which means <strong>"Less than"</strong>.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>SELECT Count(*) FROM FilmLocations WHERE ReleaseYear&#x3C;1950;
+</code></pre>
+          <p>{: codeblock}</p>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20COUNT%20-%20DISTINCT%20-%20LIMIT/images/1.B.3.O.png" width="520" height="400">
+        </details>
+      </li>
+    </ol><br>
+    <h1>Exercise 2: DISTINCT</h1>
+    <p>In this exercise, you will first go through some examples of using DISTINCT in queries, and then solve some exercise problems by using it.</p>
+    <h1></h1>
+    <h2>Task A: Example exercises of DISTINCT</h2>
+    <p>Let us go through some examples of DISTINCT related queries:</p><br>
+    <ol>
+      <li>
+        <p>In this example, we want to retrieve the title of all films in the table in such a way that duplicates will be discarded in the output resultset.</p>
+        <ol>
+          <li>
+            <p>Problem:</p>
+            <blockquote>
+              <p><em>Retrieve the name of all films without any repeated titles.</em></p>
+            </blockquote>
+          </li>
+          <li>
+            <p>Solution:</p>
+            <pre><code>SELECT DISTINCT Title FROM FilmLocations;
+</code></pre>
+            <p>{: codeblock}</p>
+          </li>
+        </ol><br>
+        <ol start="3">
+          <li>Copy the solution code above by clicking on the little copy button on the bottom right of the codeblock below and paste it to the textbox of the Datasette tool. Then click <strong>Submit query</strong>.</li>
+        </ol><br>
+        <ol start="4">
+          <li>
+            <p>Your output resultset should look like the image below:</p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20COUNT%20-%20DISTINCT%20-%20LIMIT/images/2.A.1.4.png" width="520" height="400">
+          </li>
+        </ol>
+      </li>
+    </ol><br><br>
+    <ol start="2">
+      <li>
+        <p>In this example, we want to retrieve the count of release years of the films produced by a specific company in such a way that duplicate release years of those films will be discarded in the count.</p>
+        <ol>
+          <li>
+            <p>Problem:</p>
+            <blockquote>
+              <p><em>Retrieve the number of release years of the films distinctly, produced by Warner Bros. Pictures.</em></p>
+            </blockquote>
+          </li>
+          <li>
+            <p>Solution:</p>
+            <pre><code>SELECT COUNT(DISTINCT ReleaseYear) FROM FilmLocations WHERE ProductionCompany="Warner Bros. Pictures";
+</code></pre>
+            <p>{: codeblock}</p>
+          </li>
+        </ol><br>
+        <ol start="3">
+          <li>Copy the solution code above by clicking on the little copy button on the bottom right of the codeblock below and paste it to the textbox of the Datasette tool. Then click <strong>Submit query</strong>.</li>
+        </ol><br>
+        <ol start="4">
+          <li>
+            <p>Your output resultset should look like the image below:</p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20COUNT%20-%20DISTINCT%20-%20LIMIT/images/2.A.2.4.png" width="520" height="400">
+          </li>
+        </ol>
+      </li>
+    </ol>
+    <h1></h1>
+    <h2>Task B: Practice exercises on DISTINCT</h2>
+    <p>Now, let us practice creating and running some DISTINCT related queries.</p><br>
+    <ol>
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Retrieve the name of all unique films released in the 21st century and onwards, along with their release years.</em></p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Follow example 1 of DISTINCT. Use WHERE clause comparsion operator <code>>=</code> which means <strong>"Greater than or equal to"</strong>.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>SELECT DISTINCT Title, ReleaseYear FROM FilmLocations WHERE ReleaseYear>=2001;
+</code></pre>
+          <p>{: codeblock}</p>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20COUNT%20-%20DISTINCT%20-%20LIMIT/images/2.B.1.O.png" width="520" height="400">
+        </details>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Retrieve the names of all the directors and their distinct films shot at City Hall.</em></p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Follow example 1 of DISTINCT. Use WHERE clause comparsion operator <code>=</code> which means <strong>"Equal to"</strong>.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>SELECT DISTINCT Title, Director FROM FilmLocations WHERE Locations="City Hall";
+</code></pre>
+          <p>{: codeblock}</p>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20COUNT%20-%20DISTINCT%20-%20LIMIT/images/2.B.2.O.png" width="520" height="400">
+        </details>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Retrieve the number of distributors distinctly who distributed films acted by Clint Eastwood as 1st actor.</em></p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Follow example 2 of DISTINCT. Use WHERE clause comparsion operator <code>=</code> which means <strong>"Equal to"</strong>.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>SELECT COUNT(DISTINCT Distributor) FROM FilmLocations WHERE Actor1="Clint Eastwood";
+</code></pre>
+          <p>{: codeblock}</p>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20COUNT%20-%20DISTINCT%20-%20LIMIT/images/2.B.3.O.png" width="520" height="400">
+        </details>
+      </li>
+    </ol><br>
+    <h1>Exercise 3: LIMIT</h1>
+    <p>In this exercise, you will first go through some examples of using LIMIT in queries and then solve some exercise by using it.</p>
+    <h1></h1>
+    <h2>Task A: Example exercises of LIMIT</h2>
+    <p>Let us go through some examples of LIMIT related queries:</p><br>
+    <ol>
+      <li>
+        <p>In this example, let us retrieve a specific number of rows from the top of the table in such a way that rows other than those are not in the output resultset.</p>
+        <ol>
+          <li>
+            <p>Problem:</p>
+            <blockquote>
+              <p><em>Retrieve the first 25 rows from the "FilmLocations" table.</em></p>
+            </blockquote>
+          </li>
+          <li>
+            <p>Solution:</p>
+            <pre><code>SELECT * FROM FilmLocations LIMIT 25;
+</code></pre>
+            <p>{: codeblock}</p>
+          </li>
+        </ol><br>
+        <ol start="3">
+          <li>Copy the solution code above by clicking on the little copy button on the bottom right of the codeblock below and paste it to the textbox of the Datasette tool. Then click <strong>Submit query</strong>.</li>
+        </ol><br>
+        <ol start="4">
+          <li>
+            <p>Your output resultset should look like the image below:</p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20COUNT%20-%20DISTINCT%20-%20LIMIT/images/3.A.1.4.png" width="520" height="400">
+          </li>
+        </ol>
+      </li>
+    </ol><br><br>
+    <ol start="2">
+      <li>
+        <p>In this example, let us take the first example to a more advanced level. Now we want to retrieve a specific number of rows from the table, but thid time, not from the top of the table. This time we want to retrieve a specific number of rows starting from a specific row in the table.</p>
+        <ol>
+          <li>
+            <p>Problem:</p>
+            <blockquote>
+              <p><em>Retrieve the first 15 rows from the "FilmLocations" table starting from row 11.</em></p>
+            </blockquote>
+          </li>
+          <li>
+            <p>Solution:</p>
+            <pre><code>SELECT * FROM FilmLocations LIMIT 15 OFFSET 10;
+</code></pre>
+            <p>{: codeblock}</p>
+          </li>
+        </ol><br>
+        <ol start="3">
+          <li>Copy the solution code above by clicking on the little copy button on the bottom right of the codeblock below and paste it to the textbox of the Datasette tool. Then click <strong>Submit query</strong>.</li>
+        </ol><br>
+        <ol start="4">
+          <li>
+            <p>Your output resultset should look like the image below:</p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20COUNT%20-%20DISTINCT%20-%20LIMIT/images/3.A.2.4.png" width="520" height="400">
+          </li>
+        </ol>
+      </li>
+    </ol><br>
+    <h1></h1>
+    <h2>Task B: Practice exercises on LIMIT</h2>
+    <p>Now, let us practice creating and running some LIMIT related queries.</p><br>
+    <ol>
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Retrieve the name of first 50 films distinctly.</em></p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Follow example 1 of LIMIT. Use DISTINCT.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>SELECT DISTINCT Title FROM FilmLocations LIMIT 50;
+</code></pre>
+          <p>{: codeblock}</p>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20COUNT%20-%20DISTINCT%20-%20LIMIT/images/3.B.1.O.png" width="520" height="400">
+        </details>
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Retrieve first 10 film names distinctly released in 2015.</em></p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Follow example 1 of LIMIT. Use DISTINCT. Use WHERE clause comparsion operator <code>=</code> which means <strong>"Equal to"</strong>.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>SELECT DISTINCT Title FROM FilmLocations WHERE ReleaseYear=2015 LIMIT 10;
+</code></pre>
+          <p>{: codeblock}</p>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20COUNT%20-%20DISTINCT%20-%20LIMIT/images/3.B.2.O.png" width="520" height="400">
+        </details>
+      </li>
+    </ol><br>
+    <ol start="3">
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Retrieve the next 3 film names distinctly after first 5 films released in 2015.</em></p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Follow example 2 of the LIMIT exercise to learn how to use OFFSET. Use DISTINCT and use the WHERE clause comparison operator <code>=</code> which means <strong>"Equal to"</strong>.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>SELECT DISTINCT Title FROM FilmLocations WHERE ReleaseYear=2015 LIMIT 3 OFFSET 5;
+</code></pre>
+          <p>{: codeblock}</p>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20COUNT%20-%20DISTINCT%20-%20LIMIT/images/3.B.3.O.png" width="520" height="400">
+        </details>
+      </li>
+    </ol><br>
+    <h1></h1>
+    <h3>Congratulations! You have completed this Lab.</h3>
+    <h3><br></h3>
+    <h2>Author(s)</h2>
+    <ul>
+      <li><a href="https://www.linkedin.com/in/sandipsahajoy/" target="_blank">Sandip Saha Joy</a></li>
+    </ul><br>
+    <h2>Other Contributor(s)</h2>
+    <ul>
+      <li></li>
+    </ul><br>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2020-12-23</td>
+          <td>1.1</td>
+          <td>Steve Ryan</td>
+          <td>ID Review</td>
+        </tr>
+        <tr>
+          <td>2020-11-24</td>
+          <td>1.0</td>
+          <td>Sandip Saha Joy</td>
+          <td>Initial version created</td>
+        </tr>
+      </tbody>
+    </table><br>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2020. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.min.js"></script>
+  </body>
+</html>

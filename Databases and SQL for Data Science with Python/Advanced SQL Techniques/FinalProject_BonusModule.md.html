@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <img style="float:left;" src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/BonusModule_Coursera_v5/images/IDSNlogo.png" width="200" height="200">
+    <h1>Final Project: Advanced SQL Techniques</h1>
+    <p>Estimated time needed: <strong>60</strong> minutes</p>
+    <h1>Objectives</h1>
+    <p>After completing this lab, you will be able to:</p>
+    <ol>
+      <li>
+        <p>Use joins to query data from multiple tables</p>
+      </li>
+      <li>
+        <p>Create and query views</p>
+      </li>
+      <li>
+        <p>Write and run stored procedures</p>
+      </li>
+      <li>
+        <p>Use transactions</p>
+      </li>
+    </ol>
+    <h1>Scenario</h1>
+    <p>In this project, you will work with three datasets that are available on the City of Chicago's Data Portal:</p>
+    <ul>
+      <li>Socioeconomic indicators in Chicago</li>
+      <li>Chicago public schools</li>
+      <li>Chicago crime data</li>
+    </ul>
+    <p>You must download each dataset, create a table for each one, and load the appropiate dataset through the Db2 console. If you have already completed the Hands on Lab: Joins, you can reuse the tables you created for that hands-on lab. However, you should not reuse similar tables with other names from other exercises or labs, as they may not create the correct results.</p>
+    <p><strong>Important note:</strong></p>
+    <p>
+      If you have <b>not</b> yet downloaded the three datasets from the City of Chicago's Data Portal,
+      created the required tables, and loaded the data, please follow the instructions in this section.
+    </p>
+    <h2>City of Chicago Datasets</h2>
+    <ol>
+      <li><strong>Socioeconomic indicators in Chicago</strong></li>
+    </ol>
+    <p>
+      This dataset contains a selection of six socioeconomic indicators of public health significance and a “hardship index,” for each Chicago community area, for the years 2008 – 2012. A detailed description of this dataset and the original dataset can be obtained from the Chicago Data Portal at:
+      <a href="https://data.cityofchicago.org/Health-Human-Services/Census-Data-Selected-socioeconomic-indicators-in-C/kn9c-c2s2?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDeveloperSkillsNetworkDB0201ENSkillsNetwork20127838-2021-01-01" target="_blank" rel="external">https://data.cityofchicago.org/Health-Human-Services/Census-Data-Selected-socioeconomic-indicators-in-C/kn9c-c2s2</a>
+    </p>
+    <ol start="2">
+      <li><strong>Chicago public schools</strong></li>
+    </ol>
+    <p>
+      This dataset shows all school level performance data used to create CPS School Report Cards for the 2011-2012 school year. A detailed description of this dataset and the original dataset can be obtained from the Chicago Data Portal at:
+      <a href="https://data.cityofchicago.org/Education/Chicago-Public-Schools-Progress-Report-Cards-2011-/9xs2-f89t?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDeveloperSkillsNetworkDB0201ENSkillsNetwork20127838-2021-01-01" target="_blank" rel="external">https://data.cityofchicago.org/Education/Chicago-Public-Schools-Progress-Report-Cards-2011-/9xs2-f89t</a>
+    </p>
+    <ol start="3">
+      <li><strong>Chicago crime data</strong></li>
+    </ol>
+    <p>This dataset reflects reported incidents of crime (with the exception of murders where data exists for each victim) that occurred in the City of Chicago from 2001 to present, minus the most recent seven days. A detailed description of this dataset and the original dataset can be obtained from the Chicago Data Portal at: <a href="https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-present/ijzp-q8t2?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMDeveloperSkillsNetworkDB0201ENSkillsNetwork20127838-2021-01-01" target="_blank" rel="external">https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-present/ijzp-q8t2</a></p>
+    <h3>Store the datasets in database tables</h3>
+    <p>The lab requires you to have these three tables populated with a subset of the whole datasets. Download the 'ChicagoCensusData.csv', 'ChicagoPublicSchools.csv', and 'ChicagoCrimeData.csv' datasets below and load the data into your Db2 On Cloud database.</p>
+    <p><a href="datasets/ChicagoCensusData.csv">Chicago Census Data</a></p>
+    <p><a href="datasets/ChicagoPublicSchools.csv">Chicago Public Schools</a></p>
+    <p><a href="datasets/ChicagoCrimeData.csv">Chicago Crime Data</a></p>
+    <p>You need to create a new table for each dataset. As you load each dataset, click on "(+) New Table", specify the name of the table you want to create, and then click "Next".</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/BonusModule_Coursera_v5/images/LoadingData.png" width="800">
+    <p>Name the new tables as follows:</p>
+    <ol>
+      <li><strong>CENSUS_DATA</strong></li>
+      <li><strong>CHICAGO_PUBLIC_SCHOOLS</strong></li>
+      <li><strong>CHICAGO_CRIME_DATA</strong></li>
+    </ol>
+    <p>After you have created the tables, review the data in each table by using the View Data feature in the Db2 On Cloud console.</p>
+    <h1>Exercise 1: Using Joins</h1>
+    <p>You have been asked to produce some reports about the communities and crimes in the Chicago area. You will need to use SQL join queries to access the data stored across multiple tables.</p>
+    <h3>Question 1</h3>
+    <ul>
+      <li>Write and execute a SQL query to list the school names, community names and average attendance for communities with a hardship index of 98.</li>
+    </ul>
+    <details>
+      <summary>Hint 1</summary>Use tables CHICAGO_PUBLIC_SCHOOLS and CENSUS_DATA
+    </details>
+    <details>
+      <summary>Hint 2</summary>Use a left join
+    </details>
+    <p><strong>Take a screenshot showing the SQL query and its results.</strong></p>
+    <h3>Question 2</h3>
+    <ul>
+      <li>Write and execute a SQL query to list all crimes that took place at a school. Include case number, crime type and community name.</li>
+    </ul>
+    <details>
+      <summary>Hint 1</summary>Use tables CHICAGO_CRIME_DATA and CENSUS_DATA
+    </details>
+    <details>
+      <summary>Hint 2</summary>Use a left join
+    </details>
+    <details>
+      <summary>Hint 3</summary>The column location_description will help you find the crime location
+    </details>
+    <p><strong>Take a screenshot showing the SQL query and its results.</strong></p>
+    <h1>Exercise 2: Creating a View</h1>
+    <p>For privacy reasons, you have been asked to create a view that enables users to select just the school name and the icon fields from the CHICAGO_PUBLIC_SCHOOLS table. By providing a view, you can ensure that users cannot see the actual scores given to a school, just the icon associated with their score. You should define new names for the view columns to obscure the use of scores and icons in the original table.</p>
+    <h3>Question 1</h3>
+    <ul>
+      <li>Write and execute a SQL statement to create a view showing the columns listed in the following table, with new column names as shown in the second column.</li>
+    </ul>
+    <table>
+      <thead>
+        <tr>
+          <th>Column name in CHICAGO_PUBLIC_SCHOOLS</th>
+          <th>Column name in view</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>NAME_OF_SCHOOL</td>
+          <td>School_Name</td>
+        </tr>
+        <tr>
+          <td>Safety_Icon</td>
+          <td>Safety_Rating</td>
+        </tr>
+        <tr>
+          <td>Family_Involvement_Icon</td>
+          <td>Family_Rating</td>
+        </tr>
+        <tr>
+          <td>Environment_Icon</td>
+          <td>Environment_Rating</td>
+        </tr>
+        <tr>
+          <td>Instruction_Icon</td>
+          <td>Instruction_Rating</td>
+        </tr>
+        <tr>
+          <td>Leaders_Icon</td>
+          <td>Leaders_Rating</td>
+        </tr>
+        <tr>
+          <td>Teachers_Icon</td>
+          <td>Teachers_Rating</td>
+        </tr>
+      </tbody>
+    </table>
+    <ul>
+      <li>
+        <p>Write and execute a SQL statement that returns all of the columns from the view.</p>
+      </li>
+      <li>
+        <p>Write and execute a SQL statement that returns just the school name and leaders rating from the view.</p>
+      </li>
+    </ul>
+    <p><strong>Take a screenshot showing the last SQL query and its results.</strong></p>
+    <h1>Exercise 3: Creating a Stored Procedure</h1>
+    <p>The icon fields are calculated based on the value in the corresponding score field. You need to make sure that when a score field is updated, the icon field is updated too. To do this, you will write a stored procedure that receives the school id and a leaders score as input parameters, calculates the icon setting and updates the fields appropriately.</p>
+    <h3>Question 1</h3>
+    <ul>
+      <li>Write the structure of a query to create or replace a stored procedure called UPDATE_LEADERS_SCORE that takes a in_School_ID parameter as an integer and a in_Leader_Score parameter as an integer. Don't forget to use the #SET TERMINATOR statement to use the @ for the CREATE statement terminator.</li>
+    </ul>
+    <p><strong>Take a screenshot showing the SQL query.</strong></p>
+    <h3>Question 2</h3>
+    <ul>
+      <li>Inside your stored procedure, write a SQL statement to update the Leaders_Score field in the CHICAGO_PUBLIC_SCHOOLS table for the school identified by in_School_ID to the value in the in_Leader_Score parameter.</li>
+    </ul>
+    <p><strong>Take a screenshot showing the SQL query.</strong></p>
+    <h3>Question 3</h3>
+    <ul>
+      <li>Inside your stored procedure, write a SQL IF statement to update the Leaders_Icon field in the CHICAGO_PUBLIC_SCHOOLS table for the school identified by in_School_ID using the following information.</li>
+    </ul>
+    <table>
+      <thead>
+        <tr>
+          <th>Score lower limit</th>
+          <th>Score upper limit</th>
+          <th>Icon</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>80</td>
+          <td>99</td>
+          <td>Very strong</td>
+        </tr>
+        <tr>
+          <td>60</td>
+          <td>79</td>
+          <td>Strong</td>
+        </tr>
+        <tr>
+          <td>40</td>
+          <td>59</td>
+          <td>Average</td>
+        </tr>
+        <tr>
+          <td>20</td>
+          <td>39</td>
+          <td>Weak</td>
+        </tr>
+        <tr>
+          <td>0</td>
+          <td>19</td>
+          <td>Very weak</td>
+        </tr>
+      </tbody>
+    </table>
+    <details>
+      <summary>Hint 1</summary>Remember that once a clause of the IF statement executes, no further checking occurs and processing moves to the code below the IF statement.
+    </details>
+    <details>
+      <summary>Hint 2</summary>Your IF statement should have a structure similar to:
+      <p>IF in_Leader_Score > 0 AND in_Leader_Score &#x3C; 20 THEN</p>
+      <p>-- update icon for 0-19</p>
+      <p>ELSEIF in_Leader_Score &#x3C; 40 THEN</p>
+      <p>-- update icon for 20-39</p>
+      <p>ELSEIF in_Leader_Score &#x3C; 60 THEN</p>
+      <p>-- update icon for 40-59</p>
+      <p>ELSEIF in_Leader_Score &#x3C; 80 THEN</p>
+      <p>-- update icon for 60-79</p>
+      <p>ELSEIF in_Leader_Score &#x3C; 100 THEN</p>
+      <p>-- update icon for 80-99</p>
+      <p>END IF;</p>
+    </details>
+    <p><strong>Take a screenshot showing the SQL query.</strong></p>
+    <h3>Question 4</h3>
+    <ul>
+      <li>Run your code to create the stored procedure.</li>
+    </ul>
+    <p><strong>Take a screenshot showing the SQL query and its results.</strong></p>
+    <ul>
+      <li>Write a query to call the stored procedure, passing a valid school ID and a leader score of 50, to check that the procedure works as expected.</li>
+    </ul>
+    <h1>Exercise 4: Using Transactions</h1>
+    <p>You realise that if someone calls your code with a score outside of the allowed range (0-99), then the score will be updated with the invalid data and the icon will remain at its previous value. There are various ways to avoid this problem, one of which is using a transaction.</p>
+    <h3>Question 1</h3>
+    <ul>
+      <li>Update your stored procedure definition. Add a generic ELSE clause to the IF statement that rolls back the current work if the score did not fit any of the preceding categories.</li>
+    </ul>
+    <details>
+      <summary>Hint 1</summary>You can add an ELSE clause to the IF statement which will only run if none of the previous conditions have been met.
+    </details>
+    <p><strong>Take a screenshot showing the SQL query.</strong></p>
+    <h3>Question 2</h3>
+    <ul>
+      <li>Update your stored procedure definition again. Add a statement to commit the current unit of work at the end of the procedure.</li>
+    </ul>
+    <details>
+      <summary>Hint 1</summary>Remember that as soon as any code inside the IF/ELSE IF/ELSE statements completes, processing resumes after the END IF, so you can add your commit code there.
+    </details>
+    <p><strong>Take a screenshot showing the SQL query.</strong></p>
+    <ul>
+      <li>
+        <p>Run your code to replace the stored procedure.</p>
+      </li>
+      <li>
+        <p>Write and run one query to check that the updated stored procedure works as expected when you use a valid score of 38.</p>
+      </li>
+      <li>
+        <p>Write and run another query to check that the updated stored procedure works as expected when you use an invalid score of 101.</p>
+      </li>
+    </ul>
+    <h1>Summary</h1>
+    <p>You can now write advanced SQL statements to query data from multiple tables, to obscure sensitive data from users, and to control how information is updated in your tables.</p>
+    <h1>Authors</h1>
+    <h4>[Lin Joyner](optional link to profile)</h4>
+    <h4></h4>
+    <h4>[Ramesh Sannareddy](optional link to profile)</h4>
+    <h4></h4>
+    <h1>Other Contributor</h1>
+    <p>Rose Malcolm</p>
+    <h1>Changelog</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>02-July-21</td>
+          <td>1.2</td>
+          <td>Lakshmi Holla</td>
+          <td>Made changes in Hint section.</td>
+        </tr>
+        <tr>
+          <td>27-Jan-21</td>
+          <td>1.1</td>
+          <td>Rose Malcolm</td>
+          <td>Added instructions to go to Exercise 1 if tables already created and poplulated.</td>
+        </tr>
+        <tr>
+          <td>05-Jun-20</td>
+          <td>1.0</td>
+          <td>Rose Malcolm</td>
+          <td>Initial version created</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2020. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

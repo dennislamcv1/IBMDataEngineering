@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/styles/sn.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Joins/images/IDSNlogo.png" width="200" height="200">
+    <h1>Hands-on Lab: Joins</h1>
+    <p><strong>Estimated time needed:</strong> 25 minutes</p>
+    <p>In this lab, you will run through some SQL practice problems that will provide hands-on experience with the different kinds of join operations.</p><br>
+    <p><strong>How does a CROSS JOIN (also known as Cartesian Join) statement syntax look?</strong></p>
+    <pre><code>SELECT column_name(s)
+FROM table1
+CROSS JOIN table2;
+</code></pre><br>
+    <p><strong>How does an INNER JOIN statement syntax look?</strong></p>
+    <pre><code>SELECT column_name(s)
+FROM table1
+INNER JOIN table2
+ON table1.column_name = table2.column_name;
+WHERE condition;
+</code></pre><br>
+    <p><strong>How does a LEFT OUTER JOIN statement syntax look?</strong></p>
+    <pre><code>SELECT column_name(s)
+FROM table1
+LEFT OUTER JOIN table2
+ON table1.column_name = table2.column_name
+WHERE condition;
+</code></pre><br>
+    <p><strong>How does a RIGHT OUTER JOIN statement syntax look?</strong></p>
+    <pre><code>SELECT column_name(s)
+FROM table1
+RIGHT OUTER JOIN table2
+ON table1.column_name = table2.column_name
+WHERE condition;
+</code></pre><br>
+    <p><strong>How does a FULL OUTER JOIN statement syntax look?</strong></p>
+    <pre><code>SELECT column_name(s)
+FROM table1
+FULL OUTER JOIN table2
+ON table1.column_name = table2.column_name
+WHERE condition;
+</code></pre><br>
+    <p><strong>How does a SELF JOIN statement syntax look?</strong></p>
+    <pre><code>SELECT column_name(s)
+FROM table1 T1, table1 T2
+WHERE condition;
+</code></pre><br>
+    <h2>Software Used in this Lab</h2>
+    <p>In this lab, you will use an <a href="https://www.ibm.com/products/db2-database" target="_blank">IBM Db2 Database</a>. Db2 is a Relational Database Management System (RDBMS) from IBM, designed to store, analyze and retrieve data efficiently.</p>
+    <p>To complete this lab you will utilize a Db2 database service on IBM Cloud. If you did not already complete this lab task earlier in this module, you will not yet have access to Db2 on IBM Cloud, and you will need to follow the lab below first:</p>
+    <ul>
+      <li><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Sign%20up%20for%20IBM%20Cloud%20-%20Create%20Db2%20service%20instance%20-%20Get%20started%20with%20the%20Db2%20console/instructional-labs.md.html" target="_blank" rel="external">Hands-on Lab : Sign up for IBM Cloud, Create Db2 service instance and Get started with the Db2 console</a></li>
+    </ul>
+    <h2>Database Used in this Lab</h2>
+    <p>The database used in this lab is an internal database. You will be working on a sample HR database. This HR database schema consists of 5 tables called <strong>EMPLOYEES</strong>, <strong>JOB_HISTORY</strong>, <strong>JOBS</strong>, <strong>DEPARTMENTS</strong> and <strong>LOCATIONS</strong>. Each table has a few rows of sample data. The following diagram shows the tables for the HR database:</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Joins/images/HR_Database.PNG" width="670" height="400">
+    <p><strong>NOTE:</strong> This lab requires you to have all 5 of these tables of the HR database populated with sample data on Db2. If you didn't complete the earlier lab in this module, you won't have the tables above populated with sample data on Db2, so you will need to go through the lab below first:</p>
+    <ul>
+      <li><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0101EN-SkillsNetwork/labs/Lab%20-%20Create%20tables%20using%20SQL%20scripts%20and%20Load%20data%20into%20tables/instructional-labs.md.html" target="_blank" rel="external">Hands-on Lab : Create tables using SQL scripts and Load data into tables</a></li>
+    </ul>
+    <h2>Objectives</h2>
+    <p>After completing this lab you will be able to:</p>
+    <ul>
+      <li>Perform different kinds of join operations</li>
+    </ul>
+    <h2>Instructions</h2>
+    <p>When you approach the exercises in this lab, follow the instructions to run the queries on Db2:</p>
+    <ul>
+      <li>
+        <p>Go to the <a href="https://cloud.ibm.com/resources?cm_mmc=Email_Newsletter-_-Developer_Ed%2BTech-_-WW_WW-_-SkillsNetwork-Courses-IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork-20127838&#x26;cm_mmca1=000026UJ&#x26;cm_mmca2=10006555&#x26;cm_mmca3=M12345678&#x26;cvosrc=email.Newsletter.M12345678&#x26;cvo_campaign=000026UJ" target="_blank" rel="external">Resource List</a> of IBM Cloud by logging in where you can find the Db2 service instance that you created in a previous lab under <strong>Services</strong> section. Click on the <strong>Db2-xx service</strong>. Next, open the Db2 Console by clicking on <strong>Open Console</strong> button. Click on the 3-bar menu icon in the top left corner and go to the <strong>Run SQL</strong> page. The Run SQL tool enables you to run SQL statements.</p>
+        <ul>
+          <li>If needed, follow <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Sign%20up%20for%20IBM%20Cloud%20-%20Create%20Db2%20service%20instance%20-%20Get%20started%20with%20the%20Db2%20console/instructional-labs.md.html" target="_blank" rel="external">Hands-on Lab : Sign up for IBM Cloud, Create Db2 service instance and Get started with the Db2 console</a></li>
+        </ul>
+      </li>
+    </ul>
+    <h1>Exercise</h1>
+    <ol>
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Select the names and job start dates of all employees who work for the department number 5.</em></p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Use the Inner join operation with the EMPLOYEES table as the left table and the JOB_HISTORY table as the right table.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>select E.F_NAME,E.L_NAME, JH.START_DATE 
+from EMPLOYEES as E 
+INNER JOIN JOB_HISTORY as JH on E.EMP_ID=JH.EMPL_ID 
+where E.DEP_ID ='5';    
+</code></pre>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Joins/images/1.A.png" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol>
+    <ol start="2">
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Select the names, job start dates, and job titles of all employees who work for the department number 5.</em></p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Perform an INNER JOIN with 3 tables – EMPLOYEES, JOB_HISTORY, JOBS.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>select E.F_NAME,E.L_NAME, JH.START_DATE, J.JOB_TITLE 
+from EMPLOYEES as E 
+INNER JOIN JOB_HISTORY as JH on E.EMP_ID=JH.EMPL_ID 
+INNER JOIN JOBS as J on E.JOB_ID=J.JOB_IDENT
+where E.DEP_ID ='5';
+</code></pre>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Joins/images/1.B.png" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol>
+    <ol start="3">
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Perform a Left Outer Join on the EMPLOYEES and DEPARTMENT tables and select employee id, last name, department id and department name for all employees.</em></p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Use the Left Outer Join operation with the EMPLOYEES table as the left table and the DEPARTMENTS table as the right table.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>select E.EMP_ID,E.L_NAME,E.DEP_ID,D.DEP_NAME
+from EMPLOYEES AS E 
+LEFT OUTER JOIN DEPARTMENTS AS D ON E.DEP_ID=D.DEPT_ID_DEP;
+</code></pre>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Joins/images/2.A.png" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol>
+    <ol start="4">
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Re-write the previous query but limit the result set to include only the rows for employees born before 1980.</em></p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Use a WHERE clause and Left Outer Join operation. Alternatively, you could also use an INNER JOIN.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>select E.EMP_ID,E.L_NAME,E.DEP_ID,D.DEP_NAME
+from EMPLOYEES AS E 
+LEFT OUTER JOIN DEPARTMENTS AS D ON E.DEP_ID=D.DEPT_ID_DEP 
+where YEAR(E.B_DATE) &#x3C; 1980;
+</code></pre>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Joins/images/2.B.png" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol>
+    <ol start="5">
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Re-write the previous query but have the result set include all the employees but department names for only the employees who were born before 1980.</em></p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Use an AND in the LEFT OUTER JOIN clause.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>select E.EMP_ID,E.L_NAME,E.DEP_ID,D.DEP_NAME
+from EMPLOYEES AS E 
+LEFT OUTER JOIN DEPARTMENTS AS D ON E.DEP_ID=D.DEPT_ID_DEP 
+AND YEAR(E.B_DATE) &#x3C; 1980;
+</code></pre>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Joins/images/2.C.png" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol>
+    <ol start="6">
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Perform a Full Join on the EMPLOYEES and DEPARTMENT tables and select the First name, Last name and Department name of all employees.</em></p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Use the Full Outer Join operation with the EMPLOYEES table as the left table and the DEPARTMENTS table as the right table.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>select E.F_NAME,E.L_NAME,D.DEP_NAME
+from EMPLOYEES AS E 
+FULL OUTER JOIN DEPARTMENTS AS D ON E.DEP_ID=D.DEPT_ID_DEP;
+</code></pre>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Joins/images/3.A.png" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol>
+    <ol start="7">
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Re-write the previous query but have the result set include all employee names but department id and department names only for male employees.</em></p>
+        </blockquote>
+        <details>
+          <summary>Hint</summary>
+          <blockquote>
+            <p>Add an AND in Query 3A to filter on male employees in the ON clause. Alternatively, you can also use Left Outer Join.</p>
+          </blockquote>
+        </details>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>select E.F_NAME,E.L_NAME,D.DEPT_ID_DEP, D.DEP_NAME
+from EMPLOYEES AS E 
+FULL OUTER JOIN DEPARTMENTS AS D ON E.DEP_ID=D.DEPT_ID_DEP AND E.SEX = 'M';
+</code></pre>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Joins/images/3.B.png" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol><br>
+    <h1>Solution Script</h1>
+    <p>If you would like to run all the solution queries of the SQL problems of this lab with a script, download the script below. Upload the script to the Db2 console and run. Follow <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Create%20tables%20using%20SQL%20scripts%20and%20Load%20data%20into%20tables/instructional-labs.md.html" target="_blank" rel="external">Hands-on Lab : Create tables using SQL scripts and Load data into tables</a> on how to upload a script to Db2 console and run it.</p>
+    <ul>
+      <li><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Joins/JOIN_Solution_Script.sql" target="_blank" rel="external">JOIN_Solution_Script.sql</a></li>
+    </ul><br>
+    <h3>Congratulations! You have completed this lab, and you are ready for the next topic.</h3>
+    <h3><br></h3>
+    <h1>Author(s)</h1>
+    <ul>
+      <li><a href="https://www.linkedin.com/in/ravahuja?cm_mmc=Email_Newsletter-_-Developer_Ed%2BTech-_-WW_WW-_-SkillsNetwork-Courses-IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork-20127838&#x26;cm_mmca1=000026UJ&#x26;cm_mmca2=10006555&#x26;cm_mmca3=M12345678&#x26;cvosrc=email.Newsletter.M12345678&#x26;cvo_campaign=000026UJ" target="_blank" rel="external">Rav Ahuja</a></li>
+      <li><a href="https://www.linkedin.com/in/sandipsahajoy?cm_mmc=Email_Newsletter-_-Developer_Ed%2BTech-_-WW_WW-_-SkillsNetwork-Courses-IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork-20127838&#x26;cm_mmca1=000026UJ&#x26;cm_mmca2=10006555&#x26;cm_mmca3=M12345678&#x26;cvosrc=email.Newsletter.M12345678&#x26;cvo_campaign=000026UJ" target="_blank" rel="external">Sandip Saha Joy</a></li>
+    </ul>
+    <h1>Other Contributor(s)</h1>
+    <ul>
+      <li></li>
+    </ul>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2020-12-25</td>
+          <td>2.1</td>
+          <td>Steve Ryan</td>
+          <td>ID Reviewed</td>
+        </tr>
+        <tr>
+          <td>2020-12-10</td>
+          <td>2.0</td>
+          <td>Sandip Saha Joy</td>
+          <td>Created revised version from DB0201EN</td>
+        </tr>
+        <tr>
+          <td>2020</td>
+          <td>1.0</td>
+          <td>Rav Ahuja</td>
+          <td>Created initial version</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2020. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.min.js"></script>
+  </body>
+</html>

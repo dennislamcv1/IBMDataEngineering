@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/styles/sn.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Working%20with%20Multiple%20Tables%20%20/images/IDSNlogo.png" width="200" height="200">
+    <h1>Hands-on Lab: Working with Multiple Tables</h1>
+    <p><strong>Estimated time needed:</strong> 30 minutes</p>
+    <p>In this lab, you will through some SQL practice problems that will provide hands-on experience with SQL queries that access multiple tables. You will be:</p>
+    <ul>
+      <li>Accessing Multiple Tables with Sub-Queries</li>
+      <li>Accessing Multiple Tables with Implicit Joins</li>
+    </ul><br>
+    <p><strong>How does an Implicit version of CROSS JOIN (also known as Cartesian Join) statement syntax look?</strong></p>
+    <pre><code>SELECT column_name(s)
+FROM table1, table2;
+</code></pre><br>
+    <p><strong>How does an Implicit version of INNER JOIN statement syntax look?</strong></p>
+    <pre><code>SELECT column_name(s)
+FROM table1, table2
+WHERE table1.column_name = table2.column_name;
+</code></pre><br>
+    <h2>Software Used in this Lab</h2>
+    <p>In this lab, you will use <a href="https://www.ibm.com/products/db2-database" target="_blank">IBM Db2 Database</a>. Db2 is a Relational Database Management System (RDBMS) from IBM, designed to store, analyze and retrieve the data efficiently.</p>
+    <p>To complete this lab you will utilize a Db2 database service on IBM Cloud. If you did not already complete this lab task earlier in this module, you will not yet have access to Db2 on IBM Cloud, and you will need to follow the lab below first:</p>
+    <ul>
+      <li><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Sign%20up%20for%20IBM%20Cloud%20-%20Create%20Db2%20service%20instance%20-%20Get%20started%20with%20the%20Db2%20console/instructional-labs.md.html" target="_blank" rel="external">Hands-on Lab : Sign up for IBM Cloud, Create Db2 service instance and Get started with the Db2 console</a></li>
+    </ul>
+    <h2>Database Used in this Lab</h2>
+    <p>The database used in this lab is an internal database. You will be working on a sample HR database. This HR database schema consists of 5 tables called <strong>EMPLOYEES</strong>, <strong>JOB_HISTORY</strong>, <strong>JOBS</strong>, <strong>DEPARTMENTS</strong> and <strong>LOCATIONS</strong>. Each table has a few rows of sample data. The following diagram shows the tables for the HR database:</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Working%20with%20Multiple%20Tables%20%20/images/HR_Database.PNG" width="670" height="400">
+    <p><strong>NOTE:</strong> This lab requires you to have all 5 of these tables of the HR database populated with sample data on Db2. If you didn't complete the earlier lab in this module, you won't have the tables above populated with sample data on Db2, so you will need to go through the lab below first:</p>
+    <ul>
+      <li><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Create%20tables%20using%20SQL%20scripts%20and%20Load%20data%20into%20tables/instructional-labs.md.html" target="_blank" rel="external">Hands-on Lab : Create tables using SQL scripts and Load data into tables</a></li>
+    </ul>
+    <h2>Objectives</h2>
+    <p>After completing this lab you will be able to:</p>
+    <ul>
+      <li>Write SQL queries that access more than one table</li>
+      <li>Compose queries that access multiple tables using a nested statement in the WHERE clause</li>
+      <li>Build queries with multiple tables in the FROM clause</li>
+      <li>Write Implicit Join queries with join criteria specified in the WHERE clause</li>
+      <li>Specify aliases for table names and qualify column names with table aliases</li>
+    </ul>
+    <h2>Instructions</h2>
+    <p>When you approach the exercises in this lab, follow the instructions to run the queries on Db2:</p>
+    <ul>
+      <li>
+        <p>Go to the <a href="https://cloud.ibm.com/resources?cm_mmc=Email_Newsletter-_-Developer_Ed%2BTech-_-WW_WW-_-SkillsNetwork-Courses-IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork-20127838&#x26;cm_mmca1=000026UJ&#x26;cm_mmca2=10006555&#x26;cm_mmca3=M12345678&#x26;cvosrc=email.Newsletter.M12345678&#x26;cvo_campaign=000026UJ" target="_blank" rel="external">Resource List</a> of IBM Cloud by logging in where you can find the Db2 service instance that you created in a previous lab under <strong>Services</strong> section. Click on the <strong>Db2-xx service</strong>. Next, open the Db2 Console by clicking on <strong>Open Console</strong> button. Click on the 3-bar menu icon in the top left corner and go to the <strong>Run SQL</strong> page. The Run SQL tool enables you to run SQL statements.</p>
+        <ul>
+          <li>If needed, follow <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Sign%20up%20for%20IBM%20Cloud%20-%20Create%20Db2%20service%20instance%20-%20Get%20started%20with%20the%20Db2%20console/instructional-labs.md.html" target="_blank" rel="external">Hands-on Lab : Sign up for IBM Cloud, Create Db2 service instance and Get started with the Db2 console</a></li>
+        </ul>
+      </li>
+    </ul>
+    <h1>Exercise 1: Accessing Multiple Tables with Sub-Queries</h1>
+    <ol>
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Retrieve only the EMPLOYEES records that correspond to jobs in the JOBS table.</em></p>
+        </blockquote>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>select * from employees where JOB_ID IN (select JOB_IDENT from jobs);
+</code></pre>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Working%20with%20Multiple%20Tables%20%20/images/1.A.png" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol>
+    <ol start="2">
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Retrieve only the list of employees whose JOB_TITLE is Jr. Designer.</em></p>
+        </blockquote>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>select * from employees where JOB_ID IN (select JOB_IDENT from jobs where JOB_TITLE= 'Jr. Designer');
+</code></pre>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Working%20with%20Multiple%20Tables%20%20/images/1.B.png" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol>
+    <ol start="3">
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Retrieve JOB information and list of employees who earn more than $70,000.</em></p>
+        </blockquote>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>select JOB_TITLE, MIN_SALARY,MAX_SALARY,JOB_IDENT from jobs where JOB_IDENT IN (select JOB_ID from employees where SALARY > 70000 );
+</code></pre>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Working%20with%20Multiple%20Tables%20%20/images/1.C.png" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol>
+    <ol start="4">
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Retrieve JOB information and list of employees whose birth year is after 1976.</em></p>
+        </blockquote>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>select JOB_TITLE, MIN_SALARY,MAX_SALARY,JOB_IDENT from jobs where JOB_IDENT IN (select JOB_ID from employees where YEAR(B_DATE)>1976 );
+</code></pre>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Working%20with%20Multiple%20Tables%20%20/images/1.D.png" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol>
+    <ol start="5">
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Retrieve JOB information and list of female employees whose birth year is after 1976.</em></p>
+        </blockquote>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>select JOB_TITLE, MIN_SALARY,MAX_SALARY,JOB_IDENT from jobs where JOB_IDENT IN (select JOB_ID from employees where YEAR(B_DATE)>1976 and SEX='F' );
+</code></pre>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Working%20with%20Multiple%20Tables%20%20/images/1.E.png" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol><br>
+    <h1>Exercise 2: Accessing Multiple Tables with Implicit Joins</h1>
+    <ol>
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Perform an implicit cartesian/cross join between EMPLOYEES and JOBS tables.</em></p>
+        </blockquote>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>select * from employees, jobs;
+</code></pre>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Working%20with%20Multiple%20Tables%20%20/images/2.A.png" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol>
+    <ol start="2">
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Retrieve only the EMPLOYEES records that correspond to jobs in the JOBS table.</em></p>
+        </blockquote>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>select * from employees, jobs where employees.JOB_ID = jobs.JOB_IDENT;
+</code></pre>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Working%20with%20Multiple%20Tables%20%20/images/2.B.png" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol>
+    <ol start="3">
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Redo the previous query, using shorter aliases for table names.</em></p>
+        </blockquote>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>select * from employees E, jobs J where E.JOB_ID = J.JOB_IDENT;
+</code></pre>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Working%20with%20Multiple%20Tables%20%20/images/2.C.png" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol>
+    <ol start="4">
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Redo the previous query, but retrieve only the Employee ID, Employee Name and Job Title.</em></p>
+        </blockquote>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>select EMP_ID,F_NAME,L_NAME, JOB_TITLE from employees E, jobs J where E.JOB_ID = J.JOB_IDENT;
+</code></pre>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Working%20with%20Multiple%20Tables%20%20/images/2.D.png" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol>
+    <ol start="5">
+      <li>
+        <p>Problem:</p>
+        <blockquote>
+          <p><em>Redo the previous query, but specify the fully qualified column names with aliases in the SELECT clause.</em></p>
+        </blockquote>
+        <details>
+          <summary>Solution</summary>
+          <pre><code>select E.EMP_ID,E.F_NAME,E.L_NAME, J.JOB_TITLE from employees E, jobs J where E.JOB_ID = J.JOB_IDENT;
+</code></pre>
+        </details>
+        <details>
+          <summary>Output</summary>
+          <p>
+            <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Working%20with%20Multiple%20Tables%20%20/images/2.E.png" alt="image">
+          </p>
+        </details>
+      </li>
+    </ol><br>
+    <h1>Solution Script</h1>
+    <p>If you would like to run all the solution queries of the SQL problems of this lab with a script, download the script below. Upload the script to the Db2 console and run. Follow <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Create%20tables%20using%20SQL%20scripts%20and%20Load%20data%20into%20tables/instructional-labs.md.html" target="_blank" rel="external">Hands-on Lab : Create tables using SQL scripts and Load data into tables</a> on how to upload a script to Db2 console and run it.</p>
+    <ul>
+      <li><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Working%20with%20Multiple%20Tables%20%20/MultipleTables_Solution_Script.sql" target="_blank" rel="external">MultipleTables_Solution_Script.sql</a></li>
+    </ul><br>
+    <h3>Congratulations! You have completed this lab, and you are ready for the next topic.</h3>
+    <h3><br></h3>
+    <h1>Author(s)</h1>
+    <ul>
+      <li><a href="https://www.linkedin.com/in/ravahuja?cm_mmc=Email_Newsletter-_-Developer_Ed%2BTech-_-WW_WW-_-SkillsNetwork-Courses-IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork-20127838&#x26;cm_mmca1=000026UJ&#x26;cm_mmca2=10006555&#x26;cm_mmca3=M12345678&#x26;cvosrc=email.Newsletter.M12345678&#x26;cvo_campaign=000026UJ" target="_blank" rel="external">Rav Ahuja</a></li>
+      <li><a href="https://www.linkedin.com/in/sandipsahajoy?cm_mmc=Email_Newsletter-_-Developer_Ed%2BTech-_-WW_WW-_-SkillsNetwork-Courses-IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork-20127838&#x26;cm_mmca1=000026UJ&#x26;cm_mmca2=10006555&#x26;cm_mmca3=M12345678&#x26;cvosrc=email.Newsletter.M12345678&#x26;cvo_campaign=000026UJ" target="_blank" rel="external">Sandip Saha Joy</a></li>
+    </ul>
+    <h1>Other Contributor(s)</h1>
+    <ul>
+      <li></li>
+    </ul>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2020-12-25</td>
+          <td>2.1</td>
+          <td>Steve Ryan</td>
+          <td>ID Reviewed</td>
+        </tr>
+        <tr>
+          <td>2020-12-10</td>
+          <td>2.0</td>
+          <td>Sandip Saha Joy</td>
+          <td>Created revised version from DB0201EN</td>
+        </tr>
+        <tr>
+          <td>2020</td>
+          <td>1.0</td>
+          <td>Rav Ahuja</td>
+          <td>Created initial version</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2020. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/styles/sn.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20CREATE%20-%20ALTER%20-%20TRUNCATE%20-%20DROP/images/IDSNlogo.png" width="200" height="200">
+    <h1>Hands-on Lab : CREATE, ALTER, TRUNCATE, DROP</h1>
+    <p><strong>Estimated time needed:</strong> 15 minutes</p>
+    <p>In this lab, you will learn some commonly used DDL (Data Definition Language) statements of SQL. First you will learn the CREATE statement, which is used to create a new table in a database. Next, you will learn the ALTER statement which is used to add, delete, or modify columns in an existing table. Then, you will learn the TRUNCATE statement which is used to remove all rows from an existing table without deleting the table itself. Lastly, you will learn the DROP statement which is used to delete an existing table in a database.</p><br>
+    <p><strong>How does the syntax of a CREATE statement look?</strong></p>
+    <pre><code>CREATE TABLE table_name (
+    column1 datatype,
+    column2 datatype,
+    column3 datatype,
+   ....
+);
+</code></pre><br>
+    <p><strong>How does the syntax of an ALTER statement look?</strong></p>
+    <pre><code>ALTER TABLE table_name
+ADD COLUMN column_name data_type column_constraint;
+
+ALTER TABLE table_name
+DROP COLUMN column_name;
+
+ALTER TABLE table_name
+ALTER COLUMN column_name SET DATA TYPE data_type;
+
+ALTER TABLE table_name
+RENAME COLUMN current_column_name TO new_column_name;
+</code></pre><br>
+    <p><strong>How does the syntax of a TRUNCATE statement look?</strong></p>
+    <pre><code>TRUNCATE TABLE table_name;
+</code></pre><br>
+    <p><strong>How does the syntax of a DROP statement look?</strong></p>
+    <pre><code>DROP TABLE table_name;
+</code></pre><br>
+    <h2>Software Used in this Lab</h2>
+    <p>In this lab, you will use <a href="https://www.ibm.com/products/db2-database" target="_blank">IBM Db2 Database</a>. Db2 is a Relational Database Management System (RDBMS) from IBM, designed to store, analyze and retrieve the data efficiently.</p>
+    <p>To complete this lab you will utilize a Db2 database service on IBM Cloud. If you did not already complete this lab task earlier in this module, you will not yet have access to Db2 on IBM Cloud, and you will need to follow this lab first:</p>
+    <ul>
+      <li><a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Sign%20up%20for%20IBM%20Cloud%20-%20Create%20Db2%20service%20instance%20-%20Get%20started%20with%20the%20Db2%20console/instructional-labs.md.html" target="_blank" rel="external">Hands-on Lab : Sign up for IBM Cloud, Create Db2 service instance and Get started with the Db2 console</a></li>
+    </ul>
+    <h2>Database Used in this Lab</h2>
+    <p>The databases used in this lab are internal databases.</p>
+    <h2>Objectives</h2>
+    <p>After completing this lab, you will be able to:</p>
+    <ul>
+      <li>Create a new table in a database</li>
+      <li>Add, delete, or modify columns in an existing table</li>
+      <li>Remove all rows from an existing table without deleting the table itself</li>
+      <li>Delete an existing table in a database</li>
+    </ul>
+    <h2>Instructions</h2>
+    <p>When you approach the exercises in this lab, follow the instructions to run the queries on Db2:</p>
+    <ul>
+      <li>
+        <p>Go to the <a href="https://cloud.ibm.com/resources?cm_mmc=Email_Newsletter-_-Developer_Ed%2BTech-_-WW_WW-_-SkillsNetwork-Courses-IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork-20127838&#x26;cm_mmca1=000026UJ&#x26;cm_mmca2=10006555&#x26;cm_mmca3=M12345678&#x26;cvosrc=email.Newsletter.M12345678&#x26;cvo_campaign=000026UJ" target="_blank" rel="external">Resource List</a> of IBM Cloud by logging in where you can find the Db2 service instance that you created in a previous lab under <strong>Services</strong> section. Click on the <strong>Db2-xx service</strong>. Next, open the Db2 Console by clicking on <strong>Open Console</strong> button. Click on the 3-bar menu icon in the top left corner and go to the <strong>Run SQL</strong> page. The Run SQL tool enables you to run SQL statements.</p>
+        <ul>
+          <li>If needed, follow <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Sign%20up%20for%20IBM%20Cloud%20-%20Create%20Db2%20service%20instance%20-%20Get%20started%20with%20the%20Db2%20console/instructional-labs.md.html" target="_blank" rel="external">Hands-on Lab : Sign up for IBM Cloud, Create Db2 service instance and Get started with the Db2 console</a></li>
+        </ul>
+      </li>
+    </ul>
+    <h1>Exercise 1: CREATE</h1>
+    <p>In this exercise, you will use the CREATE statement to create two new tables using Db2.</p>
+    <ol>
+      <li>
+        <p>You need to create two tables, <strong>PETSALE</strong> and <strong>PET</strong>. To create the two tables PETSALE and PET, copy the code below and paste it to the textbox of the <strong>Run SQL</strong> page. Click <strong>Run all</strong>.</p>
+        <pre><code>CREATE TABLE PETSALE (
+    ID INTEGER NOT NULL,
+    PET CHAR(20),
+    SALEPRICE DECIMAL(6,2),
+    PROFIT DECIMAL(6,2),
+    SALEDATE DATE
+    );
+    
+CREATE TABLE PET (
+    ID INTEGER NOT NULL,
+    ANIMAL VARCHAR(20),
+    QUANTITY INTEGER
+    );
+</code></pre>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20CREATE%20-%20ALTER%20-%20TRUNCATE%20-%20DROP/images/1.1.png" width="870" height="500">
+      </li>
+      <li>
+        <p>Now insert some records into the two newly created tables and show all the records of the two tables. Copy the code below and paste it to the textbox of the <strong>Run SQL</strong> page. Click <strong>Run all</strong>.</p>
+        <pre><code>INSERT INTO PETSALE VALUES
+    (1,'Cat',450.09,100.47,'2018-05-29'),
+    (2,'Dog',666.66,150.76,'2018-06-01'),
+    (3,'Parrot',50.00,8.9,'2018-06-04'),
+    (4,'Hamster',60.60,12,'2018-06-11'),
+    (5,'Goldfish',48.48,3.5,'2018-06-14');
+    
+INSERT INTO PET VALUES
+    (1,'Cat',3),
+    (2,'Dog',4),
+    (3,'Hamster',2);
+    
+SELECT * FROM PETSALE;
+SELECT * FROM PET;
+</code></pre>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20CREATE%20-%20ALTER%20-%20TRUNCATE%20-%20DROP/images/1.2.png" width="870" height="500">
+      </li>
+    </ol>
+    <h1>Exercise 2: ALTER</h1>
+    <p>In this exercise, you will use the ALTER statement to add, delete, or modify columns in two of the existing tables created in exercise 1.</p>
+    <h2>Task A: ALTER using ADD COLUMN</h2>
+    <ol>
+      <li>
+        <p>Add a new <strong>QUANTITY</strong> column to the <strong>PETSALE</strong> table and show the altered table. Copy the code below and paste it to the textbox of the <strong>Run SQL</strong> page. Click <strong>Run all</strong>.</p>
+        <pre><code>ALTER TABLE PETSALE
+ADD COLUMN QUANTITY INTEGER;
+
+SELECT * FROM PETSALE;
+</code></pre>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20CREATE%20-%20ALTER%20-%20TRUNCATE%20-%20DROP/images/2.A.1.png" width="870" height="500">
+      </li>
+      <li>
+        <p>Now update the newly added <strong>QUANTITY</strong> column of the <strong>PETSALE</strong> table with some values and show all the records of the table. Copy the code below and paste it to the textbox of the <strong>Run SQL</strong> page. Click <strong>Run all</strong>.</p>
+        <pre><code>UPDATE PETSALE SET QUANTITY = 9 WHERE ID = 1;
+UPDATE PETSALE SET QUANTITY = 3 WHERE ID = 2;
+UPDATE PETSALE SET QUANTITY = 2 WHERE ID = 3;
+UPDATE PETSALE SET QUANTITY = 6 WHERE ID = 4;
+UPDATE PETSALE SET QUANTITY = 24 WHERE ID = 5;
+
+SELECT * FROM PETSALE;
+</code></pre>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20CREATE%20-%20ALTER%20-%20TRUNCATE%20-%20DROP/images/2.A.2.png" width="870" height="500">
+      </li>
+    </ol>
+    <h2>Task B: ALTER using DROP COLUMN</h2>
+    <ol>
+      <li>
+        <p>Delete the <strong>PROFIT</strong> column from the <strong>PETSALE</strong> table and show the altered table. Copy the code below and paste it to the textbox of the <strong>Run SQL</strong> page. Click <strong>Run all</strong>.</p>
+        <pre><code>ALTER TABLE PETSALE
+DROP COLUMN PROFIT;
+
+SELECT * FROM PETSALE;
+</code></pre>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20CREATE%20-%20ALTER%20-%20TRUNCATE%20-%20DROP/images/2.B.1.png" width="870" height="500">
+      </li>
+    </ol>
+    <h2>Task C: ALTER using ALTER COLUMN</h2>
+    <ol>
+      <li>
+        <p>Change the data type to <strong>VARCHAR(20)</strong> type of the column <strong>PET</strong> of the table <strong>PETSALE</strong> and show the altered table. Copy the code below and paste it to the textbox of the <strong>Run SQL</strong> page. Click <strong>Run all</strong>.</p>
+        <pre><code>ALTER TABLE PETSALE
+ALTER COLUMN PET SET DATA TYPE VARCHAR(20);
+
+SELECT * FROM PETSALE;
+</code></pre>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20CREATE%20-%20ALTER%20-%20TRUNCATE%20-%20DROP/images/2.C.1.png" width="870" height="500">
+      </li>
+    </ol><br>
+    <ol start="2">
+      <li>
+        <p>Now verify if the data type of the column <strong>PET</strong> of the table <strong>PETSALE</strong> changed to <strong>VARCHAR(20)</strong> type or not. Click on the 3 bar menu icon in the top left corner and click <strong>Explore</strong> > <strong>Tables</strong>. Find the <strong>PETSALE</strong> table from Schemas by clicking <strong>Select All</strong>. Click on the <strong>PETSALE</strong> table to open the Table Definition page of the table. Here, you can see all the current data type of the columns of the <strong>PETSALE</strong> table.</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20CREATE%20-%20ALTER%20-%20TRUNCATE%20-%20DROP/images/2.C.2.png" width="1155" height="250">
+      </li>
+    </ol>
+    <h2>Task D: ALTER using RENAME COLUMN</h2>
+    <ol>
+      <li>
+        <p>Rename the column <strong>PET</strong> to <strong>ANIMAL</strong> of the <strong>PETSALE</strong> table and show the altered table. Copy the code below and paste it to the textbox of the <strong>Run SQL</strong> page. Click <strong>Run all</strong>.</p>
+        <pre><code>ALTER TABLE PETSALE
+RENAME COLUMN PET TO ANIMAL;
+
+SELECT * FROM PETSALE;
+</code></pre>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20CREATE%20-%20ALTER%20-%20TRUNCATE%20-%20DROP/images/2.D.1.png" width="870" height="500">
+      </li>
+    </ol>
+    <h1>Exercise 3: TRUNCATE</h1>
+    <p>In this exercise, you will use the TRUNCATE statement to remove all rows from an existing table created in exercise 1 without deleting the table itself.</p>
+    <ol>
+      <li>
+        <p>Remove all rows from the <strong>PET</strong> table and show the empty table. Copy the code below and paste it to the textbox of the <strong>Run SQL</strong> page. Click <strong>Run all</strong>.</p>
+        <pre><code>TRUNCATE TABLE PET IMMEDIATE;
+
+SELECT * FROM PET;
+</code></pre>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20CREATE%20-%20ALTER%20-%20TRUNCATE%20-%20DROP/images/3.1.png" width="870" height="500">
+      </li>
+    </ol>
+    <h1>Exercise 4: DROP</h1>
+    <p>In this exercise, you will use the DROP statement to delete an existing table created in exercise 1.</p>
+    <ol>
+      <li>
+        <p>Delete the <strong>PET</strong> table and verify if the table still exists or not (SELECT statement won't work if a table doesn't exist). Copy the code below and paste it to the textbox of the <strong>Run SQL</strong> page. Click <strong>Run all</strong>.</p>
+        <pre><code>DROP TABLE PET;
+
+SELECT * FROM PET;
+</code></pre>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20CREATE%20-%20ALTER%20-%20TRUNCATE%20-%20DROP/images/4.1.png" width="870" height="500">
+      </li>
+    </ol>
+    <h3>Congratulations! You have completed this Lab. You are ready for the next topic.</h3>
+    <h3><br></h3>
+    <h2>Author(s)</h2>
+    <ul>
+      <li><a href="https://www.linkedin.com/in/sandipsahajoy/" target="_blank">Sandip Saha Joy</a></li>
+    </ul><br>
+    <h2>Other Contributor(s)</h2>
+    <ul>
+      <li></li>
+    </ul><br>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2020-12-24</td>
+          <td>1.1</td>
+          <td>Steve Ryan</td>
+          <td>ID reviewed</td>
+        </tr>
+        <tr>
+          <td>2020-12-07</td>
+          <td>1.0</td>
+          <td>Sandip Saha Joy</td>
+          <td>Initial version created</td>
+        </tr>
+      </tbody>
+    </table><br>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2020. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.min.js"></script>
+  </body>
+</html>

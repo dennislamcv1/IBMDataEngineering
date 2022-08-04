@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/styles/sn.css">
+  </head>
+  <body>
+    <center>
+      <img src="https://s3-api.us-geo.objectstorage.softlayer.net/cf-courses-data/CognitiveClass/Logos/organization_logo/organization_logo.png" width="300" alt="cognitiveclass.ai logo">
+    </center>
+    <h2>Introducing SQL Magic</h2>
+    <p><strong>Effort: 10 mins</strong></p>
+    <h3>Objective</h3>
+    <p>In this reading, you will learn about the SQL magic commands.</p>
+    <p>Jupyter notebooks have a concept of <strong>Magic</strong> commands that can simplify working with Python, and are particularly useful for data analysis. Your notebooks can have two types of magic commands:</p>
+    <ul>
+      <li>
+        <p><strong>Cell magics:</strong> start with a double <strong>%%</strong> sign and apply to the entire cell</p>
+      </li>
+      <li>
+        <p><strong>Line magics:</strong> start with a single <strong>%</strong> (percent) sign and apply to a particular line in a cell</p>
+      </li>
+    </ul>
+    <p>Their usage is of the format:</p>
+    <p><strong>%magicname arguments</strong></p>
+    <p>So far in the course you learned to accessed data from a database using the Python DB-API (and specifically ibm_db). With this API execution of queries and fetching their results involves multiple steps. You can use the <strong>SQL Magic</strong> commands to execute queries more easily.</p>
+    <p>For example if you want to execute the a query to select some data from a table and fetch its results, you can simply enter a command like the following in your Jupyter notebook cell:</p>
+    <p><strong>%sql select * from tablename</strong></p>
+    <p>Although SQL magic simplifies working with databases, it has some limitations. For example, unlike DB-API, there are no explicit methods to close a connection and free up resources.</p>
+    <p>In the following tutorial you will learn how to work with SQL magic.</p>
+    <h2>Author(s)</h2>
+    <h4>Rav Ahuja</h4>
+    <h4></h4>
+    <h2>Change log</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2020-09-05</td>
+          <td>2.0</td>
+          <td>Malika Singla</td>
+          <td>Migarted to GitLab</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2020. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.min.js"></script>
+  </body>
+</html>

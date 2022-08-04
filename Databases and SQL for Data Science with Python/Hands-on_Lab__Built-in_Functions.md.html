@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/styles/sn.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/labs/Lab%20-%20Built-in%20functions%20/images/IDSNlogo.png" width="200" height="200"><br><br><br>
+    <h1>Hands-on Lab: Built-in functions - Aggregate, Scalar, String, Date and Time Functions</h1>
+    <p>Now let’s practice using sub-queries and working with multiple tables. Use the PETRESCUE-CREATE.sql file provided to create the table and execute the queries in the last two videos.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>ANIMAL</th>
+          <th>QUANTITY</th>
+          <th>COST</th>
+          <th>RESCUEDATE</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Cat</td>
+          <td>9</td>
+          <td>450.09</td>
+          <td>5/29/2018</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Dog</td>
+          <td>3</td>
+          <td>666.66</td>
+          <td>6/1/2018</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Dog</td>
+          <td>1</td>
+          <td>100</td>
+          <td>6/4/2018</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Parrot</td>
+          <td>2</td>
+          <td>50</td>
+          <td>6/4/2018</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Dog</td>
+          <td>1</td>
+          <td>75.75</td>
+          <td>6/10/2018</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>Hamster</td>
+          <td>6</td>
+          <td>60.6</td>
+          <td>6/11/2018</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>Cat</td>
+          <td>1</td>
+          <td>44.44</td>
+          <td>6/11/2018</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>Goldfish</td>
+          <td>24</td>
+          <td>48.48</td>
+          <td>6/14/2018</td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td>Dog</td>
+          <td>2</td>
+          <td>222.22</td>
+          <td>6/15/2018</td>
+        </tr>
+      </tbody>
+    </table>
+    <h1>Objectives</h1>
+    <p>After completing this lab, you will be able to:</p>
+    <ol>
+      <li>Compose and run sub-queries with multiple tables</li>
+      <li>Check query results and view log files</li>
+    </ol>
+    <p>Compose and run the following queries. Check that the results are what you expect and remember to view the logs in the Results section for errors and warnings.</p>
+    <p><strong>Note:</strong> The solutions are provided at the end of this lab, but please try to compose the queries on your own before checking the solutions.</p>
+    <h1>Exercise 1: Create the Pet Rescue table</h1>
+    <p>Rather than create the table manually by typing the DDL commands in the SQL editor, you will execute a script containing the create table command.</p>
+    <ol>
+      <li>
+        <p>Download the script file <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork/labs/Labs_Coursera_V5/datasets/PETSALE_PETRESCUE/PETRESCUE-CREATE.sql" target="_blank" rel="external">PETRESCUE-CREATE.sql</a><br><strong>Note</strong>: To download, just right-click on the link above and click on <strong>Save As..</strong> or <strong>Save Link As...</strong> depending on your browser. Save the file as a .sql file and not HTML.</p>
+      </li>
+      <li>
+        <p>Login to IBM Cloud and go to the Resources Dashboard: <a href="https://cloud.ibm.com/resources?cm_mmc=Email_Newsletter-_-Developer_Ed%2BTech-_-WW_WW-_-SkillsNetwork-Courses-IBMDeveloperSkillsNetwork-DB0201EN-SkillsNetwork-20127838&#x26;cm_mmca1=000026UJ&#x26;cm_mmca2=10006555&#x26;cm_mmca3=M12345678&#x26;cvosrc=email.Newsletter.M12345678&#x26;cvo_campaign=000026UJ" target="_blank" rel="external">https://cloud.ibm.com/resources</a> where you can find the Db2 service that you created in a previous Lab. Click on the <strong>Db2-xx</strong> service. Next, open the Db2 Console by clicking on <strong>Open Console</strong> button. Go to the <strong>Run SQL</strong> page. The Run SQL tool enables you to run DDL and SQL statements.</p>
+      </li>
+      <li>
+        <p>Click on the <strong>+</strong> (Add New Script) icon.</p>
+      </li>
+      <li>
+        <p>Click on <strong>From File</strong>.</p>
+      </li>
+      <li>
+        <p>Locate the file <strong>PETRESCUE-CREATE.sql</strong> that you downloaded to your computer earlier and open it.</p>
+      </li>
+      <li>
+        <p>Once the statements are in the SQL Editor tool, you can run the queries against the database by selecting the <strong>Run all</strong> button.</p>
+      </li>
+      <li>
+        <p>On the right side of the SQL editor window you will see a <strong>Result</strong> section. Clicking on a query in the Result section will show the execution details of the job - whether it ran successfully or had any errors or warnings. Ensure your queries ran successfully and created all the tables.</p>
+      </li>
+    </ol>
+    <ol start="8">
+      <li>
+        <p>Now you can look at the tables you created. Navigate to the three-bar menu icon, select <strong>Explore</strong>, then click on <strong>Tables</strong>.</p>
+      </li>
+      <li>
+        <p>Select the Schema corresponding to your Db2 userid. Then on the right side of the screen you should see the newly created <strong>PETRESCUE</strong> table listed (plus any other tables you may have created in previous labs e.g. INSTRUCTOR, TEST, etc.).</p>
+      </li>
+      <li>
+        <p>Click on any of the tables and you will see its SCHEMA definition (that is list of columns, their data types, and so on). You can also click <strong>View Data</strong> to view the content of the table.</p>
+      </li>
+    </ol>
+    <h1>Exercise 2: Aggregate Functions</h1>
+    <p><strong>Query A1:</strong> Enter a function that calculates the total cost of all animal rescues in the PETRESCUE table.</p>
+    <p><strong>Query A2:</strong> Enter a function that displays the total cost of all animal rescues in the PETRESCUE table in a column called SUM_OF_COST.</p>
+    <p><strong>Query A3:</strong> Enter a function that displays the maximum quantity of animals rescued.</p>
+    <p><strong>Query A4:</strong> Enter a function that displays the average cost of animals rescued.</p>
+    <p><strong>Query A5:</strong> Enter a function that displays the average cost of rescuing a dog.</p>
+    <h1>Exercise 3: Scalar and String Functions</h1>
+    <p><strong>Query B1:</strong> Enter a function that displays the rounded cost of each rescue.</p>
+    <p><strong>Query B2:</strong> Enter a function that displays the length of each animal name.</p>
+    <p><strong>Query B3:</strong> Enter a function that displays the animal name in each rescue in uppercase.</p>
+    <p><strong>Query B4:</strong> Enter a function that displays the animal name in each rescue in uppercase without duplications.</p>
+    <p><strong>Query B5:</strong> Enter a query that displays all the columns from the PETRESCUE table, where the animal(s) rescued are cats. Use <strong>cat</strong> in lower case in the query.</p>
+    <h1>Exercise 4: Date and Time Functions</h1>
+    <p><strong>Query C1:</strong> Enter a function that displays the day of the month when cats have been rescued.</p>
+    <p><strong>Query C2:</strong> Enter a function that displays the number of rescues on the 5<sup>th</sup> month.</p>
+    <p><strong>Query C3:</strong> Enter a function that displays the number of rescues on the 14<sup>th</sup> day of the month.</p>
+    <p><strong>Query C4:</strong> Animals rescued should see the vet within three days of arrivals. Enter a function that displays the third day from each rescue.</p>
+    <p><strong>Query C5:</strong> Enter a function that displays the length of time the animals have been rescued; the difference between today’s date and the rescue date.</p>
+    <h1>Lab Solutions</h1>
+    <h1>Exercise 2 Solutions: Aggregate Functions</h1>
+    <p><strong>Query A1:</strong> Enter a function that calculates the total cost of all animal rescues in the PETRESCUE table.</p>
+    <p><code>select SUM(COST) from PETRESCUE;</code></p>
+    <p><strong>Query A2:</strong> Enter a function that displays the total cost of all animal rescues in the PETRESCUE table in a column called SUM_OF_COST.</p>
+    <p><code>select SUM(COST) AS SUM_OF_COST from PETRESCUE;</code></p>
+    <p><strong>Query A3:</strong> Enter a function that displays the maximum quantity of animals rescued.</p>
+    <p><code>select MAX(QUANTITY) from PETRESCUE;</code></p>
+    <p><strong>Query A4:</strong> Enter a function that displays the average cost of animals rescued.</p>
+    <p><code>select AVG(COST) from PETRESCUE;</code></p>
+    <p><strong>Query A5:</strong> <a id="_Hlk38373203"></a>Enter a function that displays the average cost of rescuing a dog.</p>
+    <p><code>select AVG( COST / QUANTITY ) from PETRESCUE where ANIMAL = 'Dog';</code></p>
+    <h1>Exercise 3 Solutions: Scalar and String Functions</h1>
+    <p><strong>Query B1:</strong> <a id="_Hlk38373248"></a>Enter a function that displays the rounded cost of each rescue.</p>
+    <p><code>select ROUND(COST) from PETRESCUE;</code></p>
+    <p><strong>Query B2:</strong> <a id="_Hlk38373308"></a>Enter a function that displays the length of each animal name.</p>
+    <p><code>select LENGTH(ANIMAL) from PETRESCUE;</code></p>
+    <p><strong>Query B3:</strong> <a id="_Hlk38373425"></a>Enter a function that displays the animal name in each rescue in uppercase.</p>
+    <p><code>select UCASE(ANIMAL) from PETRESCUE;</code></p>
+    <p><strong>Query B4:</strong> Enter a function that displays the animal name in each rescue in uppercase without duplications.</p>
+    <p><code>select DISTINCT(UCASE(ANIMAL)) from PETRESCUE;</code></p>
+    <p><strong>Query B5:</strong> Enter a query that displays all the columns from the PETRESCUE table, where the animal(s) rescued are cats. Use <strong>cat</strong> in lower case in the query.</p>
+    <p><code>select * from PETRESCUE where LCASE(ANIMAL) = 'cat';</code></p>
+    <h1>Exercise 4 Solutions: Date and Time Functions</h1>
+    <p><strong>Query C1:</strong> Enter a function that displays the day of the month when cats have been rescued.</p>
+    <p><code>select DAY(RESCUEDATE) from PETRESCUE where ANIMAL = 'Cat';</code></p>
+    <p><strong>Query C2:</strong> Enter a function that displays the number of rescues on the 5<sup>th</sup> month.</p>
+    <p><code>select SUM(QUANTITY) from PETRESCUE where MONTH(RESCUEDATE)='05';</code></p>
+    <p><strong>Query C3:</strong> Enter a function that displays the number of rescues on the 14<sup>th</sup> day of the month.</p>
+    <p><code>select SUM(QUANTITY) from PETRESCUE where DAY(RESCUEDATE)='14';</code></p>
+    <p><strong>Query C4:</strong> Animals rescued should see the vet within three days of arrivals. Enter a function that displays the third day from each rescue.</p>
+    <p><code>select (RESCUEDATE + 3 DAYS) from PETRESCUE;</code></p>
+    <p><strong>Query C5:</strong> Enter a function that displays the length of time the animals have been rescued; the difference between today’s date and the recue date.</p>
+    <p><code>select (CURRENT DATE - RESCUEDATE) from PETRESCUE;</code></p>
+    <h1>Summary</h1>
+    <p>You can now compose and run queries, check results and view the logs. You will use these skills in later labs.</p>
+    <h1>Author(s)</h1>
+    <h4>Rav Ahuja</h4>
+    <h1>Changelog</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2020-06-29</td>
+          <td>1.3</td>
+          <td>Rose Malcolm</td>
+          <td>Added new Ex.1 to create table form sql file. Renumbered remaining exercises and solutions.</td>
+        </tr>
+        <tr>
+          <td>2020-06-26</td>
+          <td>1.2</td>
+          <td>Steve Hord</td>
+          <td>Replace quotes</td>
+        </tr>
+        <tr>
+          <td>2020-06-25</td>
+          <td>1.1</td>
+          <td>Steve Hord</td>
+          <td>Revise Objectives section</td>
+        </tr>
+        <tr>
+          <td>05-Jun-20</td>
+          <td>1.0</td>
+          <td>Rose Malcolm</td>
+          <td>Initial version created</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2020. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.min.js"></script>
+  </body>
+</html>
