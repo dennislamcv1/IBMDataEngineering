@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <h1>Hands-on lab on Hadoop Map-Reduce (20 mins)</h1>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0225EN-SkillsNetwork/labs/images/IDSNlogo.png" width="200/">
+    <h4>Objectives</h4>
+    <ul>
+      <li>Run a dockerized single-node Hadoop instance</li>
+      <li>Perform a word count using Hadoop <strong>Map Reduce</strong>.</li>
+    </ul>
+    <h1>Task 1 - Set up Single-Node Dockerized Hadoop</h1>
+    <p>The steps outlined in this lab use the Dockerized single-node Hadoop Version 3.2.1. <strong>Hadoop</strong> is most useful when deployed in a fully distributed mode on a large cluster of networked servers sharing a large volume of data. However, for basic understanding, we will configure Hadoop on a single node.</p>
+    <p>In this lab, we will run the WordCount example with an input text and see how the content of the input file is processed by WordCount.</p>
+    <ol>
+      <li>Start a new terminal</li>
+    </ol>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0225EN-SkillsNetwork/labs/images/New_terminal.png">
+    <ol start="2">
+      <li>Clone the repository to your theia environment.</li>
+    </ol>
+    <pre><code class="hljs language-awk">git clone https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/ibm-developer-skills-network/</span>ooxwv-docker_hadoop.git
+</code></pre>
+    <p></p>
+    <ol start="3">
+      <li>Navigate to the docker-hadoop directory to build it.</li>
+    </ol>
+    <pre><code class="hljs language-bash"><span class="hljs-built_in">cd</span> ooxwv-docker_hadoop
+</code></pre>
+    <p></p>
+    <ol start="4">
+      <li>Compose the docker application.</li>
+    </ol>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">docker-compose up -d</span>
+</code></pre>
+    <p></p>
+    <blockquote>
+      <p><strong>Compose</strong> is a tool for defining and running multi-container Docker applications. It uses the YAML file to configure the serives and enables us to create and start all the services from just one configurtation file.</p>
+    </blockquote>
+    <ol start="5">
+      <li>Run the namenode as a mounted drive on bash.</li>
+    </ol>
+    <pre><code class="hljs language-awk">docker exec -it namenode <span class="hljs-regexp">/bin/</span>bash
+</code></pre>
+    <p></p>
+    <ol start="6">
+      <li>You will observe that the prompt changes as shown below.</li>
+    </ol>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0225EN-SkillsNetwork/labs/images/root_prompt.png" style="border: solid 1px white;">
+    <h1>Task 2 - Explore the hadoop environment</h1>
+    <p>As you have learnt in the videos and reading thus far in the course, a Hadoop environment is configured by editing a set of configuration files:</p>
+    <ul>
+      <li>
+        <p><strong>hadoop-env.sh</strong> Serves as a master file to configure YARN, HDFS, MapReduce, and Hadoop-related project settings.</p>
+      </li>
+      <li>
+        <p><strong>core-site.xml</strong> Defines HDFS and Hadoop core properties</p>
+      </li>
+      <li>
+        <p><strong>hdfs-site.xml</strong> Governs the location for storing node metadata, fsimage file and log file.</p>
+      </li>
+      <li>
+        <p><strong>mapred-site-xml</strong> Lists the parameters for MapReduce configuration.</p>
+      </li>
+      <li>
+        <p><strong>yarn-site.xml</strong> Defines settings relevant to YARN. It contains configurations for the Node Manager, Resource Manager, Containers, and Application Master.</p>
+      </li>
+    </ul>
+    <p>For the docker image, these xml files have been configured already. You can see these in the directory <strong>/opt/hadoop-3.2.1/etc/hadoop/</strong> by running</p>
+    <pre><code class="hljs language-awk">ls <span class="hljs-regexp">/opt/</span>hadoop-<span class="hljs-number">3.2</span>.<span class="hljs-number">1</span><span class="hljs-regexp">/etc/</span>hadoop/*.xml
+</code></pre>
+    <p></p>
+    <h1>Task 3 - Set up for Map Reduce</h1>
+    <ol>
+      <li>In the HDFS, create a directory named <code>user</code>.</li>
+    </ol>
+    <pre><code class="hljs language-crmsh">hdfs dfs -mkdir /<span class="hljs-keyword">user</span>
+<span class="hljs-title"></span></code></pre>
+    <p></p>
+    <ol start="2">
+      <li>In the HDFS, under <code>user</code>, create a directory named <code>root</code>.</li>
+    </ol>
+    <pre><code class="hljs language-awk">hdfs dfs -mkdir <span class="hljs-regexp">/user/</span>root
+</code></pre>
+    <p></p>
+    <ol start="3">
+      <li>Under <code>/user/root</code>, create an input directory.</li>
+    </ol>
+    <pre><code class="hljs language-awk">hdfs dfs -mkdir <span class="hljs-regexp">/user/</span>root/input
+</code></pre>
+    <p></p>
+    <ol start="4">
+      <li>Copy all the hadoop configuration xml files into the input directory.</li>
+    </ol>
+    <pre><code class="hljs language-awk">hdfs dfs -put <span class="hljs-variable">$HADOOP_HOME</span><span class="hljs-regexp">/etc/</span>hadoop<span class="hljs-regexp">/*.xml /u</span>ser<span class="hljs-regexp">/root/i</span>nput
+</code></pre>
+    <p></p>
+    <ol start="5">
+      <li>Create a <code>data.txt</code> file in the current directory.</li>
+    </ol>
+    <pre><code class="hljs language-awk">curl https:<span class="hljs-regexp">//</span>cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud<span class="hljs-regexp">/IBM-BD0225EN-SkillsNetwork/</span>labs<span class="hljs-regexp">/data/</span>data.txt > data.txt 
+</code></pre>
+    <p></p>
+    <ol start="6">
+      <li>Copy the <code>data.txt</code> into the <code>/user/root</code> directory to pass it into the wordcount problem.</li>
+    </ol>
+    <pre><code class="hljs language-awk">hdfs dfs -put data.txt <span class="hljs-regexp">/user/</span>root
+</code></pre>
+    <p></p>
+    <ol start="7">
+      <li>Check if the file has been copied into the HDFS by viewing its content.</li>
+    </ol>
+    <pre><code class="hljs language-awk">hdfs dfs -cat <span class="hljs-regexp">/user/</span>root/data.txt
+</code></pre>
+    <p></p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0225EN-SkillsNetwork/labs/images/data_txt_content.png" style="border: solid 1px white;">
+    <h1>Task 4 - View the HDFS</h1>
+    <ol>
+      <li>From the top menu, choose <strong>Launch Application</strong>.</li>
+    </ol>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0225EN-SkillsNetwork/labs/images/launch_application.png" style="border: solid 1px white;">
+    <ol start="2">
+      <li>Enter the port number <code>9870</code> and click on <code>ok</code> to connect.</li>
+    </ol>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0225EN-SkillsNetwork/labs/images/launch_port.png" style="border: solid 1px white;">
+    <ol start="3">
+      <li>This will open up the Graphical User Interface (GUI) of the Hadoop node. Click on <code>Utilities</code> <strong>-></strong> <code>Broswe the file system</code> to browse the files.</li>
+    </ol>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0225EN-SkillsNetwork/labs/images/browse_filesystem.png">
+    <ol start="4">
+      <li>View the files in the directories that you have just created by clicking on <code>user</code> then <code>root</code>.</li>
+    </ol>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0225EN-SkillsNetwork/labs/images/browse_directory.png">
+    <ol start="5">
+      <li>Notice that the block size is 128 MB even though the data.txt is very small. This is because the default block size used by HDFS is 128 MB.</li>
+    </ol>
+    <h1>Task 5 - Map Reduce - Word count</h1>
+    <ol>
+      <li>Run the Map reduce application for wordcount on data.txt and store the output in <strong>/user/root/output</strong></li>
+    </ol>
+    <pre><code class="hljs language-awk">hadoop jar <span class="hljs-variable">$HADOOP_HOME</span><span class="hljs-regexp">/share/</span>hadoop<span class="hljs-regexp">/mapreduce/</span>hadoop-mapreduce-examples-<span class="hljs-number">3.2</span>.<span class="hljs-number">1</span>.jar wordcount data.txt <span class="hljs-regexp">/user/</span>root/output
+</code></pre>
+    <p></p>
+    <blockquote>
+      <p>This takes some time. If the prompt leaves the HDFS namenode run <code>docker exec -it namenode /bin/bash</code> to go back inside.</p>
+    </blockquote>
+    <ol start="2">
+      <li>Once the word count runs successfully, you can run the following command to see the output file it has generated.</li>
+    </ol>
+    <pre><code class="hljs language-awk">hdfs dfs -ls <span class="hljs-regexp">/user/</span>root<span class="hljs-regexp">/output/</span>
+</code></pre>
+    <p></p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0225EN-SkillsNetwork/labs/images/map_reduce_outputdir.png" style="border: solid 1px white;">
+    <blockquote>
+      <p>While it is still processing, you may only see <em>'_temporary'</em> listed in the output directory. Wait for a couple of minutes and run the command again till you see output as shown in the image above.</p>
+    </blockquote>
+    <ol start="3">
+      <li>Run the following command to see the word count output.</li>
+    </ol>
+    <pre><code class="hljs language-awk">hdfs dfs -cat  <span class="hljs-regexp">/user/</span>root<span class="hljs-regexp">/output/</span>part-r-<span class="hljs-number">00000</span>
+</code></pre>
+    <p></p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0225EN-SkillsNetwork/labs/images/map_reduce_output.png" style="border: solid 1px white;">
+    <p>The image below shows how the MapReduce wordcount happens.</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0225EN-SkillsNetwork/labs/images/map_reduce_picture_rep.png">
+    <h1>Practice Lab</h1>
+    <ol>
+      <li>Do a word count on a file with the following content.</li>
+    </ol>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">Italy Venice
+Italy Pizza
+Pizza Pasta Gelato</span>
+
+</code></pre>
+    <details>
+      <summary>Click here for a hint on how to get started</summary>- Delete the data.txt file and output folder
+    </details>
+    <details>
+      <summary>Click here for solution on how to get started</summary>Using Launch Application, go to HDFS view and delete `data.txt` and the `output` directory.
+      
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0225EN-SkillsNetwork/labs/images/delete_datatext_outputdir.png" style="border: solid 1px grey; margin-bottom:10px">
+    </details>
+    <details>
+      <summary>Click here for hint on how to create a file to wordcount</summary>Create data.txt with the required content.
+    </details>
+    <details>
+      <summary>Click here for solution on how to do word count on the file</summary>```
+      echo "Italy Venice" > data.txt &#x26;&#x26; echo "Italy Pizza" >> data.txt &#x26;&#x26; echo "Pizza Pasta Gelato" >> data.txt
+      ```
+      and then run the following command
+      <pre><code class="hljs language-awk">hadoop jar <span class="hljs-variable">$HADOOP_HOME</span><span class="hljs-regexp">/share/</span>hadoop<span class="hljs-regexp">/mapreduce/</span>hadoop-mapreduce-examples-<span class="hljs-number">3.2</span>.<span class="hljs-number">1</span>.jar wordcount data.txt <span class="hljs-regexp">/user/</span>root/output
+</code></pre>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0225EN-SkillsNetwork/labs/images/practice_lab_sample.png" style="border: solid 1px white; margin-bottom:10px">
+    </details>
+    <details>
+      <summary>Click here for sample output</summary>
+      <p>The output will be as below.</p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0225EN-SkillsNetwork/labs/images/practice_lab_output.png" style="border: solid 1px white; margin-top:10px; margin-bottom:10px">
+    </details>
+    <h1>Congratulations! You have:</h1>
+    <ul>
+      <li>Deployed Hadoop using Docker</li>
+      <li>Copied data into HDFS</li>
+      <li>Used MapReduce to do a word count</li>
+    </ul>
+    <p><a class="twitter-share-button" href="https://twitter.com/intent/tweet?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMBD0225ENSkillsNetwork25716109-2021-01-01&#x26;text=I+just+learned+how+to+deploy+%23Hadoop+using+%23Docker%2C+load+data+into+%23HDFS%2C+and+used+%23MapReduce+to+perform+a+word+count+as+part+of+the+introductory+Big+Data+with+Hadoop+and+Spark+course+by+IBM."><img src="https://abs.twimg.com/errors/logo46x38.png">Tweet and share your achievement!</a></p>
+    <h2>Author(s)</h2>
+    <p>Lavanya T S</p>
+    <h2>Contributor(s)</h2>
+    <p><a href="https://www.linkedin.com/in/aije-egwaikhide/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMBD0225ENSkillsNetwork25716109-2021-01-01" target="_blank" rel="external">Aije Egwaikhide</a></p>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>16-07-2021</td>
+          <td>1.1</td>
+          <td>Aije</td>
+          <td>Modified multiple areas</td>
+        </tr>
+        <tr>
+          <td>11-07-2021</td>
+          <td>1.0</td>
+          <td>Lavanya</td>
+          <td>Created lab instructions for Word count using MapReduce</td>
+        </tr>
+      </tbody>
+    </table>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

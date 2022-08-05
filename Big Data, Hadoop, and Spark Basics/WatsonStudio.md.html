@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-PY0101EN-SkillsNetwork/labs/FinalModule_Coursera/images/IDSNlogo.png" width="200" height="200">
+    <h1>Hands on Lab: Getting Started with Apache Spark on Watson Studio (20 mins)</h1>
+    <h3>Objectives</h3>
+    <p>After completing this lab you will be able to:</p>
+    <ul>
+      <li>Create an IBM Cloud account.</li>
+      <li>Create a Watson Studio Service instance.</li>
+      <li>Create a Jupyter Notebook on Watson Studio with a Apache Spark + Python kernel</li>
+      <li>Run the notebook and inspect the outputs</li>
+    </ul>
+    <blockquote>
+      <p><strong>Note:</strong> A credit card is NOT required to sign up for an IBM Cloud Lite account and there is no charge associated in creating a Lite plan instance.</p>
+    </blockquote>
+    <blockquote>
+      <p><strong>Note:</strong> If you already have an IBM Cloud account, please skip Exercise 1. Additionally if you also have a Watson Studio service created, skip Exercise 2 as well.</p>
+    </blockquote>
+    <h3>Exercise 1: Create an IBM Cloud Account</h3>
+    <p>Follow the steps in <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-PY0101EN-SkillsNetwork/labs/FinalModule_Coursera/IBM_Cloud_Account_Setup.md.html" target="_blank" rel="external">Hands on Lab: IBM Cloud Service Creation</a> to create an IBM cloud account.</p>
+    <h3>Exercise 2: Create an instance of Watson Studio service</h3>
+    <p>Follow the steps in <a href="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-PY0101EN-SkillsNetwork/labs/FinalModule_Coursera/IBM_Cloud_and_Watson_Setup.md.html" target="_blank" rel="external">Hands on Lab: IBM Watson Setup</a> to create a Watson Studio service and launch it.</p>
+    <h3>Exercise 3: Create a Spark + Python Jupyter notebook on Watson Studio</h3>
+    <p>Once the Watson Studio service has been created and Watson Studio has been launched via the Cloud Pak for Data dashboard.</p>
+    <h3>Step 1: Creating a Watson Studio Project:</h3>
+    <p>Click on <strong>Create a project:</strong></p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-PY0101EN-SkillsNetwork/labs/FinalModule_Coursera/images/F9_Create_project.png" alt="image">
+    </p>
+    <p>On the Create a project page, click <strong>Create an empty project</strong></p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-PY0101EN-SkillsNetwork/labs/FinalModule_Coursera/images/F9_EmptyProject.png" alt="image">
+    </p>
+    <p>Provide a <strong>Project Name</strong> and <strong>Description</strong>, as shown below:</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0225EN-SkillsNetwork/labs/images/watson_studio_project.png" alt="image">
+    </p>
+    <p>You must also create storage for the project.</p>
+    <p>Click <strong>Add</strong></p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-PY0101EN-SkillsNetwork/labs/FinalModule_Coursera/images/F11_AddStorage.png" alt="image">
+    </p>
+    <p>On the Cloud Object Storage page, scroll down and then click <strong>Create.</strong></p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-PY0101EN-SkillsNetwork/labs/FinalModule_Coursera/images/F12_StorageLite.png" alt="image">
+    </p>
+    <p>In the Confirm Creation box, click <strong>Confirm.</strong></p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-PY0101EN-SkillsNetwork/labs/FinalModule_Coursera/images/F13_Confirm.png" alt="image">
+    </p>
+    <p>On the New project page, note that the storage has been added, and then click <strong>Create.</strong></p>
+    <p>After creating the project you will need to add a Jupyter notebook to your project.</p>
+    <h3>Step 2: Adding a Notebook to the Project:</h3>
+    <p>You need to add a Notebook to your project. Click <strong>Add to project.</strong></p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0225EN-SkillsNetwork/labs/images/watson_studio_notebook_1.png" alt="image">
+    </p>
+    <p>In the list of asset types, click <strong>Notebook:</strong></p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBMDeveloperSkillsNetwork-PY0101EN-SkillsNetwork/labs/FinalModule_Coursera/images/F16_1_Notebook.png" alt="image">
+    </p>
+    <p>On the New Notebook page, enter a name and description for the notebook, and then click From URL as shown below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0225EN-SkillsNetwork/labs/images/watson_studio_notebook_3.png" alt="image">
+    </p>
+    <p>Important: <strong>Select <code>"Python 3.7 with Spark"</code> as the runtime.</strong></p>
+    <p>
+      This will initiate a kernel with Spark installed.
+      Copy and paste the notebook URL - <a href="">https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0225EN-SkillsNetwork/labs/SparkIntro.ipynb</a> for the <strong>Apache Spark Python Intro</strong> from this course into the <strong>Notebook URL</strong> box, and then click <strong>Create Notebook</strong>.
+    </p>
+    <p><em>Note</em>: For future Watson Studio labs that involve Jupyter notebooks, please replace the above notebook link with the relevant link or upload the notebook manually if needed.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0225EN-SkillsNetwork/labs/images/watson_studio_notebook_4.png" alt="image">
+    </p>
+    <p>You should see a loading screen like this:</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0225EN-SkillsNetwork/labs/images/watson_studio_notebook_5.png" alt="image">
+    </p>
+    <p>Once the kernel has been initiated you will see the notebook like this. Please run all the cells to complete the lab.<br>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0225EN-SkillsNetwork/labs/images/watson_studio_notebook_6.png" alt="image">
+    </p>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-07-15</td>
+          <td>1.0</td>
+          <td>Karthik</td>
+          <td>Initial draft</td>
+        </tr>
+        <tr>
+          <td>2021-08-17</td>
+          <td>1.1</td>
+          <td>Karthik</td>
+          <td>Post Beta feedback</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2021. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

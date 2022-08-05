@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <h1>Apache Spark on Kubernetes Lab</h1>
+    <center>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/cc201/labs/5_FinalProject_Coursera/images/labs_module_1_images_IDSNlogo.png" width="300">
+    </center>
+    <h1>Objectives</h1>
+    <p>In this lab, you will:</p>
+    <ul>
+      <li>Install <em>kind</em> - Kubernetes in Docker - an easy way to install and run a Kubernetes cluster inside a single docker container</li>
+      <li>Create a Kubernetes Pod - a set of containers running inside Kubernetes - here, containing Apache Spark which we use to submit jobs against Kubernetes</li>
+      <li>Submit Apache Spark jobs to Kubernetes</li>
+    </ul>
+    <h1>Prerequisites</h1>
+    <p>Note: If you are running this lab within the Skillsnetwort Lab environment, all prerequisites are already installed for you</p>
+    <p>The only pre-requisites to this lab are:</p>
+    <ul>
+      <li>A working <em>docker</em> installation</li>
+      <li>The <em>git</em> command line tool</li>
+    </ul>
+    <h1>Project Overview</h1>
+    <p>Welcome to the lab on how to submit Apache Spark applications to a Kubernetes cluster. This exercise is straightforward thanks to the new native Kubernetes scheduler that has been added to Spark recently.</p>
+    <p>Kubernetes is a container orchestrator which allows to schedule millions of "docker" containers on huge compute clusters containing thousands of compute nodes. Originally invented and open-sourced by Google, Kubernetes became the de-facto standard for cloud-native application development and deployment inside and outside IBM. With RedHat OpenShift, IBM is the leader in hybrid cloud Kubernetes and within the top three companies contributing to Kubernetes' open source code base.</p>
+    <h1>Install KIND - Kubernetes in Docker</h1>
+    <p>On the right hand side to this instructions you'll see the Theia IDE. Select the <em>Lab</em> tab. On the menu bar select <em>Terminal>New Terminal</em>.</p>
+    <center>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0225EN-SkillsNetwork/labs/images/terminal_ide.png" width="80%">
+    </center>
+    <p>Please enter the following commands in the terminal:</p>
+    <p>Get the latest code:</p>
+    <pre><code class="hljs language-awk">git clone https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/romeokienzler/</span>new_horizons.git
+</code></pre>
+    <p></p>
+    <p>Change the directory to the downloaded code:</p>
+    <pre><code class="hljs language-haxe">cd <span class="hljs-keyword">new</span><span class="hljs-type">_horizons</span>
+</code></pre>
+    <p></p>
+    <p>Change into the "Kubernetes in Docker" installation folder:</p>
+    <pre><code class="hljs language-bash"><span class="hljs-built_in">cd</span> kind
+</code></pre>
+    <p></p>
+    <p>Install the "Kubernetes in Docker" install tool (kind):</p>
+    <pre><code class="hljs language-jboss-cli"><span class="hljs-string">./install_kind.sh</span>
+</code></pre>
+    <p></p>
+    <p>Create a KIND Kubernetes Cluster running on top of Docker:</p>
+    <pre><code class="hljs language-jboss-cli"><span class="hljs-string">./create_kind_cluster.sh</span>
+</code></pre>
+    <p></p>
+    <p>Add an alias to for less typing:</p>
+    <pre><code class="hljs language-ini">alias <span class="hljs-attr">k</span>=<span class="hljs-string">'kubectl'</span>
+</code></pre>
+    <p></p>
+    <h1>Deploy the Apache Spark Kubernetes Pod</h1>
+    <p>Please continue entering the following commands in the terminal:</p>
+    <p>Install the Apache Spark POD:</p>
+    <pre><code class="hljs language-awk">k apply -f ..<span class="hljs-regexp">/spark/</span>pod_spark.yaml 
+</code></pre>
+    <p></p>
+    <p>Make sure that we can interact the the Kubernetes Cluster form inside a POD:</p>
+    <pre><code class="hljs language-coq">k <span class="hljs-built_in">apply</span> -f rbac.yaml 
+</code></pre>
+    <p></p>
+    <p>Now it is time to check the status of the Pod. Just enter the following command:</p>
+    <pre><code class="hljs language-routeros">k <span class="hljs-builtin-name">get</span> po 
+</code></pre>
+    <p></p>
+    <p>
+      If you see the following output it means that the Pod is not
+      yet available and you need to wait a bit.
+    </p>
+    <pre><code class="hljs language-apache"><span class="hljs-attribute">NAME</span>   READY   STATUS              RESTARTS   AGE  
+<span class="hljs-attribute">spark</span>  <span class="hljs-number">0</span>/<span class="hljs-number">2</span>     ContainerCreating   <span class="hljs-number">0</span>          <span class="hljs-number">29</span>s
+</code></pre>
+    <p>Just issue the command again after some time:</p>
+    <pre><code class="hljs language-routeros">k <span class="hljs-builtin-name">get</span> po 
+</code></pre>
+    <p></p>
+    <p>After a while you should see an output like this:</p>
+    <pre><code class="hljs language-apache"><span class="hljs-attribute">NAME</span>  READY   STATUS    RESTARTS   AGE
+<span class="hljs-attribute">spark</span> <span class="hljs-number">2</span>/<span class="hljs-number">2</span>     Running   <span class="hljs-number">0</span>          <span class="hljs-number">10</span>m
+</code></pre>
+    <p>
+      In case you see the following status you need to delete the pod and start over again later
+      as this usually happens when the image registry is unreliable or offline.
+    </p>
+    <pre><code class="hljs language-apache"><span class="hljs-attribute">NAME</span>   READY   STATUS              RESTARTS   AGE  
+<span class="hljs-attribute">spark</span>  <span class="hljs-number">0</span>/<span class="hljs-number">2</span>     ImagePullBackOff    <span class="hljs-number">0</span>          <span class="hljs-number">29</span>s
+</code></pre>
+    <p>Just in this case please delete the pod:</p>
+    <pre><code class="hljs language-vim"><span class="hljs-keyword">k</span> <span class="hljs-keyword">delete</span> <span class="hljs-keyword">po</span> spark 
+</code></pre>
+    <p></p>
+    <p>Then start over:</p>
+    <pre><code class="hljs language-awk">k apply -f ..<span class="hljs-regexp">/spark/</span>pod_spark.yaml 
+</code></pre>
+    <p></p>
+    <p>Again, regularly check status:</p>
+    <pre><code class="hljs language-routeros">k <span class="hljs-builtin-name">get</span> po 
+</code></pre>
+    <p></p>
+    <p>
+      Note that this Pod is called <em>spark</em> and contains two
+      containers <em>(2/2)</em> of which are both in status <em>Running</em>. Please also note that Kubernetes automatically <em>RESTARTS</em> failed pods - this hasn't happened here so far. Most probably because the <em>AGE</em> of this pod is only 10 minutes.
+    </p>
+    <h1>Submit Apache Spark jobs to Kubernetes</h1>
+    <p>
+      Now it is time to enter the <em>spark</em> container of this Pod.
+      The command <em>exec</em> is told to provide interactive access (<em>-it</em>) to the container called <em>spark</em> (-c). With <em>--</em> we execute a shell (/bin/bash).
+    </p>
+    <pre><code class="hljs language-applescript">k exec -<span class="hljs-keyword">it</span> spark -c spark  <span class="hljs-comment">-- /bin/bash</span>
+</code></pre>
+    <p></p>
+    <p>You've now entered container <em>spark</em> in Pod <em>spark</em> inside Kubernetes. This container we will use to submit Spark applications to the Kubernetes cluster. This container is based on an image with the Apache Spark distribution and the <em>kubectl</em> command pre-installed.</p>
+    <p>If you are interested you can have a look at the <a href="https://github.com/romeokienzler/new_horizons/blob/main/spark/Dockerfile" target="_blank" rel="external">Dockerfile</a> to understand what's really inside.</p>
+    <p>You can also check out the <a href="https://github.com/romeokienzler/new_horizons/blob/main/spark/pod_spark.yaml" target="_blank" rel="external">pod.yaml</a>. You'll notice that it contains two containers. One is Apache Spark, another one is providing a Kubernetes Proxy - a so called side car container - allowing to interact with the Kubernetes cluster from inside a Pod.</p>
+    <p>Inside the container you can use the <em>spark-submit</em> command which makes use of the new native Kubernetes scheduler that has been added to Spark recently.</p>
+    <p>The following command submits the <em>SparkPi</em> sample application to the cluster. SparkPi computes Pi and the more iterations you run, the more precise it gets:</p>
+    <pre><code class="hljs language-angelscript">./bin/spark-submit \
+--master k8s:<span class="hljs-comment">//http://127.0.0.1:8001 \</span>
+--deploy-mode cluster \
+--name spark-pi \
+--<span class="hljs-keyword">class</span> <span class="hljs-symbol">org</span>.<span class="hljs-symbol">apache</span>.<span class="hljs-symbol">spark</span>.<span class="hljs-symbol">examples</span>.<span class="hljs-symbol">SparkPi</span> \
+--<span class="hljs-symbol">conf</span> <span class="hljs-symbol">spark</span>.<span class="hljs-symbol">executor</span>.<span class="hljs-symbol">instances</span>=<span class="hljs-symbol">3</span> \
+--<span class="hljs-symbol">conf</span> <span class="hljs-symbol">spark</span>.<span class="hljs-symbol">kubernetes</span>.<span class="hljs-symbol">container</span>.<span class="hljs-symbol">image</span>=<span class="hljs-symbol">romeokienzler</span>/<span class="hljs-symbol">spark</span>-<span class="hljs-symbol">py:<span class="hljs-symbol">3</span></span>.<span class="hljs-symbol">1</span>.<span class="hljs-symbol">2</span> \
+--<span class="hljs-symbol">conf</span> <span class="hljs-symbol">spark</span>.<span class="hljs-symbol">kubernetes</span>.<span class="hljs-symbol">executor</span>.<span class="hljs-symbol">limit</span>.<span class="hljs-symbol">cores</span>=<span class="hljs-symbol">1</span> \
+<span class="hljs-symbol">local:</span>///<span class="hljs-symbol">opt</span>/<span class="hljs-symbol">spark</span>/<span class="hljs-symbol">examples</span>/<span class="hljs-symbol">jars</span>/<span class="hljs-symbol">spark</span>-<span class="hljs-symbol">examples_2</span>.<span class="hljs-symbol">12</span>-<span class="hljs-symbol">3</span>.<span class="hljs-symbol">1</span>.<span class="hljs-symbol">2</span>.<span class="hljs-symbol">jar</span> \
+<span class="hljs-symbol">10</span>
+</code></pre>
+    <p></p>
+    <p>You should see output like below, please ignore the WARNINGS. Unless you don't see ERRORS all is fine:</p>
+    <center>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0225EN-SkillsNetwork/labs/images/kube_lab_spark_submit_output.png" width="80%">
+    </center>
+    <h1>Understanding the spark-submit command</h1>
+    <p>So let's have a look what's going on here:</p>
+    <ul>
+      <li><em>./bin/spark-submit</em> is the command to submit applications to a Apache Spark cluster</li>
+      <li><em>--master k8s://<a href="http://127.0.0.1:8001" target="_blank" rel="external">http://127.0.0.1:8001</a></em> is the address of the Kubernetes API server - the way <em>kubectl</em> but also the Apache Spark native Kubernetes scheduler interacts with the Kubernetes cluster</li>
+      <li><em>--name spark-pi</em> provides a name for the job and the subsequent Pods created by the Apache Spark native Kubernetes scheduler are prefixed with that name</li>
+      <li><em>--class org.apache.spark.examples.SparkPi</em> provides the canonical name for the Spark application to run (Java package and class name)</li>
+      <li><em>--conf spark.executor.instances=1</em> tells the Apache Spark native Kubernetes scheduler how many Pods it has to create to parallelize the application. Note that on this single node development Kubernetes cluster increasing this number doesn't make any sense (besides adding overhead for parallelization)</li>
+      <li><em>--conf spark.kubernetes.container.image=romeokienzler/spark-py:3.1.2</em> tells the Apache Spark native Kubernetes scheduler which container image it should use for creating the driver and executor Pods. This image can be custom build using the provided Dockerfiles in <em>kubernetes/dockerfiles/spark/</em> and <em>bin/docker-image-tool.sh</em> in the Apache Spark distribution</li>
+      <li><em>--conf spark.kubernetes.executor.limit.cores=1</em> tells the Apache Spark native Kubernetes scheduler to set the CPU core limit to only use one core per executor Pod</li>
+      <li><em>local:///opt/spark/examples/jars/spark-examples_2.12-3.1.2.jar</em> indicates the <em>jar</em> file the application is contained in. Note that the <em>local://</em> prefix addresses a path within the container images provided by the <em>spark.kubernetes.container.image</em> option. Since we're using a <em>jar</em> provided by the Apache Spark distribution this is not a problem, otherwise the <em>spark.kubernetes.file.upload.path</em> option has to be set and an appropriate storage subsystem has to be configured, as described in the <a href="https://spark.apache.org/docs/latest/running-on-kubernetes.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMBD0225ENSkillsNetwork25716109-2021-01-01#running-spark-on-kubernetes" target="_blank" rel="external">documentation</a></li>
+      <li><em>10</em> tells the application to run for <em>10</em> iterations, then output the computed value of <em>Pi</em></li>
+    </ul>
+    <p>Please see the <a href="https://spark.apache.org/docs/latest/running-on-kubernetes.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMBD0225ENSkillsNetwork25716109-2021-01-01#configuration" target="_blank" rel="external">documentation</a> for a full list of available parameters.</p>
+    <h1>Monitor the Spark application in a parallel terminal</h1>
+    <p>Once this command runs you can <em>open a second terminal window</em> within Theia and issue the following command:</p>
+    <pre><code class="hljs language-routeros">kubectl <span class="hljs-builtin-name">get</span> po  
+</code></pre>
+    <p></p>
+    <p>This will show you the additional Pods being created by the Apache Spark native Kubernetes scheduler - one driver and at least one executor (with an exception if there is only one executor, it runs within the driver Pod). Here an example when using three executors (exact IDs replaced by X and Y for readability):</p>
+    <pre><code class="hljs language-apache"><span class="hljs-attribute">NAME</span>              READY STATUS    RESTARTS AGE
+<span class="hljs-attribute">spark</span>             <span class="hljs-number">2</span>/<span class="hljs-number">2</span>   Running   <span class="hljs-number">0</span>        <span class="hljs-number">28</span>m
+<span class="hljs-attribute">spark</span>-pi-X-exec-<span class="hljs-number">1</span> <span class="hljs-number">1</span>/<span class="hljs-number">1</span>   Running   <span class="hljs-number">0</span>        <span class="hljs-number">33</span>s
+<span class="hljs-attribute">spark</span>-pi-X-exec-<span class="hljs-number">2</span> <span class="hljs-number">1</span>/<span class="hljs-number">1</span>   Running   <span class="hljs-number">0</span>        <span class="hljs-number">33</span>s
+<span class="hljs-attribute">spark</span>-pi-X-exec-<span class="hljs-number">3</span> <span class="hljs-number">1</span>/<span class="hljs-number">1</span>   Running   <span class="hljs-number">0</span>        <span class="hljs-number">33</span>s
+<span class="hljs-attribute">spark</span>-pi-X-driver <span class="hljs-number">1</span>/<span class="hljs-number">1</span>   Running   <span class="hljs-number">0</span>        <span class="hljs-number">44</span>s
+<span class="hljs-attribute">spark</span>-pi-Y-driver <span class="hljs-number">0</span>/<span class="hljs-number">1</span>   Completed <span class="hljs-number">0</span>        <span class="hljs-number">12</span>m
+</code></pre>
+    <p>You can see that Pod <em>spark-pi-Y-driver</em> is in status <em>Completed</em>, from a single executor run twelve minutes ago and that there are one driver and three executors actually running for job <em>spark-pi-X- ..</em>.</p>
+    <p>To check the job's elapsed time just execute (you need to replace the Pod name of course with the one on your system):</p>
+    <p><span style="color:red">Please make sure you run the following code in the newly created terminal window which allows you to execute commands within the Spark driver running in a POD</span>.</p>
+    <pre><code class="hljs language-apache"><span class="hljs-attribute">kubectl</span> logs spark-pi-<span class="hljs-number">6</span>f<span class="hljs-number">62</span>d<span class="hljs-number">17</span>a<span class="hljs-number">800</span>beb<span class="hljs-number">3</span>e-driver |grep <span class="hljs-string">"Job 0 finished:"</span>
+</code></pre>
+    <p></p>
+    <p>You should get something like:</p>
+    <pre><code class="hljs language-apache"><span class="hljs-attribute">Job</span> <span class="hljs-number">0</span> finished: reduce at SparkPi.scala:<span class="hljs-number">38</span>, took <span class="hljs-number">8</span>.<span class="hljs-number">446024</span> s
+</code></pre>
+    <p>If you are interested in knowing what value for <em>Pi</em> the application came up with just issue:</p>
+    <pre><code class="hljs language-apache"><span class="hljs-attribute">kubectl</span> logs spark-pi-<span class="hljs-number">86</span>d<span class="hljs-number">1</span>f<span class="hljs-number">27</span>a<span class="hljs-number">80018666</span>-driver |grep <span class="hljs-string">"Pi is roughly "</span>
+</code></pre>
+    <p></p>
+    <p>And you'll see something like:</p>
+    <pre><code class="hljs language-apache"><span class="hljs-attribute">Pi</span> is roughly <span class="hljs-number">3</span>.<span class="hljs-number">1416551416551415</span>
+</code></pre>
+    <h1>Experiment yourself</h1>
+    <p>Now you can play around with values for <em>spark.executor.instances</em>, <em>spark.kubernetes.executor.limit.cores=1</em> (0.1 is also a valid number) and number of iterations and see how it affects runtime and precision of the outcome.</p>
+    <p>This concludes this lab.</p>
+    <h1>Summary</h1>
+    <p>In this lab you've learned how to setup an experimental Kubernetes cluster on top of Docker using KIND (Kubernetes in Docker). You've learned how to create an Apache Spark client POD within that cluster to submit jobs. Then, you've used the spark-submit command to create a job running inside this Kubernetes cluster. You are now able to scale your Apache Spark jobs on any Kubernetes cluster running in the cloud or in your data center to thousands of nodes, CPUs and GB of main memory.</p>
+    <h2>Change Log</h2>
+    <p>
+      Romeo Kienzler, Initial version, July 2021
+      Romeo Kienzler, Production ready version, August 2021
+    </p>
+    <h2>Credits</h2>
+    <p>Thanks a lot to Aije Egwaikhide for testing and her feedback to improve the lab.</p>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>
