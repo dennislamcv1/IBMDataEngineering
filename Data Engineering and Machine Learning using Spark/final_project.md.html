@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0231EN-SkillsNetwork/labs/images/IDSNlogo.png" alt="Skills Network Logo">
+    </p>
+    <h1>ETL and Machine Learning - Final Project</h1>
+    <p><strong>Estimated time needed:</strong> 120 minutes</p>
+    <p>In this lab you’ll create your own Apache Spark application as end to end use case from data acquisition, transformation, model training and deployment.</p>
+    <h2>Objectives</h2>
+    <p>After completing this lab, you will be able to:</p>
+    <ol>
+      <li>Pull-in data from the HMP dataset</li>
+      <li>Create a Spark data frame from the raw data</li>
+      <li>Store this to parquet (in Cloud Object Store)</li>
+      <li>Read it again (from Cloud Object Store)</li>
+      <li>Deploy this model to Train a ML-Model on that data set</li>
+      <li>Watson Machine Learning</li>
+    </ol>
+    <p>But don’t be scared, we provide you with a set of sample notebooks you can modify and hook together. The library where you can draw the notebooks from is called CLAIMED – the Component Library for AI, Machine Learning, ETL and Data Science and is an open source library available on the <a href="https://github.com/IBM/claimed/tree/master/component-library" target="_blank" rel="external">CLAIMED GitHub repo</a>.</p>
+    <p>You’ll use <a href="https://elyra.readthedocs.io/en/stable/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMBD0231ENSkillsNetwork26766988-2021-01-01" target="_blank" rel="external">Elyra – a JupyterLab extension</a> for editing the notebooks and if you like you can use the <a href="https://elyra.readthedocs.io/en/latest/getting_started/overview.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMBD0231ENSkillsNetwork26766988-2021-01-01#ai-pipelines-visual-editor" target="_blank" rel="external">pipeline editor</a> of Elyra to visually join them into a data pipeline.</p>
+    <p>Elyra is the foundation of the <a href="https://medium.com/ibm-data-ai/automating-the-ai-lifecycle-with-ibm-watson-studio-orchestration-flow-4450f1d725d6?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMBD0231ENSkillsNetwork26766988-2021-01-01" target="_blank" rel="external">IBM Watson Studio Orchestration Flow</a> tool which can be used in the cloud. Feel free to give it a shot as well to experience how a business user would do the job.</p>
+    <p>We’ll use the HMP dataset you’re already familiar with from the ETL lab. The dataset is publically available <a href="https://github.com/wchill/HMP_Dataset" target="_blank" rel="external">here</a>.</p>
+    <p>Note that in the lab we have concentrated on the Extract (pulling data from the github repository) and Transform (parsing the raw files into a Apache Spark data frame) parts and didn’t load it to anywhere.</p>
+    <p>In previous generation BigData systems, HDFS was the core data store. Nowadays, S3 compatible Cloud Object Store (COS) is the de-facto standard across clouds and also starts to get traction in local data centers (Ceph, Minio).</p>
+    <p>So let’s have a quick look at the tooling:</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0231EN-SkillsNetwork/labs/images/fp1.png" alt="Architecture Diagram of the component – interactions">
+    </p>
+    <p>Figure 1: Architecture Diagram of the component – interactions</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0231EN-SkillsNetwork/labs/images/fp2.png" alt="Elyra and Jupyter Lab">
+    </p>
+    <p>Figure 2: This is a screenshot of Elyra and JupyterLab. You can see the pipeline editor canvas (1) which allows you to design data flow pipelines out of (Apache Spark based) Jupyter notebooks, Python and R scripts. You open a pipeline by clicking on the file (2) or create a new one (3). You can collaborate with others using the built-in git (4) functionality. Elyra automatically creates a Table of Contents of your notebooks (5) and useful code snippets are right at your fingertips using the code snipped repository (6).</p>
+    <p>So let’s get started with the lab!</p>
+    <h3>Note - Screenshots</h3>
+    <p>Throughout this lab you will be prompted to take screenshots and save them on your own device. These screenshots will be needed to be uploaded for peer review in the next section of the course. You can use various free screengrabbing tools to do this or use your operating system's shortcut keys to do this (for example Alt+PrintScreen in Windows).</p>
+    <h2>Exercise 1 : Import the CLAIMED library to JupyterLab</h2>
+    <ol>
+      <li>
+        <p>This section uses the JupyterLab interface of Skills Network Labs which you are already currently in.</p>
+      </li>
+      <li>
+        <p>Please double check that you are reading this readme while in that environment.</p>
+      </li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0231EN-SkillsNetwork/labs/images/fp3.png" alt="jupyterlab button">
+    </p>
+    <ol start="3">
+      <li>In a separate browser tab, please open the CLAIMED component library: <a href="https://github.com/IBM/claimed" target="_blank" rel="external">GitHub Link</a></li>
+      <li>Don’t hesitate to give us a star (1) :), then please click on fork (2)</li>
+    </ol>
+    <p>(This way you will be able work on your own copy)</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0231EN-SkillsNetwork/labs/images/fp4.png" alt="Elyra Github repo">
+    </p>
+    <ol start="5">
+      <li>Please note down the new URL of the library, something like: <code>https://github.com/&#x3C;your_git_user_id>/claimed</code></li>
+      <li>In JupyterLab (which contains the Elyra extensions pre-installed) please click on Git (1), then “Clone”. Then please paste the URL above (2) and then click on “CLONE”. The screenshot below illustrates this step.</li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0231EN-SkillsNetwork/labs/images/fp5.png" alt="Clone component library to Jupyterlab">
+    </p>
+    <ol start="7">
+      <li>After a while you should be able to see the following message bottom right:</li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0231EN-SkillsNetwork/labs/images/fp6.png" alt="sucess message">
+    </p>
+    <ol start="8">
+      <li>Congratulations, you’ve successfully imported the component library.</li>
+    </ol>
+    <h2>Task 1 - Import the component library</h2>
+    <p>
+      Take a screenshot of the success message along with the rest of the screen (full screenshot). Name the screenshot as <code>1-import-library.jpg</code>. (images can be saved with either .jpg or .png extension)
+      This message is only available for a short period of time. In case you miss it just open the contents of the claimed/component-library folder in the file explorer and then take the screenshot of your ENTIRE screen.
+    </p>
+    <h2>Exercise 2 : Explore the CLAIMED component library</h2>
+    <p>Now it’s time to familiarize yourself a bit with some components (Jupyter Notebooks) in the component library.</p>
+    <ol>
+      <li>In JuypterLab, please go to the file explorer (1), double-click on folder "claimed", then on “component-library” (2)</li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0231EN-SkillsNetwork/labs/images/fp7.png" alt="jupyerlab exploration">
+    </p>
+    <ol start="2">
+      <li>Please open the folder called "transform" (1) and open the notebook called spark-csv-to-parquet (2). The prefix "spark" indicates that the notebook is using Apache Spark to perform its task. From the name you can make out that this component transforms a file from "csv" to "parquet" format. Each notebook starts with a title and description of what it is supposed to do, followed by commands to install library dependencies. Then, a set of parameters this notebook accepts is provided (3), followed by an actual implementation of pulling those parameters from the environment (4). Finally, the actual task is implemented in source code (5).</li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0231EN-SkillsNetwork/labs/images/fp8.png" alt="jupyerlab exploration">
+    </p>
+    <ol start="3">
+      <li>Please explore the other components in the library and have a look how they are implemented. They serve as cookie cutter to an abundance of daily data science tasks and hopefully you can learn from them.</li>
+    </ol>
+    <h2>Task 2 - Explore component library transformations</h2>
+    <p>For this task, please run the spark-parquet-to-csv notebook. Even though we are going to be using the spark-csv-to-parquet notebook later, the goal of this task is to familiarize the learners with the different data science functions included in the component library. Please note that this notebook will fail in the penultimate cell with <em>AnalysisException: 'Path does not exist: file:/resources/claimed/data/data.csv;'</em> - this is because we haven't created any data yet.</p>
+    <p>Take a entire screen screenshot of the <code>spark-parquet-to-csv.ipynb</code> notebook with the cells executed. Name the screenshot as <code>2-parquet-to-csv.jpg</code>. (images can be saved with either .jpg or .png extension)</p>
+    <h2>Exercise 3 : Create the Pipeline</h2>
+    <p>
+      Now it’s time to create the data processing pipeline.
+      Everything you need is available from within the CLAIMED component library, so please make heavy usage of the code provided. It is completely up to you which path you want to follow:
+    </p>
+    <ol>
+      <li>Implement the complete pipeline as a large, single jupyter notebook (works, but not recommended in production)</li>
+      <li>Break it up into smaller chunks</li>
+      <li>Use the components (jupyter notebooks) from CLAIMED 1:1 and just configure them using variables</li>
+      <li>Use the components (jupyter notebooks) from CLAIMED 1:1 and just configure them by dragging and dropping them to the pipeline editor of Elyra and set the environment variables using the user interface</li>
+    </ol>
+    <h3>3A : Getting Started</h3>
+    <ol>
+      <li>Using the file explorer (1), enter directory "claimed".</li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0231EN-SkillsNetwork/labs/images/fp9.png" alt="creating a pipeline">
+    </p>
+    <ol start="2">
+      <li>Let’s start with pulling the the HMP data set. In the component library under folder “input” (so in claimed/component-library/input) you’ll find a notebook called <code>“input-hmp.ipynb”</code>. Just open it by double-clicking and execute each cell, one by one until you get the result file.</li>
+    </ol>
+    <p>Note: A cell which creates a lot of output can be switched into scrolling mode. Just right-click into the output canvas (1) and click on “Enable Scrolling for Outputs” (2)</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0231EN-SkillsNetwork/labs/images/fp10.png" alt="creating a pipeline">
+    </p>
+    <ol start="3">
+      <li>
+        <p>After quite some time you should see a folder called “data.csv” in the “data” directory you’ve previously created. Please note that Apache Spark always creates folders containing individual files, one per partition. This is not a problem because Spark doesn’t distinguish between files and folders and threats folders as they where files. The only way to get a file is to repartition the data frame to one and extract/rename the file inside the folder <code>df = df.repartition(1)</code>.</p>
+      </li>
+      <li>
+        <p>Now it’s time to convert this CSV file to a parquet file, please use the spark-csv-to-parquet notebook in the transform category you’re already familiar with.</p>
+      </li>
+      <li>
+        <p>You might have noticed that the writing speed of parquet is far higher than the one of CSV files, this is already a glimpse of the effectiveness of the parquet format.</p>
+      </li>
+    </ol>
+    <h2>Task 3 - Convert CSV to Parquet</h2>
+    <p>Take a screenshot of the parquet file that is created at the end of this step. Name the screenshot as <code>3-converted-parquet.jpg</code>. (images can be saved with either .jpg or .png extension). You will find it in the <em>claimed/data</em> folder, parallel to the <em>component-library</em> folder. Just take a screenshot of your entire screen when you show the resulting file (it is actually a folder) in the file explorer.</p>
+    <h3>3B : Train the Machine Learning Model</h3>
+    <ol>
+      <li>Now it’s time to train a machine learning model given the data. Just open the <code>spark-train-lr.ipynb</code> notebook in the “train” category</li>
+      <li>Please use the default values and train a linear regression model using the data</li>
+      <li>After all cells have been executed, you’ll have a file called <code>model.pmml</code> in the “train” folder</li>
+    </ol>
+    <p>PMML stand for “Predictive Model Markup Language” and is an interchange format for machine learning models. We’ll use this file to deploy to the IBM Watson Machine Learning Service in the next section.</p>
+    <h2>Task 4 - Perform Model Training</h2>
+    <p>Please note the accuracy you get after training the model with the default parameters somewhere. You can round the output to 2 decimal places. You will be asked to submit this result later in text format.</p>
+    <h2>Task 5 - Complete the Model Training</h2>
+    <p>Take a screenshot of the folder explorer window showing the <code>pmml</code> file. Name the screenshot as <code>5-pmml.jpg</code>. (images can be saved with either .jpg or .png extension)</p>
+    <h2>Exercise 4 : Deploy the Model</h2>
+    <p>Now we deploy the model we’ve trained with Apache Spark to the IBM Watson Machine Learning (WML) Service. WML is a scalable, scale-to-zero cloud service with supports training and serving of machine learning and deep learning models, providing a HTTP(S) endpoint for seamless consumption from 3rd party applications. Advantages of such a service include:</p>
+    <p>• Costs only incur if the service is actively used (scale-to-zero)<br>• Response time is constant, independent of the number of parallel requests as auto-scaling is used<br>• Operational costs are zero since the cloud provider is responsible for operation</p>
+    <p>To use the service an <code>API_KEY</code> and <code>DEPLOYMENT_SPACE_GUID</code> is needed. The API_KEY provides access to all IBM Cloud services whereas the <code>DEPLOYMENT_SPACE_GUID</code> is used to publish the model to the Watson Machine Learning service. Therefore, in the following, an IBM Cloud account needs to be created and activated (1), an Instance of IBM Cloud Pak for Data needs to be started (2), within that, a Deployment Space needs to be created (3) and a Watson Machine Learning Service needs to be created and associated to the Deployment Space. At the end of this exercise, you have to note down the <code>API_KEY</code> and <code>DEPLOYMENT_SPACE_GUID</code>.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0231EN-SkillsNetwork/labs/images/fp11.png" alt="deploy model">
+    </p>
+    <h3>4A: Create and Obtain API keys</h3>
+    <p>To obtain <code>API_KEY</code> and <code>DEPLOYMENT_SPACE_GUID</code> credentials, please follow these steps:</p>
+    <ol>
+      <li>Open <a href="https://dataplatform.cloud.ibm.com/registration/stepone?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMBD0231ENSkillsNetwork26766988-2021-01-01" target="_blank" rel="external">the IBM Cloud Registration Page</a> in your web browser.</li>
+      <li>Select “Dallas” (1) as IBM Cloud location.</li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0231EN-SkillsNetwork/labs/images/fp12.png" alt="deploy model">
+    </p>
+    <ol start="3">
+      <li>If you already have an IBM Cloud account, complete the activation steps, otherwise please create a new account and, once completed, open the<a href="https://dataplatform.cloud.ibm.com/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMBD0231ENSkillsNetwork26766988-2021-01-01" target="_blank" rel="external">IBM Cloud login page</a> and select “Dallas” as cloud region.
+        <blockquote>
+          <p>Note: The IBM Cloud account is COMPLETELY FREE, does NOT EXPIRE and NO CREDIT CARD is required.</p>
+        </blockquote>
+      </li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0231EN-SkillsNetwork/labs/images/fp13.png" alt="deploy model">
+    </p>
+    <ol start="4">
+      <li>Click “Deployments” (1).</li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0231EN-SkillsNetwork/labs/images/fp14.png" alt="deploy model">
+    </p>
+    <ol start="5">
+      <li>Create a new deployment space.</li>
+      <li>Enter “think” as name (1) and click “Create” (2).</li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0231EN-SkillsNetwork/labs/images/fp15.png" alt="deploy model">
+    </p>
+    <ol start="7">
+      <li>Wait for the deployment space to be created.</li>
+      <li>Click “View new space” (1).</li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0231EN-SkillsNetwork/labs/images/fp16.png" alt="deploy model">
+    </p>
+    <ol start="9">
+      <li>Select the “Manage” tab and locate the “Machine learning service” section.</li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0231EN-SkillsNetwork/labs/images/fp17.png" alt="deploy model">
+    </p>
+    <ol start="10">
+      <li>Click “Associate instance +” (1) to add Watson Machine Learning to the space.</li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0231EN-SkillsNetwork/labs/images/fp18.png" alt="deploy model">
+    </p>
+    <ol start="11">
+      <li>Select the free “Lite” (1) plan and click “Create” (2) if no existing Watson Machine Learning service was found.</li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0231EN-SkillsNetwork/labs/images/fp19.png" alt="deploy model">
+    </p>
+    <ol start="12">
+      <li>Select the Machine Learning service instance you’ve just created. Note that the name might be slightly different in your environment.</li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0231EN-SkillsNetwork/labs/images/fp20.png" alt="deploy model">
+    </p>
+    <ol start="13">
+      <li>Make sure you’re still on the “Manage” (1) tab and then click the copy button for the <code>DEPLOYMENT_SPACE_GUID</code> (2). (Note that highlighting and copying the ID doesn’t work because only a portion is displayed.)</li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0231EN-SkillsNetwork/labs/images/fp21.png" alt="deploy model">
+    </p>
+    <ol start="14">
+      <li>
+        <p>Paste the copied space ID into a file for later use.</p>
+        <p>(Create an IBM Cloud API key)</p>
+      </li>
+      <li>
+        <p>Open the <a href="https://cloud.ibm.com/iam/apikeys?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMBD0231ENSkillsNetwork26766988-2021-01-01" target="_blank" rel="external">Cloud API key page</a>.</p>
+      </li>
+      <li>
+        <p>Click “Create an IBM Cloud API key”.</p>
+      </li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0231EN-SkillsNetwork/labs/images/fp22.png" alt="deploy model">
+    </p>
+    <ol start="17">
+      <li>Name the API key “think” (1) and click “Create” (2).</li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0231EN-SkillsNetwork/labs/images/fp23.png" alt="deploy model">
+    </p>
+    <ol start="18">
+      <li>Copy the API_KEY to your clipboard and paste it to the text editor which already contains the <code>DEPLOYMENT_SPACE_GUID</code>.</li>
+    </ol>
+    <p>Congratulations - you’ve obtained all information required to customize the pipeline for deployment.</p>
+    <h3>4B: Deploy The Trained Model</h3>
+    <ol>
+      <li>Re-open the JupyterLab/Elyra web browser tab in skillsnetwork.</li>
+      <li>Open the “deploy/deploy_wml_pmml” component and fill in the <code>API_KEY</code> and <code>DEPLOYMENT_SPACE_GUID</code></li>
+      <li>Run all cells</li>
+      <li>Open the <a href="https://dataplatform.cloud.ibm.com/ml-runtime/spaces?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMBD0231ENSkillsNetwork26766988-2021-01-01" target="_blank" rel="external">ML runtime spaces page</a></li>
+      <li>Select your space</li>
+      <li>Identify your model (1) and click on the “rocket” symbol (2) to deploy your model</li>
+    </ol>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-BD0231EN-SkillsNetwork/labs/images/fp25.png" alt="deploy model">
+    </p>
+    <ol start="7">
+      <li>
+        <p>Select “Online”, give it a name and click on “Create”</p>
+      </li>
+      <li>
+        <p>Click on “Deployments”, then identify your deployment and click on it.</p>
+      </li>
+      <li>
+        <p>Click on “Python” to obtain sample code on how to call your model</p>
+      </li>
+      <li>
+        <p>Copy the complete python sample code into a jupyter notebook</p>
+      </li>
+      <li>
+        <p>Paste the IBM Cloud <code>API_KEY</code> from the last section to the appropriate location in the code</p>
+      </li>
+      <li>
+        <p>Replace the line starting with with the following line:</p>
+        <pre><code class="hljs language-Python">payload_scoring = {<span class="hljs-string">"input_data"</span>: [{<span class="hljs-string">"fields"</span>: [<span class="hljs-string">"x"</span>, <span class="hljs-string">"y"</span>, <span class="hljs-string">"z"</span>, ], <span class="hljs-string">"values"</span>: [[<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>]]}]}
+</code></pre>
+      </li>
+      <li>
+        <p>Execute the code. You should see the result of the prediction</p>
+      </li>
+    </ol>
+    <h2>Task 6 - Deploy the model to Watson Machine Learning</h2>
+    <p>After you ran all steps in the "deploy/deploy_wml_pmml" notebook, please go to the ML runtime spaces page as mentioned in step 4 above. Take a screenshot of the Watson Studio page showing your model deployment. Name the screenshot as <code>6-deploy_wml_pmml.jpg</code>. (images can be saved with either .jpg or .png extension)</p>
+    <h2>Task 7 - Perform Model Inference</h2>
+    <p>
+      Please upload a screenshot showing the model output for the input provided in step 12 above. In the next cell of the notebook also come up with an invalid input that results in an error message being generated. The goal of this exercise is to see potential ways our model deployment API can be fed with user errors/invalid inputs. This will help correct such errors in the future.
+      You can title the screenshot <code>7-model-inference.jpg</code>.
+    </p>
+    <h2>Task 8 - HyperParameter Tuning</h2>
+    <p>For this task, we are going to perform hyperparameter tuning. We will be reverting back to the notebook used in "3B : Train the Machine Learning Model" section.</p>
+    <p>Hyperparameters are training parameters that can be controlled by us during the training process. Examples include learning rate, number of iterations, steps per iteration etc. Specifically in the notebook used in 3B, we have 3 hyper parameters and their default values - namely <code>maxIter=10</code>, <code>regParam=0.3</code> and <code>elasticNetParam=0.8</code>. Now, for this exercise, do the following:</p>
+    <ul>
+      <li>Iterate over the hyperparameters maxIter in {10, 20} regParam in {0.3, 0.5} and elasticNetParam in {0.8, 0.85}.</li>
+      <li>Print the accuracy for each combination of hyperparameters in a human readable format.</li>
+      <li>Report the combination of hyperparameters that yielded the highest accuracy</li>
+    </ul>
+    <p>Take a screenshot of the above 3 notebook cells and title it <code>8-hyper-parameter-tuning.jpg</code>.</p>
+    <h2>Task 9 - Resample data splits</h2>
+    <p>
+      For this task, you will use the best hyperparameter combinations used above but re-train the model with different train and test splits.
+      Perform training with the best hyperparameters from the above task with the following splits:
+    </p>
+    <ul>
+      <li>70:30 train:test split</li>
+      <li>90:10 train:test split</li>
+    </ul>
+    <p>Note: for both the splits above, use a <code>random seed</code> of 1.</p>
+    <p>For both the training above, report the accuracy on the test split and save a screenshot called <code>9-resample-data-splits.jpg</code>.</p>
+    <h2>Task 10 - RandomForest classification</h2>
+    <p>In this task, you will build an end to end pipeline that reads in data in parquet format, converts it to CSV and loads it into a dataframe, trains a model and perform hyperparameter tuning. For this submission, you may use code and snippets from all the resources mentioned above including the component library. Create a notebook that does the following:</p>
+    <ul>
+      <li>
+        <p>Read in the <code>parquet</code> file you created as part of Task 3.</p>
+      </li>
+      <li>
+        <p>Convert the <code>parquet</code> file to <code>CSV</code> format.</p>
+      </li>
+      <li>
+        <p>Load the CSV file into a dataframe</p>
+      </li>
+      <li>
+        <p>Create a 80-20 training and test split with <code>seed=1</code>.</p>
+      </li>
+      <li>
+        <p>Train a Random Forest model with different hyperparameters listed below and report the best performing hyperparameter combinations.</p>
+        <p>Hyper parameters:</p>
+        <pre><code class="hljs language-apache">  - <span class="hljs-attribute">number</span> of trees : {<span class="hljs-number">10</span>, <span class="hljs-number">20</span>}
+  - <span class="hljs-attribute">maximum</span> depth : {<span class="hljs-number">5</span>, <span class="hljs-number">7</span>} 
+  - <span class="hljs-attribute">use</span> random seed = <span class="hljs-number">1</span> wherever needed
+</code></pre>
+      </li>
+      <li>
+        <p>Use the accuracy metric when evaluating the model with different hyperparameters</p>
+      </li>
+    </ul>
+    <p>Title your notebook <code>randomforest.ipynb</code> and export it as HTML. This should create a file called <code>randomforest.html</code> which you will later submit.</p>
+    <h2>Author(s)</h2>
+    <p><a href="https://www.coursera.org/instructor/romeo-kienzler?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMBD0231ENSkillsNetwork26766988-2021-01-01" target="_blank" rel="external">Romeo Kienzler</a></p>
+    <p><a href="https://www.linkedin.com/in/karthik-muthuraman/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMBD0231ENSkillsNetwork26766988-2021-01-01" target="_blank" rel="external">Karthik Muthuraman</a></p>
+    <h2>Changelog</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Version</th>
+          <th>Changed by</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-05-12</td>
+          <td>0.1</td>
+          <td>Romeo Kienzler</td>
+          <td>Initial version created</td>
+        </tr>
+        <tr>
+          <td>2021-06-22</td>
+          <td>1.0</td>
+          <td>Karthik Muthuraman</td>
+          <td>First editorial pass</td>
+        </tr>
+        <tr>
+          <td>2021-05-12</td>
+          <td>1.1</td>
+          <td>Romeo Kienzler</td>
+          <td>Adjusted for API changes</td>
+        </tr>
+        <tr>
+          <td>2021-08-09</td>
+          <td>1.2</td>
+          <td>Romeo Kienzler</td>
+          <td>Move to CLAIMED git url</td>
+        </tr>
+        <tr>
+          <td>2021-08-10</td>
+          <td>1.3</td>
+          <td>Romeo Kienzler</td>
+          <td>Migrate to notebook</td>
+        </tr>
+        <tr>
+          <td>2021-08-10</td>
+          <td>1.4</td>
+          <td>Romeo Kienzler</td>
+          <td>Bugfixes</td>
+        </tr>
+        <tr>
+          <td>2021-08-11</td>
+          <td>1.5</td>
+          <td>Karthik Muthuraman</td>
+          <td>Bugfixes and typos</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <h2></h2>
+    <h3 align="center">© IBM Corporation 2021. All rights reserved.</h3>
+    <h3></h3>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>
