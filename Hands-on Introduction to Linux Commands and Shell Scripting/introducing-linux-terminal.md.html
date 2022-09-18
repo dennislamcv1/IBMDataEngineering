@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <h1>Hands-on Lab: Introducing Linux Terminal</h1>
+    <center>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/assets/logos/SN_web_darkmode.png" width="300" alt="cognitiveclass.ai logo">
+    </center>
+    <p>Estimated time needed: <strong>40</strong> minutes</p>
+    <h1>Objectives</h1>
+    <p>In this lab, you will:</p>
+    <ul>
+      <li>Interact with the Linux Terminal</li>
+      <li>Navigate directories on a Linux filesystem and explore their contents</li>
+      <li>Install and update packages</li>
+      <li>Create and edit files using <code>nano</code></li>
+      <li>Run shell commands and applications from the terminal</li>
+    </ul>
+    <h2>About Skills Network Cloud IDE</h2>
+    <p>Skills Network Cloud IDE (based on Theia and Docker) provides an environment for hands-on labs for course and project-related labs. Theia is an open source Integrated Development Environment (IDE) that can be run on the desktop or on the cloud. To complete this lab, you will be using the Cloud IDE based on Theia.</p>
+    <h2>Important Notice About This Lab Environment</h2>
+    <p>Please be aware that sessions for this lab environment are not persisted. Thus, every time you connect to this lab, a new environment is created for you and any data or files you may have saved in a previous session will be lost. To avoid losing your data, plan to complete these labs in a single session.</p>
+    <h2>Setup</h2>
+    <p>Open a new terminal by clicking the menu bar and selecting <strong>Terminal</strong>-><strong>New Terminal</strong>.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-LX0117EN-SkillsNetwork/labs/module%201/images/new-terminal.png" alt="">
+    </p>
+    <p>This will open a new terminal at the bottom of the screen.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-LX0117EN-SkillsNetwork/labs/module%201/images/terminal_bottom_screen.png" alt="">
+    </p>
+    <p>You can run the commands provided in the following excercises in your newly opened terminal. You can copy the code to your clipboard by clicking the copy button on the bottom right of each codeblock, and then pasting it on the command line.</p>
+    <h1>Exercise 1 - Navigating Directories</h1>
+    <p><strong><code>cd</code></strong></p>
+    <p>In this exercise, you will explore directories on the cloud IDE Linux system using the <code>cd</code> command.</p>
+    <p>Recall the special paths:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Symbol</th>
+          <th>Stands for</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>~</code></td>
+          <td>Home directory</td>
+        </tr>
+        <tr>
+          <td><code>/</code></td>
+          <td>Root directory</td>
+        </tr>
+        <tr>
+          <td><code>.</code></td>
+          <td>Current directory</td>
+        </tr>
+        <tr>
+          <td><code>..</code></td>
+          <td>Parent directory</td>
+        </tr>
+      </tbody>
+    </table>
+    <p><strong>1.1. Changing working directory to home directory</strong></p>
+    <pre><code class="hljs language-bash"><span class="hljs-built_in">cd</span> ~
+</code></pre>
+    <p></p>
+    <p>Copy the command above into the terminal and press Enter to run the command.</p>
+    <p>This will change your current working directory to the home directory <code>~</code>.</p>
+    <p>Note: (In our lab environment, your user's home directory is <code>~</code> = <code>/home/theia</code>).</p>
+    <p><strong>1.2. Changing working directory to parent</strong></p>
+    <pre><code class="hljs language-gams"><span class="hljs-function"><span class="hljs-title">cd</span></span> ..
+</code></pre>
+    <p></p>
+    <p>This will change your current working directory to the parent of the current working directory.</p>
+    <p>If your working directory was <code>/home/theia</code>, then it will become <code>/home</code>.</p>
+    <p><strong>1.3. Changing working directory to root directory</strong></p>
+    <pre><code class="hljs language-bash"><span class="hljs-built_in">cd</span> /
+</code></pre>
+    <p></p>
+    <p>This will change your current working directory to the root directory <code>/</code>.</p>
+    <p><strong>1.4 Changing working directory to child</strong></p>
+    <pre><code class="hljs language-bash"><span class="hljs-built_in">cd</span> bin
+</code></pre>
+    <p></p>
+    <p>This will change your current working directory to the <code>/bin</code> directory.</p>
+    <p>The <code>bin</code> directory is called a <em>child</em> of the root <code>/</code> directory because it's inside of it.</p>
+    <p><strong>1.5. Changing working directory back to home directory</strong></p>
+    <pre><code class="hljs language-awk">cd ..<span class="hljs-regexp">/home/</span>theia
+</code></pre>
+    <p></p>
+    <p>This will change your current working directory back to your home directory.</p>
+    <p>Of course, a simpler way to do this would be:</p>
+    <pre><code class="hljs language-bash"><span class="hljs-built_in">cd</span> ~
+</code></pre>
+    <p></p>
+    <p><strong>1.6. Changing working directory back to project directory</strong></p>
+    <pre><code class="hljs language-gams"><span class="hljs-function"><span class="hljs-title">cd</span></span> ../project
+</code></pre>
+    <p></p>
+    <p>This will change your current working directory back to your project directory.</p>
+    <p>The project directory is a special empty directory we provide for your work.</p>
+    <h1>Exercise 2 - Browsing Directories</h1>
+    <p><strong><code>ls</code></strong></p>
+    <p>In this exercise, you will explore browsing the content of directories using the <code>ls</code> command.</p>
+    <p><code>ls</code> is a special command that the shell knows by default. You will learn about many more of these commands in the future.</p>
+    <p><strong>2.1. Viewing files in the current working directory</strong></p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">ls</span>
+</code></pre>
+    <p></p>
+    <p>Typing <code>ls</code> by itself will show all files inside the current working directory.</p>
+    <p>Because you're in the <code>/home/project</code> directory (which is empty) ls will return nothing.</p>
+    <p><strong>2.2. Viewing files in any directory</strong></p>
+    <p>If you know the path to a directory, you can view its contents by typing:</p>
+    <p><code>ls [PATH TO DIRECTORY]</code></p>
+    <p>For example:</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">ls</span> /
+</code></pre>
+    <p></p>
+    <p>This will show the contents of the root directory.</p>
+    <p>Recall some of the directories you've learned in prior video(s):</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Directory</th>
+          <th>Contains</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>/bin</code></td>
+          <td>System libraries</td>
+        </tr>
+        <tr>
+          <td><code>/sbin</code></td>
+          <td>Binaries that require root privileges</td>
+        </tr>
+        <tr>
+          <td><code>/usr</code></td>
+          <td>User programs and data</td>
+        </tr>
+        <tr>
+          <td><code>/home</code></td>
+          <td>Home directory</td>
+        </tr>
+        <tr>
+          <td><code>/media</code></td>
+          <td>Removable media device directories</td>
+        </tr>
+      </tbody>
+    </table>
+    <pre><code class="hljs language-jboss-cli"><span class="hljs-keyword">ls</span> <span class="hljs-string">/bin</span>
+</code></pre>
+    <p></p>
+    <p>This will show the contents of the <code>/bin</code> directory.</p>
+    <p>You might notice one of these files is called <code>"ls"</code>. That's because the <code>ls</code> command runs using the file <code>/bin/ls</code>.</p>
+    <h1>Exercise 3 - Updating and Installing Packages</h1>
+    <p><em>In your lab environment, we provide access to the <code>sudo</code> command. Be careful not to break your system!</em></p>
+    <p><strong>3.1 Getting latest packages information</strong></p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">sudo apt update</span>
+</code></pre>
+    <p></p>
+    <p>This will fetch the lastest package information from trusted sources.</p>
+    <p><code>apt update</code> doesn't actually update your packages; instead, it finds if any packages <em>can</em> be upgraded.</p>
+    <p><strong>3.2. Updating nano</strong></p>
+    <p><code>nano</code> is a simple command that enables you to use the terminal as a text editor.</p>
+    <p>To get the latest supported version of <code>nano</code>, type:</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">sudo apt upgrade nano</span>
+</code></pre>
+    <p></p>
+    <p>You may be prompted: "<code>Do you want to continue? [Y/n]</code>"</p>
+    <p>Type "<code>n</code>" and press Enter to continue. Updating <code>nano</code> will take time and will not affect this lab.</p>
+    <blockquote>
+      <p>Note: The capital <code>Y</code> in <code>Y/n</code> means it's the default - if you press enter without typing anything it uses the default <code>y</code>.</p>
+    </blockquote>
+    <p><strong>3.3. Installing vim</strong></p>
+    <p>Another popular text-editing program is <code>vim</code>.</p>
+    <p>Because <code>vim</code> doesn't come with your system, you will need to install it:</p>
+    <pre><code class="hljs language-cmake">sudo apt <span class="hljs-keyword">install</span> vim
+</code></pre>
+    <p></p>
+    <p>As with upgrading, you may be prompted: "<code>Do you want to continue? [Y/n]</code>"</p>
+    <p>In this case, type "<code>y</code>" and press Enter to continue. You will be using <code>vim</code> in a later exercise.</p>
+    <h1>Exercise 4 - Creating and Editing Files</h1>
+    <p>For the purpose of this lab, you will be use <code>nano</code> to create and edit files.</p>
+    <p>This is because <code>nano</code> is known as simple to use and easy to master.</p>
+    <p>On the other hand, vim can be harder to learn - though it has many more features.</p>
+    <p><strong>4.1 Navigating to the project directory</strong></p>
+    <p>We provide a clean project directory at <code>/home/project</code>. Ensure you're working in this folder using:</p>
+    <pre><code class="hljs language-gradle">cd <span class="hljs-regexp">/home/</span><span class="hljs-keyword">project</span>
+</code></pre>
+    <p></p>
+    <p>Try auto-completing the path by typing <code>cd /home/pr</code> and pressing TAB.</p>
+    <p>If you type <code>ls</code> here, you should see no files.</p>
+    <p><strong>4.2 Creating and editing a file</strong></p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">nano myprogram</span>.py
+</code></pre>
+    <p></p>
+    <p>This will create a <code>.py</code> (Python) file called <code>myprogram.py</code> and enable you to begin editing it using the <code>nano</code> text editor.</p>
+    <p>Type the following to the file:</p>
+    <pre><code class="hljs language-stylus"><span class="hljs-function"><span class="hljs-title">print</span><span class="hljs-params">(<span class="hljs-string">'Learning Linux is fun!'</span>)</span></span>
+</code></pre>
+    <p></p>
+    <p>Now:</p>
+    <ol>
+      <li>
+        <p>Press "CTRL-X" to exit</p>
+      </li>
+      <li>
+        <p>You will be prompted with:</p>
+      </li>
+    </ol>
+    <pre><code class="hljs language-mathematica"><span class="hljs-built_in">Save</span> <span class="hljs-variable">modified</span> <span class="hljs-variable">buffer</span> <span class="hljs-punctuation">(</span><span class="hljs-variable">ANSWERING</span> <span class="hljs-string">"No"</span> <span class="hljs-variable">WILL</span> <span class="hljs-variable">DESTROY</span> <span class="hljs-variable">CHANGES</span><span class="hljs-punctuation">)</span> <span class="hljs-operator">?</span>
+ <span class="hljs-variable">Y</span> <span class="hljs-variable">Yes</span>
+ <span class="hljs-built_in">N</span> <span class="hljs-variable">No</span>           <span class="hljs-operator">^</span><span class="hljs-built_in">C</span> <span class="hljs-built_in">Cancel</span>
+</code></pre>
+    <p>Press "y" to save.</p>
+    <ol start="3">
+      <li>Press "ENTER" to confirm the file name.</li>
+    </ol>
+    <p>You should now be back at the terminal's command prompt.</p>
+    <p><strong>4.3 Running the Python file you made</strong></p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">ls</span>
+</code></pre>
+    <p></p>
+    <p>You should now see that the file <code>myprogram.py</code> was created in your current working directory.</p>
+    <p>You can now run your Python file using:</p>
+    <pre><code class="hljs language-vim"><span class="hljs-keyword">python3</span> myprogram.<span class="hljs-keyword">py</span>
+</code></pre>
+    <p></p>
+    <p>Try auto-completing the command by typing <code>python3 my</code> and pressing TAB.</p>
+    <p>You should see the output:</p>
+    <p><code>Learning Linux is fun!</code></p>
+    <p>Otherwise, you may have had a typo in your program.</p>
+    <h1>Practice Exercises</h1>
+    <ol>
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Display the content of the <code>/usr</code> directory.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-jboss-cli"><span class="hljs-keyword">ls</span> <span class="hljs-string">/usr</span>
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="2">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Navigate to the <code>/media</code> directory.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-jboss-cli"><span class="hljs-keyword">cd</span> <span class="hljs-string">/media</span>
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="3">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Navigate to the <code>/home/project</code> directory and display its contents.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-gradle">cd <span class="hljs-regexp">/home/</span><span class="hljs-keyword">project</span>
+ls
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="4">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Using <code>nano</code>, edit <code>myprogram.py</code> to add a new line containing "<code>print('My name is ...')</code>" (replace ... with your name)</em></p>
+    </blockquote>
+    <p>Hint: To start, you can press the Up arrow until you get <code>nano myprogram.py</code> from your command history.</p>
+    <details>
+      <summary>Click here for Solution</summary>
+      <blockquote>
+        <p>Begin editing the existing file <code>myprogram.py</code> with nano:</p>
+      </blockquote>
+      <pre><code class="hljs language-ebnf"><span class="hljs-attribute">nano myprogram</span>.py
+</code></pre>
+      <p></p>
+      <blockquote>
+        <p>Add the following contents to the file:</p>
+      </blockquote>
+      <pre><code class="hljs language-scheme">print(<span class="hljs-symbol">'My</span> name is [<span class="hljs-name">ENTER</span> YOUR NAME HERE]')
+</code></pre>
+      <p></p>
+      <blockquote>
+        <p>Then save and exit using:</p>
+      </blockquote>
+      <ol>
+        <li>Press "CTRL-X" to exit</li>
+        <li>You will be prompted to (save y/n?). Press "y" to save.</li>
+        <li>Press "ENTER" to confirm the file name.</li>
+      </ol>
+      <blockquote>
+        <p>Once back to the command prompt, you can run the file using:</p>
+      </blockquote>
+      <pre><code class="hljs language-vim"><span class="hljs-keyword">python3</span> myprogram.<span class="hljs-keyword">py</span>
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="5">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Using <code>vi</code>, create a file called "<code>done.py</code>" that prints "I am done with the lab!"</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Use <code>vi</code> and python's <code>print</code> function.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <blockquote>
+        <p>Create and begin editing file <code>done.py</code> with <code>vi</code>:</p>
+      </blockquote>
+      <pre><code class="hljs language-vim"><span class="hljs-keyword">vi</span> done.<span class="hljs-keyword">py</span>
+</code></pre>
+      <p></p>
+      <ul>
+        <li>Press "i" to enter "Insert mode"</li>
+      </ul>
+      <blockquote>
+        <p>Add the following contents to the file:</p>
+      </blockquote>
+      <pre><code class="hljs language-stylus"><span class="hljs-function"><span class="hljs-title">print</span><span class="hljs-params">(<span class="hljs-string">'I am done with the lab!'</span>)</span></span>
+</code></pre>
+      <p></p>
+      <blockquote>
+        <p>Then save and exit using:</p>
+      </blockquote>
+      <ol>
+        <li>ESC to exit out of "Insert mode"</li>
+        <li>type ":wq" and press ENTER</li>
+      </ol>
+      <blockquote>
+        <p>Once back to the command prompt, you can run the file using:</p>
+      </blockquote>
+      <pre><code class="hljs language-gcode">pytho<span class="hljs-symbol">n3</span> <span class="hljs-keyword">do</span><span class="hljs-symbol">ne.py
+</span></code></pre>
+      <p></p>
+    </details>
+    <h2>Authors</h2>
+    <p>Sam Prokopchuk</p>
+    <h3>Other Contributors</h3>
+    <h2>Change Log</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date (YYYY-MM-DD)</th>
+          <th>Version</th>
+          <th>Changed By</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2022-04-05</td>
+          <td>1.0</td>
+          <td>Sam Prokopchuk</td>
+          <td>Add first iteration of lab</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Copyright (c) 2022 IBM Corporation. All rights reserved.</p>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

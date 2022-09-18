@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <h1>Pipes</h1>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-LX0117EN-SkillsNetwork/labs/module%201/images/pipes.jpeg">
+    <h2>What are pipes?</h2>
+    <p>Put simply, pipes are commands in Linux which allow you to use the output of one command as the input of another.</p>
+    <p>Pipes "<code>|</code>" use the following format:</p>
+    <pre><code class="hljs language-json">[command <span class="hljs-number">1</span>] | [command <span class="hljs-number">2</span>] | [command <span class="hljs-number">3</span>] ... | [command n]
+</code></pre>
+    <p>(no limit to the number of times in a row u can pipe!)</p>
+    <h2>Pipe examples</h2>
+    <h3>Ex 1:</h3>
+    <p>Let's start with a commonly used example.</p>
+    <p>Recall the commands:</p>
+    <ul>
+      <li><a href="https://man7.org/linux/man-pages/man1/sort.1.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMLX0117ENSkillsNetwork27653394-2022-01-01" target="_blank" rel="external"><code>sort</code></a>: sorts lines in input</li>
+      <li><a href="https://man7.org/linux/man-pages/man1/uniq.1.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMLX0117ENSkillsNetwork27653394-2022-01-01" target="_blank" rel="external"><code>uniq</code></a>: prints input with consecutive repeated lines collapsed to a single, unique line</li>
+    </ul>
+    <p>With the help of the pipe operator, you can combine these commands to print all the unique lines in a file!</p>
+    <p>Suppose you have the file <code>pets.txt</code> with the following contents:</p>
+    <pre><code class="hljs language-powershell"><span class="hljs-variable">$</span> <span class="hljs-built_in">cat</span> pets.txt
+goldfish
+dog
+<span class="hljs-built_in">cat</span>
+parrot
+dog
+goldfish
+goldfish
+</code></pre>
+    <p>If you <em>only</em> use <code>sort</code> on pets.txt, you get:</p>
+    <pre><code class="hljs language-powershell"><span class="hljs-variable">$</span> <span class="hljs-built_in">sort</span> pets.txt
+<span class="hljs-built_in">cat</span>
+dog
+dog
+goldfish
+goldfish
+goldfish
+parrot
+</code></pre>
+    <p>And if you <em>only</em> use <code>uniq</code>, you get:</p>
+    <pre><code class="hljs language-powershell"><span class="hljs-variable">$</span> uniq pets.txt
+goldfish
+dog
+<span class="hljs-built_in">cat</span>
+parrot
+dog
+goldfish
+</code></pre>
+    <p>But by combining the two commands in the correct order, you get back:</p>
+    <pre><code class="hljs language-powershell"><span class="hljs-variable">$</span> <span class="hljs-built_in">sort</span> pets.txt | uniq
+<span class="hljs-built_in">cat</span>
+dog
+goldfish
+parrot
+</code></pre>
+    <p>which are the sorted, unique lines from <code>pets.txt</code>!</p>
+    <h3>Ex 2:</h3>
+    <p>Some commands, such as <code>tr</code>, <em>only</em> accept "standard input" as input (not strings or filenames):</p>
+    <ul>
+      <li><a href="https://man7.org/linux/man-pages/man1/tr.1p.html?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMLX0117ENSkillsNetwork27653394-2022-01-01" target="_blank" rel="external"><code>tr</code></a> (translate) - replaces characters in input text.
+        <ul>
+          <li>Syntax: <code>tr [OPTIONS] [target characters] [replacement characters]</code></li>
+        </ul>
+      </li>
+    </ul>
+    <p>In cases like this, we can use piping to apply the command to strings and file contents.</p>
+    <p>With strings, you could, for example, use <code>echo</code> in combination with <code>tr</code> to replace all vowels in a string with underscores, as follows:</p>
+    <pre><code class="hljs language-sqf">$ <span class="hljs-built_in">echo</span> <span class="hljs-string">"Linux and shell scripting are awesome\!"</span> | tr <span class="hljs-string">"aeiou"</span> <span class="hljs-string">"_"</span>
+L_n_x <span class="hljs-variable">_nd</span> sh_ll scr_pt_ng <span class="hljs-variable">_r_</span> <span class="hljs-variable">_w_s_m_</span>!
+</code></pre>
+    <p>To perform the complement of the operation from the previous example, that is, to replace all consonants with an underscore, you can use the -c option like this:</p>
+    <pre><code class="hljs language-autohotkey">$ echo <span class="hljs-string">"Linux and shell scripting are awesome\!"</span> | tr -c <span class="hljs-string">"aeiou"</span> <span class="hljs-string">"_"</span>
+_i_u__a_____e______i__i___<span class="hljs-built_in">a_e</span>_<span class="hljs-built_in">a_e</span>_o_e_
+</code></pre>
+    <p>With files, you could use <code>cat</code> in combination with <code>tr</code> to change all of the text to upper case as follows:</p>
+    <pre><code class="hljs language-powershell"><span class="hljs-variable">$</span> <span class="hljs-built_in">cat</span> pets.txt | tr <span class="hljs-string">"[a-z]"</span> <span class="hljs-string">"[A-Z]"</span>
+GOLDFISH
+DOG
+<span class="hljs-built_in">CAT</span>
+PARROT
+DOG
+GOLDFISH
+GOLDFISH
+</code></pre>
+    <p>The possibilities are endless! For example:</p>
+    <pre><code class="hljs language-powershell"><span class="hljs-variable">$</span> <span class="hljs-built_in">sort</span> pets.txt | uniq | tr <span class="hljs-string">"[a-z]"</span> <span class="hljs-string">"[A-Z]"</span>
+<span class="hljs-built_in">CAT</span>
+DOG
+GOLDFISH
+PARROT
+</code></pre>
+    <h3>Ex 3:</h3>
+    <p>You can even use curl in combination with the grep command to extract components of URL data by piping the output of curl to grep.<br>Let's see how you can use this pattern to get the current price of BTC (Bitcoin) in USD.</p>
+    <p>First, you find a public URL API. In this example, you will use one provided by <a href="https://coinstats.app/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMLX0117ENSkillsNetwork27653394-2022-01-01" target="_blank" rel="external">CoinStats</a>.</p>
+    <p>Specifically, they provide a public API (no key required) <code>https://api.coinstats.app/public/v1/coins/bitcoin\?currency\=USD</code> which returns some json about the current BTC price in USD.</p>
+    <p>You can see what this looks like in your browser: 
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-LX0117EN-SkillsNetwork/labs/module%201/images/coinstatsBrowserView.png">
+    </p>
+    <p>Entering the following command returns the BTC price data, displayed as a json object:</p>
+    <pre><code class="hljs language-json">$ curl -s --location --request GET https:<span class="hljs-comment">//api.coinstats.app/public/v1/coins/bitcoin\?currency\=USD</span>
+{
+  <span class="hljs-attr">"coin"</span>: {
+    <span class="hljs-attr">"id"</span>: <span class="hljs-string">"bitcoin"</span>,
+    <span class="hljs-attr">"icon"</span>: <span class="hljs-string">"https://static.coinstats.app/coins/Bitcoin6l39t.png"</span>,
+    <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Bitcoin"</span>,
+    <span class="hljs-attr">"symbol"</span>: <span class="hljs-string">"BTC"</span>,
+    <span class="hljs-attr">"rank"</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">"price"</span>: <span class="hljs-number">57907.78008618953</span>,
+    <span class="hljs-attr">"priceBtc"</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">"volume"</span>: <span class="hljs-number">48430621052.9856</span>,
+    <span class="hljs-attr">"marketCap"</span>: <span class="hljs-number">1093175428640.1146</span>,
+    <span class="hljs-attr">"availableSupply"</span>: <span class="hljs-number">18877868</span>,
+    <span class="hljs-attr">"totalSupply"</span>: <span class="hljs-number">21000000</span>,
+    <span class="hljs-attr">"priceChange1h"</span>: <span class="hljs-number">-0.19</span>,
+    <span class="hljs-attr">"priceChange1d"</span>: <span class="hljs-number">-0.4</span>,
+    <span class="hljs-attr">"priceChange1w"</span>: <span class="hljs-number">-9.36</span>,
+    <span class="hljs-attr">"websiteUrl"</span>: <span class="hljs-string">"http://www.bitcoin.org"</span>,
+    <span class="hljs-attr">"twitterUrl"</span>: <span class="hljs-string">"https://twitter.com/bitcoin"</span>,
+    <span class="hljs-attr">"exp"</span>: [
+      <span class="hljs-string">"https://blockchair.com/bitcoin/"</span>,
+      <span class="hljs-string">"https://btc.com/"</span>,
+      <span class="hljs-string">"https://btc.tokenview.com/"</span>
+    ]
+  }
+}
+</code></pre>
+    <p>(The output is formatted for your convenience in this lab).</p>
+    <p>The json field you want to grab here is <code>"price": [numbers].[numbers]"</code>. To grab this you can use the following grep command to extract it from the json text:</p>
+    <p><code>grep -oE "\"price\"\s*:\s*[0-9]*?\.[0-9]*"</code></p>
+    <p>Let's break down the details of this statement:</p>
+    <ul>
+      <li><code>-o</code> tells <code>grep</code> to <em>only</em> return the matching portion</li>
+      <li><code>-E</code> tells <code>grep</code> to be able to use extended regex symbols such as <code>?</code></li>
+      <li><code>\"price\"</code> matches the string <code>"price"</code></li>
+      <li><code>\s*</code> matches any number (including 0) of whitespace (<code>\s</code>) characters</li>
+      <li><code>:</code> matches <code>:</code></li>
+      <li><code>[0-9]*</code> matches any number of digits (from 0 to 9)</li>
+      <li><code>?\.</code> optionally matches a <code>.</code> (this is in case price were an integer)</li>
+    </ul>
+    <p>Now that you have the grep statement that you need, you can pipe the BTC data to it using the curl command from above:</p>
+    <pre><code class="hljs language-awk">$ curl -s --location --request GET https:<span class="hljs-regexp">//</span>api.coinstats.app<span class="hljs-regexp">/public/</span>v1<span class="hljs-regexp">/coins/</span>bitcoin\?currency\=USD |\
+    grep -oE <span class="hljs-string">"\"price\":\s*[0-9]*?\.[0-9]*"</span>
+<span class="hljs-string">"price"</span>: <span class="hljs-number">57907.78008618953</span>
+</code></pre>
+    <p>The backslash <code>\</code> character used here after the pipe <code>|</code> allows you to write the expression on multiple lines.</p>
+    <p>Finally, to get <em>only</em> the value in the price field, and drop the "price" label, you can use chaining to pipe the same output to another <code>grep</code>:</p>
+    <pre><code class="hljs language-awk">$ curl -s --location --request GET https:<span class="hljs-regexp">//</span>api.coinstats.app<span class="hljs-regexp">/public/</span>v1<span class="hljs-regexp">/coins/</span>bitcoin\?currency\=USD |\
+    grep -oE <span class="hljs-string">"\"price\":\s*[0-9]*?\.[0-9]*"</span> |\
+    grep -oE <span class="hljs-string">"[0-9]*?\.[0-9]*"</span>
+<span class="hljs-number">57907.78008618953</span>
+</code></pre>
+    <p>Beautiful 😎</p>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

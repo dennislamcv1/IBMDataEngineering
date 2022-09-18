@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <h1>Linux Terminal Tips - Tab completion, command history</h1>
+    <h2>Tab Completion</h2>
+    <p>Many shells support a tool called "Tab Completion"</p>
+    <p>Tab completion allows a shell to auto-complete a command you're typing.</p>
+    <p>Support you're in your home directory <code>~</code>, which contains:</p>
+    <ul>
+      <li><code>Pictures</code></li>
+      <li><code>Videos</code></li>
+      <li><code>Documents</code></li>
+      <li><code>Downloads</code></li>
+    </ul>
+    <p>And suppose your <code>Documents</code> folder <em>only</em> contained the folder:</p>
+    <ul>
+      <li><code>python-examples</code></li>
+    </ul>
+    <h3>Ex 1 - Tab Completion:</h3>
+    <p>If you type:</p>
+    <pre><code class="hljs language-powershell">~ <span class="hljs-variable">$</span> <span class="hljs-built_in">cd</span> P
+</code></pre>
+    <p>and press TAB, the shell will autocomplete this to:</p>
+    <pre><code class="hljs language-powershell">~ <span class="hljs-variable">$</span> <span class="hljs-built_in">cd</span> Pictures/
+</code></pre>
+    <p>Because the <code>Pictures</code> directory is the only directory within your current folder that starts with a "<code>P</code>".</p>
+    <h3>Ex 2 - Tab Completion for Long Path:</h3>
+    <p>If you type:</p>
+    <pre><code class="hljs language-powershell">~ <span class="hljs-variable">$</span> <span class="hljs-built_in">cd</span> <span class="hljs-keyword">Do</span>
+</code></pre>
+    <p>and press TAB, nothing will happen.</p>
+    <p>Because your current directory contains more than one directory that starts with "<code>Do</code>".</p>
+    <p>On the other hand, if you type:</p>
+    <pre><code class="hljs language-powershell">~ <span class="hljs-variable">$</span> <span class="hljs-built_in">cd</span> Doc
+</code></pre>
+    <p>and press TAB, the shell will autocomplete this to:</p>
+    <pre><code class="hljs language-powershell">~ <span class="hljs-variable">$</span> <span class="hljs-built_in">cd</span> Documents/
+</code></pre>
+    <p>If you press TAB again, the shell will autocomplete this to:</p>
+    <pre><code class="hljs language-awk">~ $ cd Documents<span class="hljs-regexp">/python-examples/</span>
+</code></pre>
+    <p>Because the folder <code>python-examples</code> is the only existing file within the <code>~/Documents</code> directory.</p>
+    <h2>Command history</h2>
+    <p>Command history allows you to navigate previous commands you enetered using the arrow keys</p>
+    <p>Let's say you've entered the following commands:</p>
+    <pre><code class="hljs language-vim">~ $ <span class="hljs-keyword">cd</span> ~/Documents/<span class="hljs-keyword">python</span>-examples
+~/Documents/<span class="hljs-keyword">python</span>-examples $ <span class="hljs-keyword">python3</span> myprogram.<span class="hljs-keyword">py</span>
+Hello, World!
+~/Documents/<span class="hljs-keyword">python</span>-examples $ <span class="hljs-keyword">cd</span> /
+/ $
+</code></pre>
+    <p>You can run a previous command, by pressing the up arrow key</p>
+    <h3>Ex 1 - Running the last command:</h3>
+    <p>If you press UP once:</p>
+    <pre><code class="hljs language-arcade">~ $ cd ~<span class="hljs-regexp">/Documents/</span>python-examples
+~<span class="hljs-regexp">/Documents/</span>python-examples $ python3 myprogram.py
+Hello, World!
+~<span class="hljs-regexp">/Documents/</span>python-examples $ cd /
+<span class="hljs-regexp">/ $ cd /</span>
+</code></pre>
+    <p>The shell will automatically put the last command you entered</p>
+    <pre><code class="hljs language-arcade">~ $ cd ~<span class="hljs-regexp">/Documents/</span>python-examples
+~<span class="hljs-regexp">/Documents/</span>python-examples $ python3 myprogram.py
+Hello, World!
+~<span class="hljs-regexp">/Documents/</span>python-examples $ cd /
+<span class="hljs-regexp">/ $ cd /</span>
+</code></pre>
+    <h3>Ex 2 - Running previous command from session</h3>
+    <p>If you had pressed UP <em>three times</em> instead of once:</p>
+    <pre><code class="hljs language-vim">~ $ <span class="hljs-keyword">cd</span> ~/Documents/<span class="hljs-keyword">python</span>-examples
+~/Documents/<span class="hljs-keyword">python</span>-examples $ <span class="hljs-keyword">python3</span> myprogram.<span class="hljs-keyword">py</span>
+Hello, World!
+~/Documents/<span class="hljs-keyword">python</span>-examples $ <span class="hljs-keyword">cd</span> /
+/ $ <span class="hljs-keyword">cd</span> ~/Documents/<span class="hljs-keyword">python</span>-examples
+</code></pre>
+    <p>It would automatically place the command you ran three commands ago (<code>cd ~/Documents/python-examples</code>)</p>
+    <p>After pressing enter, youwould find yourself back in your <code>cd ~/Documents/python-examples</code> directory:</p>
+    <pre><code class="hljs language-arcade">~ $ cd ~<span class="hljs-regexp">/Documents/</span>python-examples
+~<span class="hljs-regexp">/Documents/</span>python-examples $ python3 myprogram.py
+Hello, World!
+~<span class="hljs-regexp">/Documents/</span>python-examples $ cd /
+<span class="hljs-regexp">/ $ cd ~/</span>Documents/python-examples
+~<span class="hljs-regexp">/Documents/</span>python-examples $ 
+</code></pre>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <center>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/assets/logos/SN_web_darkmode.png" width="300" alt="cognitiveclass.ai logo">
+    </center>
+    <h1>Hands-on Lab: File Content, Compression, &#x26; Networking Commands</h1>
+    <p>Estimated time needed: <strong>40</strong> minutes</p>
+    <h2>Objectives</h2>
+    <p>In this lab, you will be introduced to the use of basic Unix commands related to the following categories:</p>
+    <ul>
+      <li>File content viewing commands</li>
+      <li>Text processing commands</li>
+      <li>File/Folder compression &#x26; archiving commands</li>
+      <li>Networking commands</li>
+    </ul>
+    <h1>About Skills Network Cloud IDE</h1>
+    <p>Skills Network Cloud IDE (based on Theia and Docker) provides an environment for hands on labs for course and project related labs. Theia is an open source IDE (Integrated Development Environment), that can be run on desktop or on the cloud. To complete this lab, you will be using the Cloud IDE based on Theia.</p>
+    <h2>Important notice about this lab environment</h2>
+    <p>Please be aware that sessions for this lab environment are not persisted. Thus, every time you connect to this lab, a new environment is created for you and any data or files you may have saved in a previous session will be lost. To avoid losing your data, plan to complete these labs in a single session.</p>
+    <h1>Setup</h1>
+    <p>Open a new terminal, by clicking on the menu bar and selecting <strong>Terminal</strong>-><strong>New Terminal</strong>, as in the image below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-LX0117EN-SkillsNetwork/labs/module%201/images/new-terminal.png" alt="">
+    </p>
+    <p>This will open a new terminal at the bottom of the screen as seen below.</p>
+    <p>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-LX0117EN-SkillsNetwork/labs/module%201/images/terminal_bottom_screen.png" alt="">
+    </p>
+    <p>You can run the commands provided in the following excercises in your newly opened terminal. You can copy the code to your clipboard if you like by clicking on the little copy button on the bottom right of each codeblock, and then paste it on the command line.</p>
+    <h1>Exercise 1 - Viewing file content</h1>
+    <p>In this exercise, you will work with commands for viewing file content.</p>
+    <h2><strong>Important:</strong> In order to complete this section, you must run the following in your current directory:</h2>
+    <pre><code class="hljs language-awk">wget https:<span class="hljs-regexp">//</span>cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud<span class="hljs-regexp">/IBM-DB0250EN-SkillsNetwork/</span>labs<span class="hljs-regexp">/Bash%20Scripting/u</span>sdoi.txt
+</code></pre>
+    <p></p>
+    <p><strong>1.1. Display all file contents</strong></p>
+    <p><strong><code>cat</code></strong></p>
+    <p>The <code>cat</code> command displays contents of files.</p>
+    <p>The following command prints the content of the file <code>usdoi.txt</code> which you downloaded earlier.</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">cat usdoi</span>.txt
+</code></pre>
+    <p></p>
+    <p><strong>1.2. Display file contents page-wise</strong></p>
+    <p><strong><code>more</code></strong></p>
+    <p>The <code>more</code> command displays the file contents page by page.</p>
+    <p>Press <code>spacebar</code> to display the next page.</p>
+    <pre><code class="hljs language-dos"><span class="hljs-built_in">more</span> usdoi.txt
+</code></pre>
+    <p></p>
+    <p><strong>1.3. Display first few lines of a file</strong></p>
+    <p><strong><code>head</code></strong></p>
+    <p>Print the first 10 lines of the file <code>usdoi.txt</code>.</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">head usdoi</span>.txt
+</code></pre>
+    <p></p>
+    <p>You can specify the number of lines to be printed.</p>
+    <p>Print the first 3 lines of the file <code>usdoi.txt</code>.</p>
+    <pre><code class="hljs language-apache"><span class="hljs-attribute">head</span> -<span class="hljs-number">3</span> usdoi.txt
+</code></pre>
+    <p></p>
+    <p><strong>1.4. Display last lines of a file</strong></p>
+    <p><strong><code>tail</code></strong></p>
+    <p>Print the last 10 lines of the file <code>usdoi.txt</code>.</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">tail usdoi</span>.txt
+</code></pre>
+    <p></p>
+    <p>You can specify the number of lines to be printed.</p>
+    <p>Print the last 2 lines of the file <code>usdoi.txt</code>.</p>
+    <pre><code class="hljs language-apache"><span class="hljs-attribute">tail</span> -<span class="hljs-number">2</span> usdoi.txt
+</code></pre>
+    <p></p>
+    <p><strong>1.5. Count lines, words or characters</strong></p>
+    <p><strong><code>wc</code></strong></p>
+    <p>If you want to find the number of lines, words and characters in a file, for example <code>usdoi.txt</code>, enter the command:</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">wc usdoi</span>.txt
+</code></pre>
+    <p></p>
+    <p>The output contains the number of lines followed by number of words followed by number of characters in the file.</p>
+    <p>To print only the number of lines in <code>usdoi.txt</code>, use the <code>-l</code> option:</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">wc -l usdoi</span>.txt
+</code></pre>
+    <p></p>
+    <p>To print only the number of words in <code>usdoi.txt</code>, use the <code>-w</code> option:</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">wc -w usdoi</span>.txt
+</code></pre>
+    <p></p>
+    <p>To print only the number of characters in <code>usdoi.txt</code>, use te <code>-c</code> option:</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">wc -c usdoi</span>.txt
+</code></pre>
+    <p></p>
+    <h1>Exercise 2: Customizing view of file content</h1>
+    <p><strong>2.1. View sorted file lines</strong></p>
+    <p><strong><code>sort</code></strong></p>
+    <p>To view the sorted lines of <code>usdoi.txt</code>:</p>
+    <pre><code class="hljs language-dos"><span class="hljs-built_in">sort</span> usdoi.txt
+</code></pre>
+    <p></p>
+    <p>To view the reverse-sorted lines of <code>usdoi.txt</code>:</p>
+    <pre><code class="hljs language-dos"><span class="hljs-built_in">sort</span> -r usdoi.txt
+</code></pre>
+    <p></p>
+    <p><strong>2.2. View with repeated, consecutive lines merged into one</strong></p>
+    <p><strong><code>uniq</code></strong></p>
+    <p>First download the following file:</p>
+    <pre><code class="hljs language-awk">wget https:<span class="hljs-regexp">//</span>cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud<span class="hljs-regexp">/IBM-LX0117EN-SkillsNetwork/</span>labs<span class="hljs-regexp">/module%201/</span>zoo.txt
+</code></pre>
+    <p></p>
+    <p>View the raw contents of <code>zoo.txt</code>:</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">cat zoo</span>.txt
+</code></pre>
+    <p></p>
+    <p>View the contents of <code>zoo.txt</code> with equal, consecutive lines merged into one:</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">uniq zoo</span>.txt
+</code></pre>
+    <p></p>
+    <p><strong>2.3. Extract lines matching specified criteria</strong></p>
+    <p><strong><code>grep</code></strong></p>
+    <p>The <code>grep</code> command allows you to specify a pattern and search for lines from the input text that contain a match to the pattern.</p>
+    <p>The following command prints all lines in the file <code>usdoi.txt</code> which contain the word <code>people</code>.</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">grep people usdoi</span>.txt
+</code></pre>
+    <p></p>
+    <p>Some of the frequently used options for <code>grep</code> are:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Option</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>-n</code></td>
+          <td>Along with the matching lines, also print the line numbers</td>
+        </tr>
+        <tr>
+          <td><code>-c</code></td>
+          <td>Get the count of matching lines</td>
+        </tr>
+        <tr>
+          <td><code>-i</code></td>
+          <td>Ignore the case of the text while matching</td>
+        </tr>
+        <tr>
+          <td><code>-v</code></td>
+          <td>Print all lines which do not contain the pattern</td>
+        </tr>
+        <tr>
+          <td><code>-w</code></td>
+          <td>Match only if the pattern matches whole words</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Prints all lines from the <code>/etc/passwd</code> file, which do not contain the pattern <code>login</code>.</p>
+    <pre><code class="hljs language-gradle"><span class="hljs-keyword">grep</span> -v login <span class="hljs-regexp">/etc/</span>passwd
+</code></pre>
+    <p></p>
+    <p><strong>2.4. View lines of file with filter applied to each line</strong></p>
+    <p><strong><code>cut</code></strong></p>
+    <p>
+      The <code>cut</code> command allows you to view the lines of a file after a filter is applied to each line.
+      For example, you can use <code>cut</code> with the <code>-c</code> option to view the first two characters of each line:
+    </p>
+    <pre><code class="hljs language-apache"><span class="hljs-attribute">cut</span> -c -<span class="hljs-number">2</span> zoo.txt
+</code></pre>
+    <p></p>
+    <p>or each line starting from the second character:</p>
+    <pre><code class="hljs language-apache"><span class="hljs-attribute">cut</span> -c <span class="hljs-number">2</span>- zoo.txt
+</code></pre>
+    <p></p>
+    <p><strong>2.5. View multiple files side by side</strong></p>
+    <p><strong><code>paste</code></strong></p>
+    <p>Download the following file:</p>
+    <pre><code class="hljs language-awk">wget https:<span class="hljs-regexp">//</span>cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud<span class="hljs-regexp">/IBM-LX0117EN-SkillsNetwork/</span>labs<span class="hljs-regexp">/module%201/</span>zoo_ages.txt
+</code></pre>
+    <p></p>
+    <p>
+      The <code>paste</code> command allows you to view multiple files at once - with lines being aligned as columns.
+      You can see what that looks like by entering:
+    </p>
+    <pre><code class="hljs language-stylus">paste zoo<span class="hljs-selector-class">.txt</span> zoo_ages<span class="hljs-selector-class">.txt</span>
+</code></pre>
+    <p></p>
+    <p>You can also customize the delimiter. Instead of the default<code>tab</code>, you could specify a comma as follows:</p>
+    <pre><code class="hljs language-stylus">paste -d <span class="hljs-string">","</span> zoo<span class="hljs-selector-class">.txt</span> zoo_ages<span class="hljs-selector-class">.txt</span>
+</code></pre>
+    <p></p>
+    <h1>Exercise 3: File and folder archiving and compression</h1>
+    <p><strong>3.1. Create and manage file archives</strong></p>
+    <p><strong><code>tar</code></strong></p>
+    <p>The <code>tar</code> command allows you to pack multiple files and directories into a single archive file.</p>
+    <p>The following command creates an archive of the entire <code>/bin</code> directory into a file named <code>bin.tar</code>.<br></p>
+    <p>The options used are as follows:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Option</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>-c</td>
+          <td>Create new archive file</td>
+        </tr>
+        <tr>
+          <td>-v</td>
+          <td>Verbosely list files processed</td>
+        </tr>
+        <tr>
+          <td>-f</td>
+          <td>Archive file name</td>
+        </tr>
+      </tbody>
+    </table>
+    <pre><code class="hljs language-mipsasm">tar -cvf <span class="hljs-keyword">bin.tar </span>/<span class="hljs-keyword">bin
+</span></code></pre>
+    <p></p>
+    <p>To see the list of files in the archive, use the <code>-t</code> option:</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">tar -tvf bin</span>.tar
+</code></pre>
+    <p></p>
+    <p>To untar the archive or extract files from the archive, use the <code>-x</code> option:</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">tar -xvf bin</span>.tar
+</code></pre>
+    <p></p>
+    <p>Use the <code>ls</code> command to verify that the folder <code>bin</code> is extracted.</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">ls -l</span>
+</code></pre>
+    <p></p>
+    <p><strong>3.2. Package and compress archive files</strong></p>
+    <p><strong><code>zip</code></strong></p>
+    <p>The <code>zip</code> command allows you to compress files.</p>
+    <p>The following command creates a zip file named <code>config.zip</code> consisting of all the files with extension <code>.conf</code> in the <code>/etc</code> directory.</p>
+    <pre><code class="hljs language-awk">zip config.zip <span class="hljs-regexp">/etc/</span>*.conf
+</code></pre>
+    <p></p>
+    <p>The <strong><code>-r</code></strong> option can be used to zip an entire directory.</p>
+    <p>The following command creates an archive of the <code>/bin</code> directory.</p>
+    <pre><code class="hljs language-python"><span class="hljs-built_in">zip</span> -r <span class="hljs-built_in">bin</span>.<span class="hljs-built_in">zip</span> /<span class="hljs-built_in">bin</span>
+</code></pre>
+    <p></p>
+    <p><strong>3.3. Extract, list, or test compressed files in a ZIP archive</strong></p>
+    <p><strong><code>unzip</code></strong></p>
+    <p>The following command lists the files of the archive called <code>config.zip</code></p>
+    <pre><code class="hljs language-arduino">unzip -l config.zip
+</code></pre>
+    <p></p>
+    <p>The following command extracts all the files in the archive <code>bin.zip</code>.</p>
+    <pre><code class="hljs language-python">unzip -o <span class="hljs-built_in">bin</span>.<span class="hljs-built_in">zip</span>
+</code></pre>
+    <p></p>
+    <p>We added the <code>-o</code> option to force overwrite, in case you run the command more than once.</p>
+    <p>You should see a folder named <code>bin</code> created in your directory.</p>
+    <h1>Exercise 4 - Networking commands</h1>
+    <p><strong>4.1. Show the system's host name</strong></p>
+    <p><strong><code>hostname</code></strong></p>
+    <p>To view the current host name, run the command below .</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">hostname</span>
+</code></pre>
+    <p></p>
+    <p>You can use the <code>-i</code> option to view the IP adrress of the host:</p>
+    <pre><code class="hljs language-css">hostname -<span class="hljs-selector-tag">i</span>
+</code></pre>
+    <p></p>
+    <p><strong>4.2. Test if a host is reachable</strong></p>
+    <p><strong><code>ping</code></strong></p>
+    <p>Check if <a href="http://www.google.com/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMLX0117ENSkillsNetwork27653394-2022-01-01" target="_blank" rel="external">www.google.com</a> is reachable. The command keeps sending data packets to the <a href="http://www.google.com/?utm_medium=Exinfluencer&#x26;utm_source=Exinfluencer&#x26;utm_content=000026UJ&#x26;utm_term=10006555&#x26;utm_id=NA-SkillsNetwork-Channel-SkillsNetworkCoursesIBMLX0117ENSkillsNetwork27653394-2022-01-01" target="_blank" rel="external">www.google.com</a> server and prints the response it gets back. (Press <code>Ctrl+C</code> to stop pinging)</p>
+    <pre><code class="hljs language-stylus">ping www<span class="hljs-selector-class">.google</span><span class="hljs-selector-class">.com</span>
+</code></pre>
+    <p></p>
+    <p>If you want to ping only for a limited number of times, use <code>-c</code> option.</p>
+    <pre><code class="hljs language-stylus">ping -c <span class="hljs-number">5</span> www<span class="hljs-selector-class">.google</span><span class="hljs-selector-class">.com</span>
+</code></pre>
+    <p></p>
+    <p><strong>4.3. Display network interface configuration</strong></p>
+    <p><strong><code>ifconfig</code></strong></p>
+    <p>The <code>ifconfig</code> command is used to configure or display network interface parameters for a network.</p>
+    <p>To display the configuration of all network interfaces of the system, enter:</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">ifconfig</span>
+</code></pre>
+    <p></p>
+    <p>To display the configuration of an ethernet adapter <code>eth0</code>, enter:</p>
+    <pre><code class="hljs language-apache"><span class="hljs-attribute">ifconfig</span> eth<span class="hljs-number">0</span>
+</code></pre>
+    <p></p>
+    <p><code>eth0</code> is usually the primary network interface that connects your server to the network.</p>
+    <p>You can see your server's IP address in line number 2 after the word <code>inet</code>.</p>
+    <p><strong>4.4. Transfer data from or to a server</strong></p>
+    <p><strong><code>curl</code></strong></p>
+    <p>You can use <code>curl</code> to access the file at the following URL and display the file's contents on your screen:</p>
+    <pre><code class="hljs language-awk">curl https:<span class="hljs-regexp">//</span>cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud<span class="hljs-regexp">/IBM-DB0250EN-SkillsNetwork/</span>labs<span class="hljs-regexp">/Bash%20Scripting/u</span>sdoi.txt
+</code></pre>
+    <p></p>
+    <p>or to access the file at the given URL and save it in your current working directory:</p>
+    <pre><code class="hljs language-awk">curl -O https:<span class="hljs-regexp">//</span>cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud<span class="hljs-regexp">/IBM-DB0250EN-SkillsNetwork/</span>labs<span class="hljs-regexp">/Bash%20Scripting/u</span>sdoi.txt
+
+</code></pre>
+    <p></p>
+    <p><strong>4.5. Downloading file(s) from a URL</strong></p>
+    <p><strong><code>wget</code></strong></p>
+    <p>The <code>wget</code> command is similar to <code>curl</code> - however it's primary use is for file downloading. One unique feature of <code>wget</code> is that it can recursively download files at a URL.</p>
+    <p>To see how <code>wget</code> works, first remove <code>usdoi.txt</code> from your current directory:</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">rm usdoi</span>.txt
+</code></pre>
+    <p></p>
+    <p>and re-download it using <code>wget</code> as follows:</p>
+    <pre><code class="hljs language-awk">wget https:<span class="hljs-regexp">//</span>cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud<span class="hljs-regexp">/IBM-DB0250EN-SkillsNetwork/</span>labs<span class="hljs-regexp">/Bash%20Scripting/u</span>sdoi.txt
+</code></pre>
+    <p></p>
+    <h1>Practice exercises</h1>
+    <p>Before you begin, ensure you're in your home directory:</p>
+    <pre><code class="hljs language-bash"><span class="hljs-built_in">cd</span> ~
+<span class="hljs-built_in">pwd</span>
+</code></pre>
+    <p></p>
+    <ol>
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Display your username</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Use the <code>whoami</code> command</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-ebnf"><span class="hljs-attribute">whoami</span>
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="2">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>View the kernel version</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Use the <code>uname</code> command with the right options</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for solution</summary>
+      <pre><code class="hljs language-ebnf"><span class="hljs-attribute">uname -r</span>
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="3">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Display the number of lines in the <code>/etc/passwd file</code>.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>use the <code>wc</code> command with right option.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-awk">wc -l <span class="hljs-regexp">/etc/</span>passwd
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="4">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Display the lines that contain the string 'not installed' in <code>/var/log/bootstrap.log</code>.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>use the <code>grep</code> command.</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-stata">grep <span class="hljs-string">"not installed"</span> /<span class="hljs-keyword">var</span>/<span class="hljs-keyword">log</span>/<span class="hljs-keyword">bootstrap</span>.<span class="hljs-keyword">log</span>
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="5">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em><code>https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DB0250EN-SkillsNetwork/labs/Bash%20Scripting/top-sites.txt</code> contains most popular websites. Find out all the websites that have the word <code>org</code> in them.</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>use the <code>wget</code> command to download the file.</p>
+      </blockquote>
+      <p>use the <code>grep</code> command to search</p>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-awk">wget https:<span class="hljs-regexp">//</span>cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud<span class="hljs-regexp">/IBM-DB0250EN-SkillsNetwork/</span>labs<span class="hljs-regexp">/Bash%20Scripting/</span>top-sites.txt
+grep org top-sites.txt 
+</code></pre>
+      <p></p>
+    </details>
+    <details>
+      <summary>Alternative Solution</summary>
+      <pre><code class="hljs language-awk">curl -o top-sites.txt https:<span class="hljs-regexp">//</span>cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud<span class="hljs-regexp">/IBM-DB0250EN-SkillsNetwork/</span>labs<span class="hljs-regexp">/Bash%20Scripting/</span>top-sites.txt
+grep org top-sites.txt 
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="6">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Print the first 7 lines of <code>top-sites.txt</code></em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>use the <code>head</code> command with the correct arguments</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-apache"><span class="hljs-attribute">head</span> -n <span class="hljs-number">7</span> top-sites.txt
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="7">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Print the last 7 lines of <code>top-sites.txt</code></em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>use the <code>tail</code> command with the correct arguments</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-apache"><span class="hljs-attribute">tail</span> -n <span class="hljs-number">7</span> top-sites.txt
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="8">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Zip the file <code>top-sites.txt</code> into a file called <code>top-sites.zip</code></em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p><em>Use the <code>zip</code> command</em></p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-coq">zip <span class="hljs-built_in">top</span>-sites.zip <span class="hljs-built_in">top</span>-sites.txt
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="9">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Print the first three characters of each line from <code>top-sites.txt</code></em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>use the <code>cut</code> command with the correct arguments</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-coq"><span class="hljs-built_in">cut</span> -c <span class="hljs-number">-3</span> <span class="hljs-built_in">top</span>-sites.txt
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="10">
+      <li>Problem:</li>
+    </ol>
+    <blockquote>
+      <p><em>Print details of the <code>eth0</code> internet adapter</em></p>
+    </blockquote>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>use the <code>ifconfig</code> command with the correct argument</p>
+      </blockquote>
+    </details>
+    <details>
+      <summary>Click here for Solution</summary>
+      <pre><code class="hljs language-apache"><span class="hljs-attribute">ifconfig</span> eth<span class="hljs-number">0</span>
+</code></pre>
+      <p></p>
+    </details>
+    <h2>Authors</h2>
+    <p>
+      Ramesh Sannareddy
+      Sam Prokopchuk
+    </p>
+    <h3>Other contributors</h3>
+    <p>
+      Rav Ahuja
+      Jeff Grossman
+    </p>
+    <h2>Change Log</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date (YYYY-MM-DD)</th>
+          <th>Version</th>
+          <th>Changed By</th>
+          <th>Change Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2021-05-30</td>
+          <td>0.1</td>
+          <td>Ramesh Sannareddy</td>
+          <td>Created initial version of the lab</td>
+        </tr>
+        <tr>
+          <td>2021-11-29</td>
+          <td>0.2</td>
+          <td>Sam Prokopchuk</td>
+          <td>Update lab contents and split</td>
+        </tr>
+        <tr>
+          <td>2021-12-02</td>
+          <td>0.3</td>
+          <td>Jeff Grossman</td>
+          <td>Review and Update lab</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Copyright (c) 2021 IBM Corporation. All rights reserved.</p>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>

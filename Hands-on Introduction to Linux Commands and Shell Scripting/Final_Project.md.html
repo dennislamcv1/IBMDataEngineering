@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/styles/default.min.css">
+  </head>
+  <body>
+    <h1>Linux Commands and Shell Scripting - Final Project</h1>
+    <center>
+      <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/assets/logos/SN_web_darkmode.png" width="300">
+    </center>
+    <p><strong>Estimated time needed:</strong> 90 minutes</p>
+    <p>Congratulations!! You have finished the modules. Now is the time to put your skills to test. Read through the scenario below.</p>
+    <p>This lab may use some bash concepts we haven't yet covered in this course. Whenever this happens, we will provide sufficient hints and/or the code for you.</p>
+    <h2>Scenario</h2>
+    <p>You are a lead linux developer at the top-tech company "ABC International INC." ABC currently suffers from a huge bottleneck - each day, interns must painstakingly access encrypted password files on core servers, and backup those that were updated within the last 24-hours. This introduces human error, lowers security, and takes an unreasonable amount of work.</p>
+    <p>As ABC INC's most trusted linux developer, you have been tasked with creating a script <code>backup.sh</code> which automatically backs up any of these files that have been updated within the past 24 hours.</p>
+    <h2>Objectives</h2>
+    <ul>
+      <li>The objective of this lab is to incorporate much of the shell scripting you've learned over this course into a single script.</li>
+      <li>You will schedule your shell script to run every 24 hours using <code>crontab</code>.</li>
+      <li>TIP: If you're unsure whether some of your code will work as wanted, you can try the command directly in the terminal - and even create your own test scripts!</li>
+    </ul>
+    <h1>Task 0</h1>
+    <ol>
+      <li>
+        <p>Open a new terminal by clicking on the menu bar and selecting <strong>Terminal</strong>-><strong>New Terminal</strong>:</p>
+      </li>
+      <li>
+        <p>Download the template file <code>backup.sh</code> by running the command below:</p>
+      </li>
+    </ol>
+    <pre><code class="hljs language-awk">wget https:<span class="hljs-regexp">//</span>cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud<span class="hljs-regexp">/IBM-LX0117EN-SkillsNetwork/</span>labs<span class="hljs-regexp">/Final%20Project/</span>backup.sh
+</code></pre>
+    <p></p>
+    <ol start="3">
+      <li>Open the file in the IDE by clicking <strong>File</strong>-><strong>Open</strong> as seen below:</li>
+    </ol>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-LX0117EN-SkillsNetwork/labs/Final%20Project/images/file-open.png" width="50%" height="auto">
+    <p>and then click on the file, which should have been downloaded in the project directory:</p>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-LX0117EN-SkillsNetwork/labs/Final%20Project/images/prompt-open.png" width="50%" height="auto">
+    <h1>About the template script, <code>backup.sh</code></h1>
+    <ol>
+      <li>You will notice the template script contains comments (lines starting with the <code>#</code> symbol). Do <strong>not</strong> delete these.</li>
+    </ol>
+    <ul>
+      <li>
+        <p>The ones that look like "<code># [TASK {number}]</code>" will be used by your grader:</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-LX0117EN-SkillsNetwork/labs/Final%20Project/images/task-comments.png" width="50%" height="auto">
+      </li>
+    </ul>
+    <ol start="2">
+      <li>Also, please do <strong>not</strong> modify any existing code above <code># [TASK 1]</code> in the script.</li>
+    </ol>
+    <h1><span style="color: rgb(183, 55, 62); font-weight:bold;">Saving your progress</span></h1>
+    <p>Your work <strong>will not</strong> be saved if you exit your session.</p>
+    <p>In order to save your progress:</p>
+    <ol>
+      <li>
+        <p>Save the current working file (<code>backup.sh</code>) with <code>CTRL-S</code> [Windows/Linux], <code>CMD-S</code> [MAC], or navigate to <strong>File</strong>-><strong>Save</strong> as seen below:</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-LX0117EN-SkillsNetwork/labs/Final%20Project/images/file-save.png" width="50%" height="auto">
+      </li>
+      <li>
+        <p>Download the file to your local computer by navigating to <strong>File</strong>-><strong>Download</strong> as seen below:</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-LX0117EN-SkillsNetwork/labs/Final%20Project/images/file-download.png" width="50%" height="auto">
+      </li>
+      <li>
+        <p>Unfortunately, our editor does <strong>not</strong> currently support file uploading, so you will need to use 'copy and paste' as follows:</p>
+        <ul>
+          <li>To "upload" your in-progress <code>backup.sh</code> file and continue working on it:
+            <ol>
+              <li>Open a terminal and type <code>touch backup.sh</code></li>
+              <li>Open the empty <code>backup.sh</code> file in the editor</li>
+              <li>Copy paste the contents of your locally-saved <code>backup.sh</code> file into the empty <code>backup.sh</code> file in the editor</li>
+            </ol>
+          </li>
+        </ul>
+      </li>
+    </ol>
+    <h1>Task 1</h1>
+    <p>Navigate to <code># [TASK 1]</code> in the code.</p>
+    <p>Set two variables equal to the values of the first and second command line arguments, as follows:</p>
+    <ol>
+      <li>Set <code>targetDirectory</code> to the first command line argument</li>
+      <li>Set <code>destinationDirectory</code> to the second command line argument</li>
+    </ol>
+    <p>(This task is meant to help with code readability)</p>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>The command line arguments interpreted by the script can be accessed via <code>$1</code> (first argument) and <code>$2</code> (second argument)</p>
+      </blockquote>
+    </details>
+    <h1>Task 2</h1>
+    <ol>
+      <li>Display the values of the two command line arguments in the terminal.</li>
+    </ol>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Rememeber, you can use the command <code>echo</code> as a print command.</p>
+        <ul>
+          <li>Ex: <code>echo "The year is $year"</code></li>
+        </ul>
+      </blockquote>
+    </details>
+    <h1>Task 3</h1>
+    <ol>
+      <li>Define a variable called <code>currentTS</code> as the current timestamp, expressed in seconds.</li>
+    </ol>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Remember you can customize the output format of the <code>date</code> command.</p>
+        <ul>
+          <li>To set a variable equal to the output of a command you can use command substitution: <code>$()</code> or <code>` `</code>
+            <ul>
+              <li>For example: <code>currentYear=$(date +%Y)</code></li>
+            </ul>
+          </li>
+        </ul>
+      </blockquote>
+    </details>
+    <h1>Task 4</h1>
+    <ol>
+      <li>Define a variable called <code>backupFileName</code> to store the name of the archived and compressed backup file that the script will create.</li>
+    </ol>
+    <ul>
+      <li>The variable <code>backupFileName</code> should have the value <code>"backup-[$currentTS].tar.gz"</code>
+        <ul>
+          <li>For example, if <code>currentTS</code> has the value <code>1634571345</code>, then <code>backupFileName</code> should have the value <code>backup-1634571345.tar.gz</code>.</li>
+        </ul>
+      </li>
+    </ul>
+    <h1>Task 5</h1>
+    <ol>
+      <li>Define a variable called <code>origAbsPath</code> with the absolute path of the current directory as the variable's value.</li>
+    </ol>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>You can get the absolute path of the current directory using the <code>pwd</code> command.</p>
+      </blockquote>
+    </details>
+    <h1>Task 6</h1>
+    <ol>
+      <li>Define a variable called <code>destAbsPath</code> with value equal to the absolute path of the destination directory.</li>
+    </ol>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>First use <code>cd</code> to go to <code>destinationDirectory</code>, and then use the same method you used in <strong>Task 5</strong></p>
+      </blockquote>
+    </details>
+    <h1>Checkpoint</h1>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-LX0117EN-SkillsNetwork/labs/Final%20Project/images/save.png" width="50%" height="auto" align="center">
+    <p>Friendly reminder to save your work to your local computer!</p>
+    <h1>Task 7</h1>
+    <ol>
+      <li>Change directories from the current working directory to the target directory <code>targetDirectory</code>.</li>
+    </ol>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p><code>cd</code> into the original directory <code>origAbsPath</code> and then <code>cd</code> into <code>targetDirectory</code>.</p>
+      </blockquote>
+    </details>
+    <h1>Task 8</h1>
+    <p>You need to find files that have been updated within the past 24 hours.<br>This means you need to find all files who's last modified date was 24 hours ago or less.</p>
+    <p>To do make this easier:</p>
+    <ol>
+      <li>Define a numerical variable called <code>yesterdayTS</code> as the timestamp (in seconds) 24 hours prior to the current timestamp, <code>currentTS</code></li>
+    </ol>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Math can be done using <code>$(())</code>; for example: <code>zero=$((3 * 5 - 6 - 9))</code></p>
+        <ul>
+          <li>Thus, to get the timestamp in seconds of 24 hours <em>in the future</em>, you would use:
+            <ul>
+              <li><code>tomorrowTS=$(($currentTS + 24 * 60 * 60))</code></li>
+            </ul>
+          </li>
+        </ul>
+      </blockquote>
+    </details>
+    <h1>Note on arrays</h1>
+    <p>You will notice the line:</p>
+    <pre><code class="hljs language-ada"><span class="hljs-keyword">declare</span> -a toBackup
+</code></pre>
+    <p>in the script.</p>
+    <p>
+      This line declares a variable called <code>toBackup</code>, which is an array.
+      An array contains a list of values, and items can be appended to arrays using the syntax:
+    </p>
+    <pre><code class="hljs language-arcade">myArray+=(<span class="hljs-symbol">$my</span>Variable)
+</code></pre>
+    <p>When you print (or <code>echo</code>) an array you will see its string representation, which is simply all of its values separated by spaces:</p>
+    <pre><code class="hljs language-shell"><span class="hljs-meta">$</span><span class="bash"> <span class="hljs-built_in">declare</span> -a myArray</span>
+<span class="hljs-meta">$</span><span class="bash"> myArray+=(<span class="hljs-string">"Linux"</span>)</span>
+<span class="hljs-meta">$</span><span class="bash"> myArray+=(<span class="hljs-string">"is"</span>)</span>
+<span class="hljs-meta">$</span><span class="bash"> myArray+=(<span class="hljs-string">"cool!"</span>)</span>
+<span class="hljs-meta">$</span><span class="bash"> <span class="hljs-built_in">echo</span> <span class="hljs-variable">${myArray[@]}</span></span>
+Linux is cool!
+</code></pre>
+    <p>This will be useful later in the script where you will pass the array <code>$toBackup</code>, consisting of the names of all files that need to be backed up, to the <code>tar</code> command. This will archive all files at once!</p>
+    <h1>Task 9</h1>
+    <ol>
+      <li>Within the <code>$()</code> expression inside the <code>for</code> loop, write a command that will return all files and directories in the current folder.</li>
+    </ol>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>There is a very clean way of doing this using <code>ls</code></p>
+      </blockquote>
+    </details>
+    <h1>Task 10</h1>
+    <ol>
+      <li>Inside the for loop, you want to check whether the <code>$file</code> was modified within the last 24 hours.</li>
+    </ol>
+    <ul>
+      <li>To get the last-modified date of a file in seconds, use <code>date -r $file +%s</code></li>
+      <li>Then compare the value to <code>yesterdayTS</code>
+        <ul>
+          <li>Idea: <code>if [[ $file_last_modified_date > $yesterdayTS ]]</code> then the file was updated within the last 24 hours!</li>
+        </ul>
+      </li>
+    </ul>
+    <ol start="2">
+      <li>Since much of this wasn't covered in the course, for this task you may copy the code below and paste it into the double round brackets <code>(())</code>:</li>
+    </ol>
+    <pre><code class="hljs language-cos">`date -<span class="hljs-keyword">r</span> <span class="hljs-built_in">$file</span> +<span class="hljs-built_in">%s</span>` > <span class="hljs-built_in">$yesterdayTS</span>
+</code></pre>
+    <p></p>
+    <h1>Task 11</h1>
+    <ol>
+      <li>In the <code>if</code>-<code>then</code> statement, add the <code>$file</code> that was updated in the past 24-hours to the <code>toBackup</code> array.</li>
+      <li>Since much of this wasn't covered in the course, you may copy the code below and place after the <code>then</code> statement for this task:</li>
+    </ol>
+    <pre><code class="hljs language-gams">toBackup+=(<span class="hljs-symbol">$</span><span class="hljs-keyword">file</span>)
+</code></pre>
+    <p></p>
+    <h1>Checkpoint</h1>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-LX0117EN-SkillsNetwork/labs/Final%20Project/images/save.png" width="50%" height="auto" align="center">
+    <p>Friendly reminder to save your work to your local computer!</p>
+    <h1>Task 12</h1>
+    <ol>
+      <li>After the <code>for</code> loop, <strong>compress</strong> and <strong>archive</strong> the files, using the <code>$toBackup</code> array of filenames, to a file with the name <code>backupFileName</code>.</li>
+    </ol>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Use <code>tar -czvf $backupFileName ${toBackup[@]}</code></p>
+      </blockquote>
+    </details>
+    <h1>Task 13</h1>
+    <p>Now the file <code>$backupFileName</code> is created in the current working directory.</p>
+    <ol>
+      <li>Move the file <code>backupFileName</code> to the destination directory located at <code>destAbsPath</code>.</li>
+    </ol>
+    <p>You are now done the coding portion of the lab!</p>
+    <h1>Task 14</h1>
+    <ol>
+      <li>Open a new terminal by clicking on the menu bar and selecting <strong>Terminal</strong>-><strong>New Terminal</strong>, as in the image below:</li>
+    </ol>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-LX0117EN-SkillsNetwork/labs/Final%20Project/images/new-terminal.png" width="50%" height="auto">
+    <ul>
+      <li>This will open a new terminal at the bottom of the screen as seen below:</li>
+    </ul>
+    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-LX0117EN-SkillsNetwork/labs/Final%20Project/images/terminal_bottom_screen.png" width="50%" height="auto">
+    <h1>Task 15</h1>
+    <ol>
+      <li>Save the file you're working on (<code>backup.sh</code>) and make it executable.</li>
+    </ol>
+    <details>
+      <summary>Click here for Hint</summary>
+      <blockquote>
+        <p>Use the <code>chmod</code> command with the correct options</p>
+      </blockquote>
+    </details>
+    <ol start="2">
+      <li>Verify the file is executable using the <code>ls</code> command with the <code>-l</code> option:</li>
+    </ol>
+    <pre><code class="hljs language-sh">ls -l backup.sh
+</code></pre>
+    <p></p>
+    <ol start="3">
+      <li>Take a screenshot of the output of the command above and save as <code>15-executable.jpg</code> (or <code>.png</code>)</li>
+    </ol>
+    <h1>Task 16</h1>
+    <ol>
+      <li>Download the following <code>zip</code> file with the <code>wget</code> command:</li>
+    </ol>
+    <pre><code class="hljs language-sh">wget https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-LX0117EN-SkillsNetwork/labs/Final%20Project/important-documents.zip
+</code></pre>
+    <p></p>
+    <ol start="2">
+      <li>Unzip the archive file:</li>
+    </ol>
+    <pre><code class="hljs language-sh">unzip -DDo important-documents.zip
+</code></pre>
+    <p></p>
+    <p>(<code>-DDo</code> to overwrite and not restore original modified date)</p>
+    <p>Update the file's last modified date to now:</p>
+    <pre><code class="hljs language-ebnf"><span class="hljs-attribute">touch important-documents</span>/*
+</code></pre>
+    <p></p>
+    <ol start="3">
+      <li>Test your script using the following command:</li>
+    </ol>
+    <pre><code class="hljs language-sh">./backup.sh important-documents .
+</code></pre>
+    <p></p>
+    <ol start="4">
+      <li>
+        <p>This should have created a file called <code>backup-[CURRENT_TIMESTAMP].tar.gz</code> in your current directory</p>
+      </li>
+      <li>
+        <p>Take a screenshot of the output of <code>ls -l</code> and save as <code>16-backup-complete.jpg</code> (or <code>.png</code>)</p>
+      </li>
+    </ol>
+    <h1>Task 17</h1>
+    <ol>
+      <li>
+        <p><strong>Copy</strong> (don't <code>mv</code>) the <code>backup.sh</code> script into the <code>/usr/local/bin/</code> directory.</p>
+        <ul>
+          <li>Note: You may need to use <code>sudo cp</code> in order to create a file in <code>/usr/local/bin/</code></li>
+        </ul>
+      </li>
+      <li>
+        <p>Test the cronjob to see if the backup script is getting triggered by scheduling it for every 1 minute.</p>
+      </li>
+    </ol>
+    <details>
+      <summary>Click here for Hint</summary>
+      <pre><code class="hljs language-sh">*/1 * * * * /usr/<span class="hljs-built_in">local</span>/bin/backup.sh /home/project/important-documents /home/project
+</code></pre>
+      <p></p>
+    </details>
+    <ol start="3">
+      <li>Please note that since the Theia Lab is a virtual environment, we need to explicitly start the cron service using the below command.</li>
+    </ol>
+    <pre><code class="hljs language-sh">sudo service cron start
+</code></pre>
+    <p></p>
+    <ol start="4">
+      <li>
+        <p>Once the cron service is started, please check in the home directory (<code>/home/project</code>) if the tar files are getting created.</p>
+      </li>
+      <li>
+        <p>If yes, then please stop the cron service using the below command, else it will continue to create tar files every minute.</p>
+      </li>
+    </ol>
+    <pre><code class="hljs language-sh">sudo service cron stop
+</code></pre>
+    <p></p>
+    <ol start="6">
+      <li>
+        <p>Using <code>crontab</code>, schedule your <code>/usr/local/bin/backup.sh</code> script to backup the <code>important-documents</code> folder every 24 hours to your home directory (<code>/home/project</code>).</p>
+      </li>
+      <li>
+        <p>Take a screenshot of the output of <code>crontab -l</code> and save as <code>17-crontab.jpg</code> (or <code>.png</code>)</p>
+      </li>
+    </ol>
+    <blockquote>
+      <p>Ensure the cron service is running or start the cron service if need be, when you are setting up cron jobs in a real-life scenario.</p>
+    </blockquote>
+    <h1>Task 18</h1>
+    <ol>
+      <li>
+        <p>Save the current working file (<code>backup.sh</code>) with CTRL-S [Windows/Linux], ⌘-S [MAC] or navigating to <strong>File</strong>-><strong>Save</strong> as seen below:</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-LX0117EN-SkillsNetwork/labs/Final%20Project/images/file-save.png" width="50%" height="auto">
+      </li>
+      <li>
+        <p>Download the file to your local computer by navigating to <strong>File</strong>-><strong>Download</strong> as seen below:</p>
+        <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-LX0117EN-SkillsNetwork/labs/Final%20Project/images/file-download.png" width="50%" height="auto">
+        <p>(You may save the file as <code>backup.sh</code>)</p>
+      </li>
+      <li>
+        <p>You will later submit this file will for peer-grading.</p>
+      </li>
+    </ol>
+    <h1>Congratulations!</h1>
+    <p>You have completed the final lab for this course!</p>
+    <script>window.addEventListener('load', function() {
+snFaculty.inject();
+});</script>
+    <script src="https://skills-network-assets.s3.us.cloud-object-storage.appdomain.cloud/scripts/inject.43989f87.js"></script>
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.1/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+  </body>
+</html>
